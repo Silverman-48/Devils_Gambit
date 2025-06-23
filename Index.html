@@ -76,7 +76,7 @@
 
 	<div class="button_divisions">
 	<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
-	<button onclick="getLIFEPOINT();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
+	<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
 	<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
 	</div>
 
@@ -641,6 +641,7 @@
 			document.getElementById("streak").textContent = streak;
 			lifepoints = lifepoints + 1;
 			document.getElementById("lifepoints").textContent = lifepoints;
+			document.getElementById("currentgambit").textContent = "Streak Sacrificed";
 		} else {
 			return;
 		}
