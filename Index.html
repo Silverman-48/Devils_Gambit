@@ -11,8 +11,6 @@
 
 	<button class="cheats_button" onclick="showELEMENT('cheats')"><div class="high_score">High Score: <span id="highscore">0</span></div></button>
 
-	<div class="score">Current Score: <span id="score">0</span></div>
-
 	<div id="cheats" class="cheats">
 
 		<button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">Add Life Point</span></button>
@@ -23,6 +21,8 @@
 		<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">Remove Streak</span></button>
 
 	</div>
+
+	<div class="score">Current Score: <span id="score">0</span></div>
 
 	<div class="current_gambit">
 	
@@ -285,7 +285,6 @@
 				multiplier = 1;
 
 		}
-		updateTESTVALUES();
 	}
 
 
@@ -986,6 +985,7 @@ return;
 	}
 
 	.high_score {
+		color: white;
 		font-size: 45px;
 	}
 
