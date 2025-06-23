@@ -129,6 +129,17 @@
 
 <script>
 
+	// Variables Used
+
+	let currentValue = 0;
+	let lifepoints = 3;
+	let blanks = 1;
+	let streak = 0;
+	let acevalue = 0;
+	let lastchance = 1;
+	let currenttablecard = "";
+	let cards = [];
+
 	let numberarray = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'King', 'Queen', 'Jack'];
 	let suitarray = ['Clubs ♣️', 'Diamonds ♦️', 'Spades ♠️', 'Hearts ♥️'];
 	let colorarray = ['Red', 'Black'];
@@ -156,6 +167,11 @@
 	}
 	
 	function printTEXT1(buttonelement) {
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
 
 		let textmodifier1 = document.getElementById("modifier1");
 		let textmodifier2 = document.getElementById("modifier2");
@@ -183,6 +199,11 @@
 
 
 	function printTEXT2(buttonelement) {
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
 
 		let textmodifier1 = document.getElementById("modifier1");
 		let textmodifier2 = document.getElementById("modifier2");
@@ -333,22 +354,6 @@
 			eval('document.getElementById(variable).textContent = ' + variable);
 		}
 	}
-
-
-
-
-
-
-// Variables Used
-
-	let currentValue = 0;
-	let lifepoints = 3;
-	let blanks = 1;
-	let streak = 0;
-	let acevalue = 0;
-	let lastchance = 1;
-	let currenttablecard = "";
-	let cards = [];
 
 
 
@@ -862,7 +867,7 @@ return;
 // Sets the Joker Gambit
 
 	function jokerGAMBIT() {
-		if (lifepoints <= 0) return;
+		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
