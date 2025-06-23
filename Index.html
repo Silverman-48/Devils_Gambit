@@ -41,38 +41,39 @@
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="runGAMBIT('normal');"><span class="button_content">Set Gambit</span></button>
+	<button onclick="runGAMBIT();"><span class="button_content">Set Gambit</span></button>
+	<button onclick="clearGAMBIT();"><span class="button_content">Clear Gambit</span></button>
 	<button onclick="reset();"><span class="button_content">Reset Game</span></button>
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="printTEXT1('Low');" ondblclick="clearGAMBIT1('Low');"><span class="button_content">Low</span></button>
-	<button onclick="printTEXT1('High');" ondblclick="clearGAMBIT1('High');"><span class="button_content">High</span></button>
-	<button onclick="printTEXT2('Red');" ondblclick="clearGAMBIT2('Red');"><span class="button_content">Red</span></button>
-	<button onclick="printTEXT2('Black');" ondblclick="clearGAMBIT2('Black');"><span class="button_content">Black</span></button>
+	<button onclick="printTEXT1('Low');"><span class="button_content">Low</span></button>
+	<button onclick="printTEXT1('High');"><span class="button_content">High</span></button>
+	<button onclick="printTEXT2('Red');"><span class="button_content">Red</span></button>
+	<button onclick="printTEXT2('Black');"><span class="button_content">Black</span></button>
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="printTEXT1('Ace');" ondblclick="clearGAMBIT1('Ace');"><span class="button_content">Ace</span></button>
-	<button onclick="printTEXT1('2');" ondblclick="clearGAMBIT1('2');"><span class="button_content">2</span></button>
-	<button onclick="printTEXT1('3');" ondblclick="clearGAMBIT1('3');"><span class="button_content">3</span></button>
-	<button onclick="printTEXT1('4');" ondblclick="clearGAMBIT1('4');"><span class="button_content">4</span></button>
-	<button onclick="printTEXT1('5');" ondblclick="clearGAMBIT1('5');"><span class="button_content">5</span></button>
-	<button onclick="printTEXT1('6');" ondblclick="clearGAMBIT1('6');"><span class="button_content">6</span></button>
-	<button onclick="printTEXT1('7');" ondblclick="clearGAMBIT1('7');"><span class="button_content">7</span></button>
-	<button onclick="printTEXT1('8');" ondblclick="clearGAMBIT1('8');"><span class="button_content">8</span></button>
-	<button onclick="printTEXT1('9');" ondblclick="clearGAMBIT1('9');"><span class="button_content">9</span></button>
-	<button onclick="printTEXT1('10');" ondblclick="clearGAMBIT1('10');"><span class="button_content">10</span></button>
-	<button onclick="printTEXT1('Jack');" ondblclick="clearGAMBIT1('Jack');"><span class="button_content">Jack</span></button>
-	<button onclick="printTEXT1('Queen');" ondblclick="clearGAMBIT1('Queen');"><span class="button_content">Queen</span></button>
-	<button onclick="printTEXT1('King');" ondblclick="clearGAMBIT1('King');"><span class="button_content">King</span></button>
+	<button onclick="printTEXT1('Ace');"><span class="button_content">Ace</span></button>
+	<button onclick="printTEXT1('2');"><span class="button_content">2</span></button>
+	<button onclick="printTEXT1('3');"><span class="button_content">3</span></button>
+	<button onclick="printTEXT1('4');"><span class="button_content">4</span></button>
+	<button onclick="printTEXT1('5');"><span class="button_content">5</span></button>
+	<button onclick="printTEXT1('6');"><span class="button_content">6</span></button>
+	<button onclick="printTEXT1('7');"><span class="button_content">7</span></button>
+	<button onclick="printTEXT1('8');"><span class="button_content">8</span></button>
+	<button onclick="printTEXT1('9');"><span class="button_content">9</span></button>
+	<button onclick="printTEXT1('10');"><span class="button_content">10</span></button>
+	<button onclick="printTEXT1('Jack');"><span class="button_content">Jack</span></button>
+	<button onclick="printTEXT1('Queen');"><span class="button_content">Queen</span></button>
+	<button onclick="printTEXT1('King');"><span class="button_content">King</span></button>
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="printTEXT2('Clubs ♣️');" ondblclick="clearGAMBIT2('Clubs ♣️');"><span class="button_content">Clubs</span></button>
-	<button onclick="printTEXT2('Diamonds ♦️');" ondblclick="clearGAMBIT2('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
-	<button onclick="printTEXT2('Spades ♠️');" ondblclick="clearGAMBIT2(Spades ♠️');"><span class="button_content">Spades</span></button>
-	<button onclick="printTEXT2('Hearts ♥️');" ondblclick="clearGAMBIT2('Hearts ♥️');"><span class="button_content">Hearts</span></button>
+	<button onclick="printTEXT2('Clubs ♣️');"><span class="button_content">Clubs</span></button>
+	<button onclick="printTEXT2('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
+	<button onclick="printTEXT2('Spades ♠️');"><span class="button_content">Spades</span></button>
+	<button onclick="printTEXT2('Hearts ♥️');"><span class="button_content">Hearts</span></button>
 	</div>
 
 	<div class="button_divisions">
@@ -144,26 +145,12 @@
 	let multiplier = 1;
 	let valueswitch = -1;
 
-
-
-	function clearGAMBIT1(buttonelement) {
-		document.getElementById("modifier1").innerHTML = buttonelement;
-		document.getElementById("modifier2").innerHTML = "None";
-
-		setCURRENTGAMBIT();
-	}
-
-
-
-	function clearGAMBIT2(buttonelement) {
+	function clearGAMBIT() {
 		document.getElementById("modifier1").innerHTML = "None";
-		document.getElementById("modifier2").innerHTML = buttonelement;
-
+		document.getElementById("modifier2").innerHTML = "None";
 		setCURRENTGAMBIT();
 	}
-
-
-
+	
 	function printTEXT1(buttonelement) {
 
 		let textmodifier1 = document.getElementById("modifier1");
@@ -173,7 +160,7 @@
 		let mod2 = textmodifier2.innerHTML;
 
 		if (buttonelement === mod1) {
-			textmodifier1.innerHTML = "None";
+			textmodifier2.innerHTML = "None";
 			setCURRENTGAMBIT();
 			return;
 		}
@@ -200,7 +187,7 @@
 		let mod2 = textmodifier2.innerHTML;
 
 		if (buttonelement === mod2) {
-			textmodifier2.innerHTML = "None";
+			textmodifier1.innerHTML = "None";
 			setCURRENTGAMBIT();
 			return;
 		}
@@ -725,10 +712,48 @@ return;
 		
 		}
 
+		if (rank === "Ace") {
+			acecardscounter = acecardscounter + 1;
+			document.getElementById("acecards").innerHTML = acecardscounter;
+		}
+
 		document.getElementById("pickedCard").textContent = rank + " of " + suit + " (" + color + ")";
 		document.getElementById("remaining").textContent = cards.length;
 
-		modifyCARDCOUNTER();
+		if (color === "Red") {
+			redcardscounter = redcardscounter + 1;
+			document.getElementById("redcards").innerHTML = redcardscounter;
+		}
+
+		if (color === "Black") {
+			blackcardscounter = blackcardscounter + 1;
+			document.getElementById("blackcards").innerHTML = blackcardscounter;
+		}
+
+		if (color === "Special") {
+			jokercardscounter = jokercardscounter + 1;
+			document.getElementById("jokercards").innerHTML = jokercardscounter;
+		}
+
+		if (suit === "Clubs ♣️") {
+			clubscardscounter = clubscardscounter + 1;
+			document.getElementById("clubscards").innerHTML = clubscardscounter;
+		}
+
+		if (suit === "Spades ♠️") {
+			spadescardscounter = spadescardscounter + 1;
+			document.getElementById("spadescards").innerHTML = spadescardscounter;
+		}
+
+		if (suit === "Diamonds ♦️") {
+			diamondscardscounter = diamondscardscounter + 1;
+			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
+		}
+
+		if (suit === "Hearts ♥️") {
+			heartscardscounter = heartscardscounter + 1;
+			document.getElementById("heartscards").innerHTML = heartscardscounter;
+		}
 	}
 
 
@@ -769,6 +794,11 @@ return;
 		
 		}
 
+		if (rank === "Ace") {
+			acecardscounter = acecardscounter + 1;
+			document.getElementById("acecards").innerHTML = acecardscounter;
+		}
+
 		document.getElementById("tablecard").textContent = rank + " of " + suit + " (" + color + ")";
 
 		currenttablecard = document.getElementById("tablecard").textContent;
@@ -776,17 +806,6 @@ return;
 		document.getElementById("remaining").textContent = cards.length;
 		acevalue = card.value;
 
-		modifyCARDCOUNTER();
-	}
-
-	pickTABLECARD();
-
-	function modifyCARDCOUNTER() {
-		if (rank === "Ace") {
-			acecardscounter = acecardscounter + 1;
-			document.getElementById("acecards").innerHTML = acecardscounter;
-		}
-		
 		if (color === "Red") {
 			redcardscounter = redcardscounter + 1;
 			document.getElementById("redcards").innerHTML = redcardscounter;
@@ -822,6 +841,8 @@ return;
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
 	}
+
+	pickTABLECARD();
 
 
 
