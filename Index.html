@@ -71,13 +71,13 @@
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="jokerGAMBIT(); clearGAMBIT();"><span class="button_content">I'm Feeling Lucky</span></button>
+	<button onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="useBLANK(); clearGAMBIT();"><span class="button_content">Use Blank</span></button>
+	<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
 	<button onclick="getLIFEPOINT();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
-	<button onclick="skipROUND(); clearGAMBIT();"><span class="button_content">Skip Round</span></button>
+	<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
 	</div>
 
 	<div class="button_divisions">
@@ -143,6 +143,16 @@
 		document.getElementById("modifier1").innerHTML = "None";
 		document.getElementById("modifier2").innerHTML = "None";
 		setCURRENTGAMBIT();
+	}
+
+	function clearGAMBIT2() {
+		document.getElementById("modifier1").innerHTML = "None";
+		document.getElementById("modifier2").innerHTML = "None";
+
+		variable = "None";
+		element = "None";
+		multiplier = 1;
+		valueswitch = -1;
 	}
 	
 	function printTEXT1(buttonelement) {
