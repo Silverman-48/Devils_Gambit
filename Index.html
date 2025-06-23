@@ -532,8 +532,11 @@
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "Last Chance!";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available!";
+			clearGAMBIT2();
 		} else {
 			document.getElementById("lifepoints").textContent = "You Lost!";
+			document.getElementById("currentgambit").innerHTML = "Game Over";
+			clearGAMBIT2();
 		}
 	}
 
