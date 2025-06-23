@@ -147,17 +147,31 @@
 
 
 	function clearGAMBIT1() {
-		document.getElementById("modifier2").innerHTML = "None";
+		let textmodifier1 = document.getElementById("modifier1");
+
+		let mod1 = textmodifier1.innerHTML;
 		
-		setCURRENTGAMBIT();
+		if (mod1 === "None") {
+			return;
+		} else {
+			document.getElementById("modifier2").innerHTML = "None";
+			setCURRENTGAMBIT();
+		}
 	}
 
 
 
 	function clearGAMBIT2() {
-		document.getElementById("modifier1").innerHTML = "None";
-		
-		setCURRENTGAMBIT();
+		let textmodifier2 = document.getElementById("modifier2");
+
+		let mod2 = textmodifier2.innerHTML;
+
+		if (mod2 === "None") {
+			return;
+		} else {
+			document.getElementById("modifier1").innerHTML = "None";
+			setCURRENTGAMBIT();
+		}
 	}
 
 
