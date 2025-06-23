@@ -147,14 +147,8 @@
 
 
 	function clearGAMBIT1(buttonelement) {
-		let textmodifier1 = document.getElementById("modifier1");
-		let textmodifier2 = document.getElementById("modifier2");
-
-		let mod1 = textmodifier1.innerHTML;
-		let mod2 = textmodifier2.innerHTML;
-		
-		mod1 = buttonelement;
-		mod2 = "None";
+		document.getElementById("modifier1").innerHTML = buttonelement;
+		document.getElementById("modifier2").innerHTML = "None";
 
 		setCURRENTGAMBIT();
 	}
@@ -162,14 +156,8 @@
 
 
 	function clearGAMBIT2(buttonelement) {
-		let textmodifier1 = document.getElementById("modifier1");
-		let textmodifier2 = document.getElementById("modifier2");
-
-		let mod1 = textmodifier1.innerHTML;
-		let mod2 = textmodifier2.innerHTML;
-		
-		mod1 = "None";
-		mod2 = buttonelement;
+		document.getElementById("modifier1").innerHTML = "None";
+		document.getElementById("modifier2").innerHTML = buttonelement;
 
 		setCURRENTGAMBIT();
 	}
