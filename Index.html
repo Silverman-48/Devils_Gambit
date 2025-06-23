@@ -442,7 +442,7 @@
 			return;
 		}
 
-		document.getElementById("currentgambit").innerHTML = "Skip Used";
+		document.getElementById("currentgambit").innerHTML = "Round Skiped";
 		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '-');
@@ -633,13 +633,19 @@
 // Life Point Related Functions
 
 	function getLIFEPOINT() {
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+		
 		if (streak >= 3) {
 			streak = streak - 3;
 			document.getElementById("streak").textContent = streak;
 			lifepoints = lifepoints + 1;
 			document.getElementById("lifepoints").textContent = lifepoints;
 		} else {
-return;
+			return;
 		}
 	}
 
