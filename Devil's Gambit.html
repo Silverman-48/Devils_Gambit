@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Devil's Gambit</title>
+	</head>
+
+<body>
+
+<!--		<button  onclick="showELEMENT('cheats')">Developer Tools</button>
+
+	<br>
+
+	<div id="cheats" class="cheats">
+
+		<button onclick="addORremove('lifepoints', 1, '+');">Add Life Point</button>
+		<button onclick="addORremove('lifepoints', 1, '-');">Remove Life Point</button>
+		<button onclick="addORremove('blanks', 1, '+')">Add Blank</button>
+		<button onclick="addORremove('blanks', 1, '-')">Remove Blank</button>
+		<button onclick="addORremove('streak', 1, '+')">Add Streak</button>
+		<button onclick="addORremove('streak', 1, '-')">Remove Streak</button>
+
+	</div>
+
+	<br>
+
+	<div>Value Switch: <span id="valueswitch">-1</span> Variable: <span id="variable">None</span>
+	 Element: <span id="element">None</span> Multiplier: <span id="multiplier">1</span></div> -->
+
+	<div class="high_score">High Score: <span id="highscore">0</span></div>
+
+	<div class="score">Current Score: <span id="score">0</span></div>
+
+	<div class="current_gambit">
+	
+	Current Gambit: <span id="currentgambit">None</span>
+
+	<br class="small_break">
+
+	<span id="modifier1">None</span> + <span id="modifier2">None</span>
+
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="runGAMBIT('normal');"><span class="button_content">Set Gambit</span></button>
+	<button onclick="reset();"><span class="button_content">Reset Game</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="printTEXT1('Low');"><span class="button_content">Low</span></button>
+	<button onclick="printTEXT1('High');"><span class="button_content">High</span></button>
+	<button onclick="printTEXT2('Red');"><span class="button_content">Red</span></button>
+	<button onclick="printTEXT2('Black');"><span class="button_content">Black</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="printTEXT1('Ace');"><span class="button_content">Ace</span></button>
+	<button onclick="printTEXT1('2');"><span class="button_content">2</span></button>
+	<button onclick="printTEXT1('3');"><span class="button_content">3</span></button>
+	<button onclick="printTEXT1('4');"><span class="button_content">4</span></button>
+	<button onclick="printTEXT1('5');"><span class="button_content">5</span></button>
+	<button onclick="printTEXT1('6');"><span class="button_content">6</span></button>
+	<button onclick="printTEXT1('7');"><span class="button_content">7</span></button>
+	<button onclick="printTEXT1('8');"><span class="button_content">8</span></button>
+	<button onclick="printTEXT1('9');"><span class="button_content">9</span></button>
+	<button onclick="printTEXT1('10');"><span class="button_content">10</span></button>
+	<button onclick="printTEXT1('Jack');"><span class="button_content">Jack</span></button>
+	<button onclick="printTEXT1('Queen');"><span class="button_content">Queen</span></button>
+	<button onclick="printTEXT1('King');"><span class="button_content">King</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="printTEXT2('Clubs ♣️');"><span class="button_content">Clubs</span></button>
+	<button onclick="printTEXT2('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
+	<button onclick="printTEXT2('Spades ♠️');"><span class="button_content">Spades</span></button>
+	<button onclick="printTEXT2('Hearts ♥️');"><span class="button_content">Hearts</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="printSPECIAL(); jokerGAMBIT();"><span class="button_content">I'm Feeling Lucky</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<button onclick="useBLANK();"><span class="button_content">Use Blank</span></button>
+	<button onclick="getLIFEPOINT();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
+	<button onclick="skipROUND();"><span class="button_content">Skip Round</span></button>
+	</div>
+
+	<div class="button_divisions">
+	<span class="info">Last Chance D4: </span>
+	<button onclick="lastCHANCE('1');"><span class="button_content3">1</span></button>
+	<button onclick="lastCHANCE('2');"><span class="button_content3">2</span></button>
+	<button onclick="lastCHANCE('3');"><span class="button_content3">3</span></button>
+	<button onclick="lastCHANCE('4');"><span class="button_content3">4</span></button>
+	<span class="info">Output: <span id="output">0</span></span>
+	</div>
+
+	<div class="info"><span>Lives: <span id="lifepoints">3</span> Blanks: <span id="blanks">1</span> Streak: <span id="streak">0</span></div>
+
+	<br class="small_break">
+
+	<div class="current_cards">
+	Next Table Card: <span id="tablecard">None</span>
+
+	<br class="small_break">
+
+	Current Table Card: <span id="currenttablecard">None</span>
+
+	<br class="small_break">
+
+	Your Card: <span id="pickedCard">None</span>
+	</div>
+
+	<br class="small_break">
+
+	<div class="card_history_title">Card History:</div>
+
+	<div class="history_icons">
+
+	<div class="icon_counter">🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span> ♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span> ♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
+
+	<br>
+
+	▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span> 🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span></div>
+
+	<div>Cards Remaining: <span id="remaining"></span></div>
+
+	<div id="card_history" class="card_history"></div>
+	</div>
+
+
+
+
+
+
+<script>
+
+	let numberarray = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'King', 'Queen', 'Jack'];
+	let suitarray = ['Clubs ♣️', 'Diamonds ♦️', 'Spades ♠️', 'Hearts ♥️'];
+	let colorarray = ['Red', 'Black'];
+	let valuearray = ['Low', 'High'];
+
+	let variable = "None";
+	let element = "None";
+	let multiplier = 1;
+	let valueswitch = -1;
+
+
+
+	function printTEXT1(buttonelement) {
+
+		let textmodifier1 = document.getElementById("modifier1");
+		let textmodifier2 = document.getElementById("modifier2");
+
+		let mod1 = textmodifier1.innerHTML;
+		let mod2 = textmodifier2.innerHTML;
+
+		if (buttonelement === mod1) {
+			textmodifier1.innerHTML = "None";
+			setCURRENTGAMBIT();
+			updateTESTVALUES();
+			return;
+		}
+		
+		if (valuearray.includes(buttonelement) && suitarray.includes(mod2)
+		|| numberarray.includes(buttonelement) && colorarray.includes(mod2)) {
+			textmodifier1.innerHTML = buttonelement;
+			textmodifier2.innerHTML = "None";
+		} else {
+			textmodifier1.innerHTML = buttonelement;
+		}
+
+		setCURRENTGAMBIT();
+	}
+
+
+
+	function printTEXT2(buttonelement) {
+
+		let textmodifier1 = document.getElementById("modifier1");
+		let textmodifier2 = document.getElementById("modifier2");
+
+		let mod1 = textmodifier1.innerHTML;
+		let mod2 = textmodifier2.innerHTML;
+
+		if (buttonelement === mod2) {
+			textmodifier2.innerHTML = "None";
+			setCURRENTGAMBIT();
+			updateTESTVALUES();
+			return;
+		}
+
+		if (colorarray.includes(buttonelement) && numberarray.includes(mod1)
+		|| suitarray.includes(buttonelement) && valuearray.includes(mod1)) {
+			textmodifier2.innerHTML = buttonelement;
+			textmodifier1.innerHTML = "None";
+			valueswitch = -1;
+
+		} else {
+			textmodifier2.innerHTML = buttonelement;
+		}
+
+		setCURRENTGAMBIT();
+	}
+
+
+
+	function printSPECIAL() {
+		document.getElementById("currentgambit").innerHTML = "Joker Gambit (Win or Lose)";
+	}
+
+
+
+	function setCURRENTGAMBIT() {
+
+		gambit1 = document.getElementById("modifier1").innerHTML;
+		gambit2 = document.getElementById("modifier2").innerHTML;
+
+		if (gambit1 === "None" && gambit2 === "None") {
+				document.getElementById("currentgambit").innerHTML = "None";
+
+				valueswitch = -1;
+				variable = "None";
+				element = "None";
+				multiplier = 1;
+
+		}
+
+		if (valuearray.includes(gambit1)) {
+			if (colorarray.includes(gambit2)) {
+				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x3)";
+
+				variable = gambit2;
+				element = "color";
+				multiplier = 3;
+
+				if (gambit1 === "Low") {
+					valueswitch = 0;
+				} else {
+					valueswitch = 1;
+				}
+
+			} else {
+				document.getElementById("currentgambit").innerHTML = "Value Gambit (x1)";
+
+				variable = "empty";
+				element = "empty";
+				multiplier = 1;
+
+				if (gambit1 === "Low") {
+					valueswitch = 0;
+				} else {
+					valueswitch = 1;
+				}
+
+			}
+		}
+
+		if (numberarray.includes(gambit1)) {
+			if (suitarray.includes(gambit2)) {
+				document.getElementById("currentgambit").innerHTML = "Number & Suit Gambit (x10)";
+
+				valueswitch = -1;
+				variable = gambit1.concat(" ", gambit2);
+				element = "result";
+				multiplier = 10;
+
+			} else {
+				document.getElementById("currentgambit").innerHTML = "Number Gambit (x5)";
+
+				valueswitch = -1;
+				variable = gambit1;
+				element = "rank";
+				multiplier = 5;
+
+			}
+		}
+
+		if (colorarray.includes(gambit2) && gambit1 === "None") {
+				document.getElementById("currentgambit").innerHTML = "Color Gambit (x1)";
+
+				valueswitch = -1;
+				variable = gambit2;
+				element = "color";
+				multiplier = 1;
+
+		}
+
+		if (suitarray.includes(gambit2) && gambit1 === "None") {
+				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x3)";
+
+				valueswitch = -1;
+				variable = gambit2;
+				element = "suit";
+				multiplier = 1;
+
+		}	
+	}
+
+
+
+	function runGAMBIT() {
+		if (valueswitch > -1) {
+			gambitVALUE();
+		} else {
+			gambit();
+		}
+	}
+
+
+
+	function updateTESTVALUES() {
+		document.getElementById("valueswitch").innerHTML = valueswitch;
+		document.getElementById("variable").innerHTML = variable;
+		document.getElementById("element").innerHTML = element;
+		document.getElementById("multiplier").innerHTML = multiplier;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// New Add / Remove Function
+
+	function addORremove(variable, value, sign) {
+		eval('var check = ' + variable);
+		
+		if (check === 0 && sign === "-") {
+			return;
+		} else {
+			eval(variable + ' = ' + variable + sign + value);
+			eval('document.getElementById(variable).textContent = ' + variable);
+		}
+	}
+
+
+
+
+
+
+// Variables Used
+
+	let currentValue = 0;
+	let lifepoints = 3;
+	let blanks = 1;
+	let streak = 0;
+	let acevalue = 0;
+	let lastchance = 1;
+	let currenttablecard = "";
+	let cards = [];
+
+
+
+
+
+
+// Deck of Cards Maker
+
+	function fillARRAY() {
+
+	const suits = [
+		{ suit: "Hearts ♥️", color: "Red" },
+		{ suit: "Diamonds ♦️", color: "Red" },
+		{ suit: "Clubs ♣️", color: "Black" },
+		{ suit: "Spades ♠️", color: "Black" }
+	]
+
+	const ranks = [
+		{ rank: "Ace", value: 20 },
+		{ rank: "2", value: 2, },
+		{ rank: "3", value: 3 },
+		{ rank: "4", value: 4 },
+		{ rank: "5", value: 5 },
+		{ rank: "6", value: 6 },
+		{ rank: "7", value: 7 },
+		{ rank: "8", value: 8 },
+		{ rank: "9", value: 9 },
+		{ rank: "10", value: 10 },
+		{ rank: "Queen", value: 10 },
+		{ rank: "Jack", value: 10 },
+		{ rank: "King", value: 10 }
+	]
+
+	const deck = [];
+
+	suits.forEach(({ suit, color }) => {
+		ranks.forEach(({ rank, value }) => {
+			deck.push({ rank, value, suit: suit, color });
+		});
+	});
+
+	deck.push(
+		{ rank: "Joker 1", value: 20, suit: "Society", color: "Special" },
+		{ rank: "Joker 2", value: 20, suit: "Society", color: "Special" }
+	);
+
+	let currentIndex = deck.length;
+
+	while (currentIndex != 0) {
+
+		let randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		[deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]];
+	}
+
+	return deck;
+	}
+
+	cards = fillARRAY();
+
+
+
+
+
+
+// Skips a Round
+
+	function skipROUND() {
+
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+		addORremove('lifepoints', 1, '-');
+		addORremove('streak', 1, '-');
+		updateDISPLAYS();
+		selectCARD();
+		pickTABLECARD();
+	}
+
+
+
+
+
+
+// Last Chance Setup
+
+	function lastCHANCE(variable) {
+		if (lastchance === 0) return;
+		if (blanks === 0) return;
+
+		lastchance = lastchance - 1;
+		addORremove('blanks', 1, '-');
+
+		const randomNumber = Math.floor(Math.random() * 4) + 1;
+		document.getElementById("output").textContent = randomNumber;
+		const diceroll = Number(variable);
+
+		if (randomNumber === diceroll) {
+
+			addORremove('lifepoints', 1, '+');
+
+		} else {
+
+			if (lifepoints === 0) {
+				document.getElementById("lifepoints").textContent = "You Lost!";
+			} else {
+				return
+			}
+
+		}
+	}
+
+
+
+
+
+
+// Show / Hide Elements
+
+	function showELEMENT(element) {
+		var x = document.getElementById(element);
+
+		if (x.style.display == "block") {
+			x.style.display = "none";
+		} else {
+			x.style.display = "block";
+		}
+	}
+
+
+
+
+
+
+// Triggers the “Empty Deck” Message
+
+	function emptyDECK() {
+		document.getElementById("tablecard").textContent = "No more cards left!";
+		document.getElementById("currenttablecard").textContent = "No more cards left!";
+		document.getElementById("pickedCard").textContent = "No more cards left!";
+	}
+
+
+
+
+
+
+// Update the Score, Card History and Score Displays
+
+	function updateDISPLAYS() {
+		document.getElementById("score").textContent = currentValue;
+
+		document.getElementById("card_history").innerHTML =
+		"Table Card: " + document.getElementById("tablecard").innerHTML + "<br>" + "You Picked: " + document.getElementById("pickedCard").innerHTML + "<br>" + document.getElementById("card_history").innerHTML;
+
+		if (lifepoints > 0) return;
+		if (lifepoints === 0 && lastchance > 0) {
+			document.getElementById("lifepoints").textContent = "Last Chance!";
+		} else {
+			document.getElementById("lifepoints").textContent = "You Lost!";
+		}
+	}
+
+
+
+
+
+
+// Triggers the Game Reset
+
+	function reset() {
+		var score = document.getElementById("score").innerHTML;
+		var highscore = document.getElementById("highscore").innerHTML;
+		var numberscore = Number(score);
+		var numberhighscore = Number(highscore);
+
+		if (numberscore > numberhighscore) {
+			document.getElementById("highscore").innerHTML = score;
+		}
+
+		cards = fillARRAY();
+		currentValue = 0;
+
+		acevalue = 0;
+
+		lifepoints = 3;
+		document.getElementById("lifepoints").textContent = 3;
+
+		document.getElementById("tablecard").textContent = "None";
+		document.getElementById("currenttablecard").innerHTML = "None";
+		document.getElementById("pickedCard").innerHTML = "None";
+		document.getElementById("card_history").innerHTML = "";
+		document.getElementById("remaining").innerHTML = cards.length;
+
+		blanks = 1;
+		document.getElementById("blanks").innerHTML = "1";
+
+		streak = 0;
+		document.getElementById("streak").innerHTML = "0";
+
+		lastchance = 1;
+		document.getElementById("output").innerHTML = "0";
+
+		document.getElementById("score").innerHTML = currentValue;
+
+		redcardscounter = 0;
+		document.getElementById("redcards").innerHTML = "0";
+
+		blackcardscounter = 0;
+		document.getElementById("blackcards").innerHTML = "0";
+
+		jokercardscounter = 0;
+		document.getElementById("jokercards").innerHTML = "0";
+
+		clubscardscounter = 0;
+		document.getElementById("clubscards").innerHTML = "0";
+
+		diamondscardscounter = 0;
+		document.getElementById("diamondscards").innerHTML = "0";
+
+		spadescardscounter = 0;
+		document.getElementById("spadescards").innerHTML = "0";
+
+		heartscardscounter = 0;
+		document.getElementById("heartscards").innerHTML = "0";
+
+		lowcardscounter = 0;
+		document.getElementById("lowcards").innerHTML = "0";
+
+		highcardscounter = 0;
+		document.getElementById("highcards").innerHTML = "0";
+
+		acecardscounter = 0;
+		document.getElementById("acecards").innerHTML = "0";
+
+		valueswitch = -1;
+
+		variable = "None";
+
+		element = "None";
+
+		multiplier = 1;
+
+		document.getElementById("modifier1").innerHTML = "None";
+		document.getElementById("modifier2").innerHTML = "None";
+
+		document.getElementById("currentgambit").innerHTML = "None";
+
+		pickTABLECARD();
+	}
+
+
+
+
+
+
+// Life Point Related Functions
+
+	function getLIFEPOINT() {
+		if (streak >= 3) {
+			streak = streak - 3;
+			document.getElementById("streak").textContent = streak;
+			lifepoints = lifepoints + 1;
+			document.getElementById("lifepoints").textContent = lifepoints;
+		} else {
+return;
+		}
+	}
+
+
+
+
+
+
+// Blank Related Functions
+
+	function useBLANK() {
+		if (blanks === 0) return;
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		addORremove('blanks', 1, '-');
+
+		selectCARD();
+
+		currentValue = Math.floor(currentValue + streak + value / 2);
+		addORremove('lifepoints', 1, '-');
+		addORremove('streak', 1, '+');
+		updateDISPLAYS();
+		pickTABLECARD();
+	}
+
+
+
+
+
+
+// Color Counter Function
+
+	let redcardscounter = 0;
+	let blackcardscounter = 0;
+	let jokercardscounter = 0;
+	let clubscardscounter = 0;
+	let diamondscardscounter = 0;
+	let spadescardscounter = 0;
+	let heartscardscounter = 0;
+	let lowcardscounter = 0;
+	let highcardscounter = 0;
+	let acecardscounter = 0;
+
+
+
+
+
+
+// Selects the Player's Card
+
+	let value = "";
+	let rank = "";
+	let suit = "";
+	let color = "";
+	let result = "";
+	let valuemodifiertable = 0;
+	let valuemodifierhand = 0;
+
+	function selectCARD() {
+		if (lifepoints <= 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		document.getElementById("currenttablecard").textContent = currenttablecard;
+
+		const index = Math.floor(Math.random() * cards.length);
+		card = cards.splice(index, 1)[0];
+		value = card.value;
+		rank = card.rank;
+		suit = card.suit;
+		color = card.color;
+		result = rank.concat(" ", suit);
+
+
+
+		if (value <= 7) {
+		
+			valuemodifierhand = 0;
+			lowcardscounter = lowcardscounter + 1;
+			document.getElementById("lowcards").innerHTML = lowcardscounter;
+		
+		}
+
+		if (value >= 8 && value !== 20) {
+		
+			valuemodifierhand = 1;
+			highcardscounter = highcardscounter + 1;
+			document.getElementById("highcards").innerHTML = highcardscounter;
+		
+		}
+
+		if (rank === "Ace") {
+		
+			acecardscounter = acecardscounter + 1;
+			document.getElementById("acecards").innerHTML = acecardscounter;
+		
+		}
+
+
+		document.getElementById("pickedCard").textContent = rank + " of " + suit + " (" + color + ")";
+		document.getElementById("remaining").textContent = cards.length;
+
+		if (color === "Red") {
+			redcardscounter = redcardscounter + 1;
+			document.getElementById("redcards").innerHTML = redcardscounter;
+		}
+
+		if (color === "Black") {
+			blackcardscounter = blackcardscounter + 1;
+			document.getElementById("blackcards").innerHTML = blackcardscounter;
+		}
+
+		if (color === "Special") {
+			jokercardscounter = jokercardscounter + 1;
+			document.getElementById("jokercards").innerHTML = jokercardscounter;
+		}
+
+		if (suit === "Clubs ♣️") {
+			clubscardscounter = clubscardscounter + 1;
+			document.getElementById("clubscards").innerHTML = clubscardscounter;
+		}
+
+		if (suit === "Spades ♠️") {
+			spadescardscounter = spadescardscounter + 1;
+			document.getElementById("spadescards").innerHTML = spadescardscounter;
+		}
+
+		if (suit === "Diamonds ♦️") {
+			diamondscardscounter = diamondscardscounter + 1;
+			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
+		}
+
+		if (suit === "Hearts ♥️") {
+			heartscardscounter = heartscardscounter + 1;
+			document.getElementById("heartscards").innerHTML = heartscardscounter;
+		}
+	}
+
+
+
+
+
+
+// Picks the Next Table Card
+
+	function pickTABLECARD() {
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		const index = Math.floor(Math.random() * cards.length);
+		const card = cards.splice(index, 1)[0];
+		const value = card.value;
+		const rank = card.rank;
+		const suit = card.suit;
+		const color = card.color;
+
+
+
+		if (value <= 7) {
+		
+			valuemodifierhand = 0;
+			lowcardscounter = lowcardscounter + 1;
+			document.getElementById("lowcards").innerHTML = lowcardscounter;
+		
+		}
+
+		if (value >= 8 && value !== 20) {
+		
+			valuemodifierhand = 1;
+			highcardscounter = highcardscounter + 1;
+			document.getElementById("highcards").innerHTML = highcardscounter;
+		
+		}
+
+		if (rank === "Ace") {
+		
+			acecardscounter = acecardscounter + 1;
+			document.getElementById("acecards").innerHTML = acecardscounter;
+		
+		}
+
+
+
+		document.getElementById("tablecard").textContent = rank + " of " + suit + " (" + color + ")";
+
+		currenttablecard = document.getElementById("tablecard").textContent;
+
+		document.getElementById("remaining").textContent = cards.length;
+		acevalue = card.value;
+		
+		if (color === "Red") {
+			redcardscounter = redcardscounter + 1;
+			document.getElementById("redcards").innerHTML = redcardscounter;
+		}
+
+		if (color === "Black") {
+			blackcardscounter = blackcardscounter + 1;
+			document.getElementById("blackcards").innerHTML = blackcardscounter;
+		}
+
+		if (color === "Special") {
+			jokercardscounter = jokercardscounter + 1;
+			document.getElementById("jokercards").innerHTML = jokercardscounter;
+		}
+
+		if (suit === "Clubs ♣️") {
+			clubscardscounter = clubscardscounter + 1;
+			document.getElementById("clubscards").innerHTML = clubscardscounter;
+		}
+
+		if (suit === "Spades ♠️") {
+			spadescardscounter = spadescardscounter + 1;
+			document.getElementById("spadescards").innerHTML = spadescardscounter;
+		}
+
+		if (suit === "Diamonds ♦️") {
+			diamondscardscounter = diamondscardscounter + 1;
+			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
+		}
+
+		if (suit === "Hearts ♥️") {
+			heartscardscounter = heartscardscounter + 1;
+			document.getElementById("heartscards").innerHTML = heartscardscounter;
+		}
+	}
+
+	pickTABLECARD();
+
+
+
+
+
+
+// Sets the Joker Gambit
+
+	function jokerGAMBIT() {
+		if (lifepoints <= 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		selectCARD();
+
+		if (color === 'Special') {
+			currentValue = currentValue + value * 10;
+			addORremove('streak', 1, '+');
+			updateDISPLAYS();
+			pickTABLECARD();
+		} else {
+			lifepoints = 0;
+			document.getElementById("lifepoints").textContent = "You Lost!";
+			streak = 0;
+			document.getElementById("streak").textContent = "0";
+			lastchance = 0;
+			updateDISPLAYS();
+			pickTABLECARD();
+		}
+	}
+
+
+
+
+
+
+// Sets the Color, Suit, Number and Number & Suit Gambits
+
+	function gambit() {
+		if (document.getElementById("modifier1").innerHTML === "None" && document.getElementById("modifier2").innerHTML === "None") return;
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		selectCARD();
+
+		eval('var check = ' + element);
+
+		if (variable === check || color === 'Special') {
+			currentValue = currentValue + streak + value * multiplier;
+			addORremove('streak', 1, '+');
+			updateDISPLAYS();
+			pickTABLECARD();
+		} else {
+			lostGAMBIT();
+		}
+	}
+
+
+
+
+
+
+// Sets the High and Low Gambits
+
+	let empty = "empty";
+
+	function gambitVALUE() {
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		selectCARD();
+
+		eval('var check = ' + element);
+
+		if (rank === 'Ace') {
+			SPEvalue = acevalue;
+
+			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
+				currentValue = currentValue + streak + value * multiplier;
+				addORremove('streak', 1, '+');
+				updateDISPLAYS();
+				pickTABLECARD();
+			} else {
+				lostGAMBIT();
+			}
+		} else {
+			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
+				currentValue = currentValue + streak + value * multiplier;
+				addORremove('streak', 1, '+');
+				updateDISPLAYS();
+				pickTABLECARD();
+			} else {
+				lostGAMBIT();
+			}
+		}
+	}
+
+
+
+
+
+
+// Activates When the Gambit is Lost
+
+	function lostGAMBIT() {
+			addORremove('streak', 1, '-');
+			addORremove('lifepoints', 1, '-');
+			updateDISPLAYS();
+			pickTABLECARD();
+	}
+
+
+
+</script>
+
+<style>
+
+	body {
+		font-family: 'Trebuchet MS';
+		font-size: 20px;
+		text-align: center;
+		color: white;
+		background-color: #191919;
+		line-height: 1.3;
+	}
+
+	.current_cards {
+		font-size: 25px;
+	}
+
+	.info {
+		font-size: 25px;
+	}
+
+	.card_history_title  {
+		font-size: 25px;
+	}
+
+	.high_score {
+		font-size: 45px;
+	}
+
+	.score {
+		font-size: 35px;
+	}
+
+	.small_break {
+		content: "";
+		margin: 8px;
+		display: block;
+	}
+
+	.current_gambit {
+		font-size: 30px;
+		line-height: 1;
+		padding: 5px;
+	}
+
+	button {
+		width: fit-content;
+		color: black;
+		background-color: white;
+		border: 3px solid #D3D3D3;
+		border-radius: 5px;
+	}
+
+	button:hover  {
+		color: white;
+		background-color: #A9A9A9;
+	}
+
+	.button_content {
+		font-family: 'Trebuchet MS';
+		font-size: 20px;
+	}
+
+	.button_content2 {
+		font-family: 'Trebuchet MS';
+		font-size: 15px;
+	}
+
+	.button_content3 {
+		font-family: 'Trebuchet MS';
+		font-size: 20px;
+	}
+
+	.button_divisions {
+		padding: 5px;
+	}
+
+	.card_history{
+		line-height: 1.5;
+		overflow: auto;
+		margin: auto;
+		max-height: 180px;
+	}
+
+	.cheats{
+		display: none;
+	}
+
+	.icon_counter{
+		line-height: 1.5;
+	}
+
+	.history_icons{
+		font-size: 22px;
+		border: 4px solid white;
+		border-radius: 5px;
+		max-width: 450px;
+		margin: auto;
+		margin-top: 5px;
+		padding: 5px;
+	}
+
+/* Handle on hover */
+.card_history::-webkit-scrollbar-thumb:hover {
+  background: #290663;
+}
+
+/* width */
+.card_history::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.card_history::-webkit-scrollbar-track {
+  background: #191919;
+  border-radius: 10px;
+}
+
+/* Handle */
+.card_history::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.card_history::-webkit-scrollbar-thumb:hover {
+  background: #D3D3D3;
+}
+
+	.numbergambitbuttons{
+		display: none;
+	}
+
+	.numbersuitgambitbuttons{
+		display: none;
+	}
+
+	.flex-container {
+		display: flex;
+		margin: auto;
+		max-width: fit-content;
+		width: fit-content;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+</style>
+</body>
+</html>
