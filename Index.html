@@ -71,13 +71,13 @@
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="jokerGAMBIT();"><span class="button_content">I'm Feeling Lucky</span></button>
+	<button onclick="jokerGAMBIT(); clearGAMBIT();"><span class="button_content">I'm Feeling Lucky</span></button>
 	</div>
 
 	<div class="button_divisions">
-	<button onclick="useBLANK();"><span class="button_content">Use Blank</span></button>
+	<button onclick="useBLANK(); clearGAMBIT();"><span class="button_content">Use Blank</span></button>
 	<button onclick="getLIFEPOINT();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
-	<button onclick="skipROUND();"><span class="button_content">Skip Round</span></button>
+	<button onclick="skipROUND(); clearGAMBIT();"><span class="button_content">Skip Round</span></button>
 	</div>
 
 	<div class="button_divisions">
@@ -414,6 +414,9 @@
 			emptyDECK();
 			return;
 		}
+
+		document.getElementById("currentgambit").innerHTML = "Skip Used";
+		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '-');
 		updateDISPLAYS();
@@ -447,8 +450,9 @@
 
 			if (lifepoints === 0) {
 				document.getElementById("lifepoints").textContent = "You Lost!";
+				document.getElementById("currentgambit").innerHTML = "Game Over";
 			} else {
-				return
+				return;
 			}
 
 		}
@@ -500,6 +504,7 @@
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "Last Chance!";
+			document.getElementById("currentgambit").innerHTML = "Last Chance Available!";
 		} else {
 			document.getElementById("lifepoints").textContent = "You Lost!";
 		}
@@ -625,6 +630,8 @@ return;
 			emptyDECK();
 			return;
 		}
+
+		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
 		addORremove('blanks', 1, '-');
 
