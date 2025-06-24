@@ -10,10 +10,38 @@
 	 Element: <span id="element">None</span> Multiplier: <span id="multiplier">1</span></div> -->
 
 	<div class="flex-container">
+<div style="flex: 0; padding-left: 10px;">
 
+	<div class="history_icons">
 
+	<div class="icon_counter">
+	🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
 
-	<div style="width: 550px; flex: 1; border-right: 4px solid white; border-radius: 5px; text-align: right; padding-right: 10px;">
+	<br>
+
+	♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
+
+	<br>
+
+	♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
+
+	<br>
+
+	▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
+
+	<br>
+
+	🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span></div>
+
+	<br>
+		
+	Cards Left: <span id="remaining"></span>
+
+	<div id="card_history" class="card_history"></div>
+	</div>
+
+</div>
+	<div style="width: 580px; flex: 1; border-left: 4px solid white; border-radius: 5px; text-align: left; padding-left: 10px;">
 
 	<button class="cheats_button" onclick="showELEMENT('cheats')"><div class="high_score">High Score: <span id="highscore">0</span></div></button>
 
@@ -112,35 +140,6 @@
 	<br class="small_break">
 
 	Your Card: <span id="pickedCard">None</span>
-	</div>
-
-	</div>
-	<div style="flex: 0; padding-left: 10px;">
-
-	<div class="history_icons">
-
-	<div class="icon_counter">
-	🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
-
-	<br>
-
-	♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
-
-	<br>
-
-	♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
-
-	<br>
-
-	▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
-
-	<br>
-
-	🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span></div>
-
-	<div style="text-align: left;">Cards Left: <span id="remaining"></span></div>
-
-	<div id="card_history" class="card_history"></div>
 	</div>
 
 	</div>
@@ -1108,7 +1107,7 @@
 		max-height: 400px;
 		border-right: 0px solid white;
 		border-radius: 5px;
-		text-align: left;
+		text-align: right;
 	}
 
 	.cheats{
@@ -1117,7 +1116,7 @@
 
 	.icon_counter{
 		line-height: 1.5;
-		text-align: left;
+		text-align: right;
 	}
 
 	.history_icons{
