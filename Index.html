@@ -131,15 +131,11 @@
 	<br class="small_break">
 
 	<div class="current_cards">
-	Next Table Card: <span id="tablecard">None</span>
+	Table Card: <span id="tablecard">None</span>
 
-	<br class="small_break">
+	<div style="display: none">Current Table Card: <span id="currenttablecard">None</span>
 
-	Current Table Card: <span id="currenttablecard">None</span>
-
-	<br class="small_break">
-
-	Your Card: <span id="pickedCard">None</span>
+	Your Card: <span id="pickedCard">None</span></div>
 	</div>
 
 	</div>
@@ -569,7 +565,7 @@
 	function updateDISPLAYS() {
 		document.getElementById("score").textContent = currentValue;
 
-		document.getElementById("card_history").innerHTML = "Table: " + result2 + "<br>" + "Hand: " + result + "<br>" + document.getElementById("card_history").innerHTML;
+		document.getElementById("card_history").innerHTML = "Table: " + result2 + "<br>" + "Hand: " + result + "<br><br>" + document.getElementById("card_history").innerHTML;
 
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
@@ -854,7 +850,7 @@
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
 
-		document.getElementById("tablecard").textContent = rank + " of " + suit + " (" + color + ")";
+		document.getElementById("tablecard").textContent = result2;
 
 		currenttablecard = document.getElementById("tablecard").textContent;
 
