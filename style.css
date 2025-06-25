@@ -116,13 +116,16 @@
 		font-size: 1.375rem; /* 22px */
 		line-height: 1.5;
 		display: flex;
+		flex-direction: column;
 	}
 
 	.icon_counter {
+		flex: 1;
 		padding-bottom: 0.313rem;
 	}
 
 	.card_history {
+		flex: 1;
 		overflow: auto;
 		margin: auto;
 		height: 16.5625rem; /* 265px */
