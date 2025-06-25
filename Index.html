@@ -908,7 +908,7 @@
 </script>
 
 <style>
-	
+
 	body {
 	font-family: 'Trebuchet MS';
 	font-size: 1.25rem; /* 20px */
@@ -916,6 +916,17 @@
 	color: white;
 	background-color: #191919;
 	line-height: 1.3;
+}
+
+@media screen and (max-width: 531px) {
+	.flex-container {
+		flex-direction: column-reverse;
+		align-items: center;
+	}
+	.flex_element_1 {
+		padding-right: 0rem;
+		text-align: center;
+	}
 }
 
 .current_cards {
@@ -997,7 +1008,6 @@ button:hover {
 	margin: auto;
 	height: 16.5625rem; /* 265px */
 	border-radius: 0.3125rem; /* 5px */
-	text-align: right;
 }
 
 .cheats {
@@ -1006,7 +1016,6 @@ button:hover {
 
 .icon_counter {
 	line-height: 1.5;
-	text-align: right;
 }
 
 .history_icons {
@@ -1051,19 +1060,20 @@ button:hover {
 	width: fit-content;
 	text-align: center;
 	justify-content: center;
-	align-items: start;
+	align-items: center;
 }
 
 .flex_element_1 {
 	padding-right: 0.625rem; /* 10px */
+	text-align: center;
 }
 
 .flex_element_2 {
 	width: 28.75rem; /* 460px */
 	border-left: 0.25rem solid white; /* 4px */
+	border-right: 0.25rem solid white; /* 4px */
 	border-radius: 0.3125rem; /* 5px */
 	text-align: center;
-	padding-left: 0.625rem; /* 10px */
 }
 
 </style>
