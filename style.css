@@ -23,6 +23,7 @@
 		padding-right: 0.625rem; /* 10px */
 		text-align: center;
 		width: 13rem; /* 280px */
+		margin: auto;
 	}
 
 	.flex_element_2 {
@@ -31,6 +32,7 @@
 		border-right: 0.25rem solid white; /* 4px */
 		border-radius: 0.3125rem; /* 5px */
 		text-align: center;
+		margin: auto;
 	}
 
 
@@ -155,13 +157,11 @@
 		}
 		.flex_element_1 {
 			padding-right: 0rem;
-			text-align: center;
 			width: 26rem; /* 280px */
 		}
 		.history_icons {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			width: fit-content;
 		}
 	}
