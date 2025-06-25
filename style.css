@@ -118,13 +118,12 @@
 	}
 
 	.icon_counter {
-		flex: 1;
 		padding-bottom: 0.313rem;
 		width: fit-content;
+		margin: auto;
 	}
 
 	.card_history {
-		flex: 1;
 		overflow: auto;
 		margin: auto;
 		height: 16.5625rem; /* 265px */
