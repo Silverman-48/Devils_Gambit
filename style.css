@@ -119,8 +119,6 @@
 
 	.icon_counter {
 		padding-bottom: 0.313rem;
-		width: fit-content;
-		margin: auto;
 	}
 
 	.card_history {
@@ -130,7 +128,6 @@
 		border-top: 0.25rem solid white; /* 4px */
 		border-bottom: 0.25rem solid white; /* 4px */
 		border-radius: 0.3125rem; /* 5px */
-		width: fit-content;
 	}
 
 	.card_history::-webkit-scrollbar {
@@ -159,6 +156,7 @@
 		.flex_element_1 {
 			padding-right: 0rem;
 			text-align: center;
+			width: 26rem; /* 280px */
 		}
 		.history_icons {
 			display: flex;
