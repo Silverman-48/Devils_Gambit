@@ -22,7 +22,6 @@
 	.flex_element_1 {
 		padding-right: 0.625rem; /* 10px */
 		text-align: center;
-		width: 13rem; /* 280px */
 		margin: auto;
 	}
 
@@ -117,6 +116,8 @@
 	.history_icons {
 		font-size: 1.375rem; /* 22px */
 		line-height: 1.5;
+		width: 13rem; /* 280px */
+		margin: auto;
 	}
 
 	.icon_counter {
@@ -157,11 +158,11 @@
 		}
 		.flex_element_1 {
 			padding-right: 0rem;
-			width: 26rem; /* 280px */
 		}
 		.history_icons {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+			width: 26rem; /* 280px */
 		}
 	}
