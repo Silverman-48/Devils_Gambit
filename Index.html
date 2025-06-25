@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Devil's Gambit</title>
 	</head>
 
@@ -10,149 +12,146 @@
 	 Element: <span id="element">None</span> Multiplier: <span id="multiplier">1</span></div> -->
 
 	<div class="flex-container">
-<div style="flex: 0; padding-left: 10px;">
+	<div class="flex_element_1">
 
-	<div class="history_icons">
+		<div class="history_icons">
 
-	<div class="icon_counter">
-	🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
+			<div class="icon_counter">
+				🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
+				<br>
+				♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
+				<br>
+				♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
+				<br>
+				▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
+				<br>
+				🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span>
+				<br>
+				Cards Left: <span id="remaining"></span>
+				<br>
+				Card History:
+				<br>
+				(Table & Hand)
+			</div>
 
-	<br>
+			<div id="card_history" class="card_history">
+			</div>
 
-	♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
-
-	<br>
-
-	♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
-
-	<br>
-
-	▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
-
-	<br>
-
-	🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span>
-
-	<br>
-		
-	Cards Left: <span id="remaining"></span></div>
-
-	<div id="card_history" class="card_history"></div>
+		</div>
 	</div>
 
-</div>
-	<div style="width: 500px; flex: 1; border-left: 4px solid white; border-radius: 5px; text-align: center; padding-left: 10px;">
+	<div class="flex_element_2">
 
-	<button class="cheats_button" onclick="showELEMENT('cheats')"><div class="high_score">High Score: <span id="highscore">0</span></div></button>
+		<button class="cheats_button" onclick="showELEMENT('cheats')">
+			<div class="high_score">
+				High Score: <span id="highscore">0</span>
+			</div>
+		</button>
 
-	<div id="cheats" class="cheats">
+		<div id="cheats" class="cheats">
+			<div class="button_divisions">
+				Life: <button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1</span></button> 
 
-		<button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1 Life</span></button>
-		<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1 Life</span></button>
-		<button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1 Blank</span></button>
-		<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1 Blank</span></button>
-		<button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1 Streak</span></button>
-		<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1 Streak</span></button>
+				Blank: <button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1</span></button> 
+
+				Streak: <button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1</span></button>
+			</div>
+		</div>
+
+		<div class="score">
+			Current Score: <span id="score">0</span>
+		</div>
+
+		<div class="current_cards">
+			Table Card: <span id="tablecard">None</span>
+		</div>
+
+		<div class="current_gambit">
+			<span id="currentgambit">Select Your Gambit</span>
+			<br class="small_break">
+			<span id="gambit_left">None</span> + <span id="gambit_right">None</span>
+		</div>
+
+		<div class="info">
+			Lives: <span id="lifepoints">3</span> 
+			Blanks: <span id="blanks">1</span> 
+			Streak: <span id="streak">0</span>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="runGAMBIT();"><span class="button_content">Set Gambit</span></button>
+			<button onclick="clearGAMBIT();"><span class="button_content">Clear Gambit</span></button>
+			<button onclick="reset();"><span class="button_content">Reset Game</span></button>
+		</div>
+
+		<div class="button_divisions" style="margin-top: 10px;">
+			<button class="special_button" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
+			<button class="special_button" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitLEFT('Ace');"><span class="button_content">Ace</span></button>
+			<button class="special_button" onclick="setgambitLEFT('Jack');"><span class="button_content">Jack</span></button>
+			<button class="special_button" onclick="setgambitLEFT('Queen');"><span class="button_content">Queen</span></button>
+			<button class="special_button" onclick="setgambitLEFT('King');"><span class="button_content">King</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitLEFT('2');"><span class="button_content">2</span></button>
+			<button class="special_button" onclick="setgambitLEFT('3');"><span class="button_content">3</span></button>
+			<button class="special_button" onclick="setgambitLEFT('4');"><span class="button_content">4</span></button>
+			<button class="special_button" onclick="setgambitLEFT('5');"><span class="button_content">5</span></button>
+			<button class="special_button" onclick="setgambitLEFT('6');"><span class="button_content">6</span></button>
+			<button class="special_button" onclick="setgambitLEFT('7');"><span class="button_content">7</span></button>
+			<button class="special_button" onclick="setgambitLEFT('8');"><span class="button_content">8</span></button>
+			<button class="special_button" onclick="setgambitLEFT('9');"><span class="button_content">9</span></button>
+			<button class="special_button" onclick="setgambitLEFT('10');"><span class="button_content">10</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitRIGHT('Clubs ♣️');"><span class="button_content">Clubs</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Spades ♠️');"><span class="button_content">Spades</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Hearts ♥️');"><span class="button_content">Hearts</span></button>
+		</div>
+
+		<div class="button_divisions" style="margin-bottom: 10px;">
+			<button class="special_button" onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
+			<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Streak Sacrifice</span></button>
+			<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<span class="info">Last Chance D4: </span>
+			<button class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
+			<button class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
+			<button class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
+			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
+			<span class="info">Output: <span id="output">0</span></span>
+		</div>
 
 	</div>
-
-	<div class="score">Current Score: <span id="score">0</span></div>
-
-<div class="current_cards">Table Card: <span id="tablecard">None</span></div>
-
-	<div class="current_gambit">
-	
-	Current Gambit: <span id="currentgambit">None</span>
-
-	<br class="small_break">
-
-	<span id="modifier1">None</span> + <span id="modifier2">None</span>
-
 	</div>
-
-	<div class="info"><span>Lives: <span id="lifepoints">3</span> Blanks: <span id="blanks">1</span> Streak: <span id="streak">0</span></div>
-
-	<div class="button_divisions">
-	<button onclick="runGAMBIT();"><span class="button_content">Set Gambit</span></button>
-	<button onclick="clearGAMBIT();"><span class="button_content">Clear Gambit</span></button>
-	<button onclick="reset();"><span class="button_content">Reset Game</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="printTEXT1('Low');"><span class="button_content">Low</span></button>
-	<button onclick="printTEXT1('High');"><span class="button_content">High</span></button>
-	<button onclick="printTEXT2('Red');"><span class="button_content">Red</span></button>
-	<button onclick="printTEXT2('Black');"><span class="button_content">Black</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="printTEXT1('Ace');"><span class="button_content">Ace</span></button>
-	<button onclick="printTEXT1('2');"><span class="button_content">2</span></button>
-	<button onclick="printTEXT1('3');"><span class="button_content">3</span></button>
-	<button onclick="printTEXT1('4');"><span class="button_content">4</span></button>
-	<button onclick="printTEXT1('5');"><span class="button_content">5</span></button>
-	<button onclick="printTEXT1('6');"><span class="button_content">6</span></button>
-	<button onclick="printTEXT1('7');"><span class="button_content">7</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="printTEXT1('8');"><span class="button_content">8</span></button>
-	<button onclick="printTEXT1('9');"><span class="button_content">9</span></button>
-	<button onclick="printTEXT1('10');"><span class="button_content">10</span></button>
-	<button onclick="printTEXT1('Jack');"><span class="button_content">Jack</span></button>
-	<button onclick="printTEXT1('Queen');"><span class="button_content">Queen</span></button>
-	<button onclick="printTEXT1('King');"><span class="button_content">King</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="printTEXT2('Clubs ♣️');"><span class="button_content">Clubs</span></button>
-	<button onclick="printTEXT2('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
-	<button onclick="printTEXT2('Spades ♠️');"><span class="button_content">Spades</span></button>
-	<button onclick="printTEXT2('Hearts ♥️');"><span class="button_content">Hearts</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
-	<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Turn 3 Streak Into 1 Life</span></button>
-	<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
-	</div>
-
-	<div class="button_divisions">
-	<span class="info">Last Chance D4: </span>
-	<button onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
-	<button onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
-	<button onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
-	<button onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
-	<span class="info">Output: <span id="output">0</span></span>
-	</div>
-
-	<div style="display: none">Current Table Card: <span id="currenttablecard">None</span>
-
-	Your Card: <span id="pickedCard">None</span></div>
-
-	</div>
-	</div>
-
-
-
-
-
 
 <script>
 
-	// Variables Used
+// Variables Used
 
-	let currentValue = 0;
+	let score = 0;
 	let lifepoints = 3;
 	let blanks = 1;
 	let streak = 0;
 	let acevalue = 0;
 	let lastchance = 1;
-	let currenttablecard = "";
 	let cards = [];
 
 	let numberarray = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'King', 'Queen', 'Jack'];
@@ -165,6 +164,30 @@
 	let multiplier = 1;
 	let valueswitch = -1;
 
+	let value = "";
+	let rank = "";
+	let suit = "";
+	let color = "";
+	let result = "";
+	let result2 = "";
+	let valuemodifiertable = 0;
+	let valuemodifierhand = 0;
+
+	let redcardscounter = 0;
+	let blackcardscounter = 0;
+	let jokercardscounter = 0;
+	let clubscardscounter = 0;
+	let diamondscardscounter = 0;
+	let spadescardscounter = 0;
+	let heartscardscounter = 0;
+	let lowcardscounter = 0;
+	let highcardscounter = 0;
+	let acecardscounter = 0;
+
+	let empty = "empty";
+
+// Resets the Gambit Values
+
 	function clearGAMBIT() {
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
@@ -172,94 +195,98 @@
 			return;
 		}
 
-		document.getElementById("modifier1").innerHTML = "None";
-		document.getElementById("modifier2").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "None";
+		document.getElementById("gambit_right").innerHTML = "None";
 		setCURRENTGAMBIT();
 	}
 
+// Secondary Reset for Other Functions
+
 	function clearGAMBIT2() {
-		document.getElementById("modifier1").innerHTML = "None";
-		document.getElementById("modifier2").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "None";
+		document.getElementById("gambit_right").innerHTML = "None";
 
 		variable = "None";
 		element = "None";
 		multiplier = 1;
 		valueswitch = -1;
 	}
+
+// Changes the Text for Left-Side Gambits
 	
-	function printTEXT1(buttonelement) {
+	function setgambitLEFT(buttonelement) {
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
 
-		let textmodifier1 = document.getElementById("modifier1");
-		let textmodifier2 = document.getElementById("modifier2");
+		let textgambit_left = document.getElementById("gambit_left");
+		let textgambit_right = document.getElementById("gambit_right");
 
-		let mod1 = textmodifier1.innerHTML;
-		let mod2 = textmodifier2.innerHTML;
+		let mod1 = textgambit_left.innerHTML;
+		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod1) {
-			textmodifier2.innerHTML = "None";
+			textgambit_right.innerHTML = "None";
 			setCURRENTGAMBIT();
 			return;
 		}
 		
 		if (valuearray.includes(buttonelement) && suitarray.includes(mod2)
 		|| numberarray.includes(buttonelement) && colorarray.includes(mod2)) {
-			textmodifier1.innerHTML = buttonelement;
-			textmodifier2.innerHTML = "None";
+			textgambit_left.innerHTML = buttonelement;
+			textgambit_right.innerHTML = "None";
 		} else {
-			textmodifier1.innerHTML = buttonelement;
+			textgambit_left.innerHTML = buttonelement;
 		}
 
 		setCURRENTGAMBIT();
 	}
 
+// Changes the Text for Right-Side Gambits
 
-
-	function printTEXT2(buttonelement) {
+	function setgambitRIGHT(buttonelement) {
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
 
-		let textmodifier1 = document.getElementById("modifier1");
-		let textmodifier2 = document.getElementById("modifier2");
+		let textgambit_left = document.getElementById("gambit_left");
+		let textgambit_right = document.getElementById("gambit_right");
 
-		let mod1 = textmodifier1.innerHTML;
-		let mod2 = textmodifier2.innerHTML;
+		let mod1 = textgambit_left.innerHTML;
+		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod2) {
-			textmodifier1.innerHTML = "None";
+			textgambit_left.innerHTML = "None";
 			setCURRENTGAMBIT();
 			return;
 		}
 
 		if (colorarray.includes(buttonelement) && numberarray.includes(mod1)
 		|| suitarray.includes(buttonelement) && valuearray.includes(mod1)) {
-			textmodifier2.innerHTML = buttonelement;
-			textmodifier1.innerHTML = "None";
+			textgambit_right.innerHTML = buttonelement;
+			textgambit_left.innerHTML = "None";
 			valueswitch = -1;
 
 		} else {
-			textmodifier2.innerHTML = buttonelement;
+			textgambit_right.innerHTML = buttonelement;
 		}
 
 		setCURRENTGAMBIT();
 	}
 
-
+// Sets the Current Gambit Values
 
 	function setCURRENTGAMBIT() {
 
-		gambit1 = document.getElementById("modifier1").innerHTML;
-		gambit2 = document.getElementById("modifier2").innerHTML;
+		gambit1 = document.getElementById("gambit_left").innerHTML;
+		gambit2 = document.getElementById("gambit_right").innerHTML;
 
 		if (gambit1 === "None" && gambit2 === "None") {
-				document.getElementById("currentgambit").innerHTML = "None";
+				document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 				valueswitch = -1;
 				variable = "None";
@@ -339,7 +366,7 @@
 		}
 	}
 
-
+// Checks If Gambit is Regular or Value, and Runs It
 
 	function runGAMBIT() {
 		if (valueswitch > -1) {
@@ -349,7 +376,7 @@
 		}
 	}
 
-
+// Used to Check Debug Values
 
 	function updateTESTVALUES() {
 		document.getElementById("valueswitch").innerHTML = valueswitch;
@@ -358,11 +385,6 @@
 		document.getElementById("multiplier").innerHTML = multiplier;
 	}
 
-
-
-
-
-	
 // New Add / Remove Function
 
 	function addORremove(variable, value, sign) {
@@ -376,97 +398,60 @@
 		}
 	}
 
-
-
-
-
-
-// Color Counter and Other Variables
-
-	let value = "";
-	let rank = "";
-	let suit = "";
-	let color = "";
-	let result = "";
-	let result2 = "";
-	let valuemodifiertable = 0;
-	let valuemodifierhand = 0;
-
-	let redcardscounter = 0;
-	let blackcardscounter = 0;
-	let jokercardscounter = 0;
-	let clubscardscounter = 0;
-	let diamondscardscounter = 0;
-	let spadescardscounter = 0;
-	let heartscardscounter = 0;
-	let lowcardscounter = 0;
-	let highcardscounter = 0;
-	let acecardscounter = 0;
-
-
-
-
-
-
 // Deck of Cards Maker
 
 	function fillARRAY() {
 
-	const suits = [
-		{ suit: "Hearts ♥️", color: "Red" },
-		{ suit: "Diamonds ♦️", color: "Red" },
-		{ suit: "Clubs ♣️", color: "Black" },
-		{ suit: "Spades ♠️", color: "Black" }
-	]
+		const suits = [
+			{ suit: "Hearts ♥️", color: "Red" },
+			{ suit: "Diamonds ♦️", color: "Red" },
+			{ suit: "Clubs ♣️", color: "Black" },
+			{ suit: "Spades ♠️", color: "Black" }
+		]
 
-	const ranks = [
-		{ rank: "Ace", value: 20 },
-		{ rank: "2", value: 2, },
-		{ rank: "3", value: 3 },
-		{ rank: "4", value: 4 },
-		{ rank: "5", value: 5 },
-		{ rank: "6", value: 6 },
-		{ rank: "7", value: 7 },
-		{ rank: "8", value: 8 },
-		{ rank: "9", value: 9 },
-		{ rank: "10", value: 10 },
-		{ rank: "Queen", value: 10 },
-		{ rank: "Jack", value: 10 },
-		{ rank: "King", value: 10 }
-	]
+		const ranks = [
+			{ rank: "Ace", value: 20 },
+			{ rank: "2", value: 2, },
+			{ rank: "3", value: 3 },
+			{ rank: "4", value: 4 },
+			{ rank: "5", value: 5 },
+			{ rank: "6", value: 6 },
+			{ rank: "7", value: 7 },
+			{ rank: "8", value: 8 },
+			{ rank: "9", value: 9 },
+			{ rank: "10", value: 10 },
+			{ rank: "Queen", value: 10 },
+			{ rank: "Jack", value: 10 },
+			{ rank: "King", value: 10 }
+		]
 
-	const deck = [];
+		const deck = [];
 
-	suits.forEach(({ suit, color }) => {
-		ranks.forEach(({ rank, value }) => {
-			deck.push({ rank, value, suit: suit, color });
+		suits.forEach(({ suit, color }) => {
+			ranks.forEach(({ rank, value }) => {
+				deck.push({ rank, value, suit: suit, color });
+			});
 		});
-	});
 
-	deck.push(
-		{ rank: "Joker 1", value: 20, suit: "Society", color: "Special" },
-		{ rank: "Joker 2", value: 20, suit: "Society", color: "Special" }
-	);
+		deck.push(
+			{ rank: "Joker 1", value: 20, suit: "Society", color: "Special" },
+			{ rank: "Joker 2", value: 20, suit: "Society", color: "Special" }
+		);
 
-	let currentIndex = deck.length;
+		let currentIndex = deck.length;
 
-	while (currentIndex != 0) {
+		while (currentIndex != 0) {
 
-		let randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex--;
+			let randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
 
-		[deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]];
-	}
+			[deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]];
+		}
 
-	return deck;
+		return deck;
 	}
 
 	cards = fillARRAY();
-
-
-
-
-
 
 // Skips a Round
 
@@ -486,11 +471,6 @@
 		selectCARD();
 		pickTABLECARD();
 	}
-
-
-
-
-
 
 // Last Chance Setup
 
@@ -521,11 +501,6 @@
 		}
 	}
 
-
-
-
-
-
 // Show / Hide Elements
 
 	function showELEMENT(element) {
@@ -538,30 +513,24 @@
 		}
 	}
 
-
-
-
-
-
 // Triggers the “Empty Deck” Message
 
 	function emptyDECK() {
 		document.getElementById("tablecard").textContent = "No more cards left!";
-		document.getElementById("currenttablecard").textContent = "No more cards left!";
-		document.getElementById("pickedCard").textContent = "No more cards left!";
 	}
-
-
-
-
-
 
 // Update the Score, Card History and Score Displays
 
 	function updateDISPLAYS() {
-		document.getElementById("score").textContent = currentValue;
+		document.getElementById("score").textContent = score;
 
-		document.getElementById("card_history").innerHTML = "Table: " + result2 + "<br>" + "Hand: " + result + "<br><br>" + document.getElementById("card_history").innerHTML;
+		if (document.getElementById("card_history").innerHTML !== "") {
+			document.getElementById("card_history").innerHTML = 
+			result2 + "<br>" + result + "<br><br>" + document.getElementById("card_history").innerHTML;
+		} else {
+			document.getElementById("card_history").innerHTML = 
+			result2 + "<br>" + result + "<br>" + document.getElementById("card_history").innerHTML;
+		}
 
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
@@ -574,11 +543,6 @@
 			clearGAMBIT2();
 		}
 	}
-
-
-
-
-
 
 // Triggers the Game Reset
 
@@ -593,80 +557,58 @@
 		}
 
 		cards = fillARRAY();
-		currentValue = 0;
 
+		score = 0;
+		lifepoints = 3;
+		blanks = 1;
+		streak = 0;
+		lastchance = 1;
 		acevalue = 0;
 
-		lifepoints = 3;
+		document.getElementById("score").innerHTML = score;
 		document.getElementById("lifepoints").textContent = 3;
+		document.getElementById("blanks").innerHTML = blanks;
+		document.getElementById("streak").innerHTML = streak;
+		document.getElementById("output").innerHTML = "0";
 
 		document.getElementById("tablecard").textContent = "None";
-		document.getElementById("currenttablecard").innerHTML = "None";
-		document.getElementById("pickedCard").innerHTML = "None";
 		document.getElementById("card_history").innerHTML = "";
 		document.getElementById("remaining").innerHTML = cards.length;
 
-		blanks = 1;
-		document.getElementById("blanks").innerHTML = "1";
-
-		streak = 0;
-		document.getElementById("streak").innerHTML = "0";
-
-		lastchance = 1;
-		document.getElementById("output").innerHTML = "0";
-
-		document.getElementById("score").innerHTML = currentValue;
-
 		redcardscounter = 0;
-		document.getElementById("redcards").innerHTML = "0";
-
 		blackcardscounter = 0;
-		document.getElementById("blackcards").innerHTML = "0";
-
 		jokercardscounter = 0;
-		document.getElementById("jokercards").innerHTML = "0";
-
 		clubscardscounter = 0;
-		document.getElementById("clubscards").innerHTML = "0";
-
 		diamondscardscounter = 0;
-		document.getElementById("diamondscards").innerHTML = "0";
-
 		spadescardscounter = 0;
-		document.getElementById("spadescards").innerHTML = "0";
-
 		heartscardscounter = 0;
-		document.getElementById("heartscards").innerHTML = "0";
-
 		lowcardscounter = 0;
-		document.getElementById("lowcards").innerHTML = "0";
-
 		highcardscounter = 0;
-		document.getElementById("highcards").innerHTML = "0";
-
 		acecardscounter = 0;
-		document.getElementById("acecards").innerHTML = "0";
+
+		document.getElementById("redcards").innerHTML = redcardscounter;
+		document.getElementById("blackcards").innerHTML = blackcardscounter;
+		document.getElementById("jokercards").innerHTML = jokercardscounter;
+		document.getElementById("clubscards").innerHTML = clubscardscounter;
+		document.getElementById("diamondscards").innerHTML = diamondscardscounter;
+		document.getElementById("spadescards").innerHTML = spadescardscounter;
+		document.getElementById("heartscards").innerHTML = heartscardscounter;
+		document.getElementById("lowcards").innerHTML = lowcardscounter;
+		document.getElementById("highcards").innerHTML = highcardscounter;
+		document.getElementById("acecards").innerHTML = acecardscounter;
 
 		valueswitch = -1;
-
 		variable = "None";
-
 		element = "None";
-
 		multiplier = 1;
 
-		document.getElementById("modifier1").innerHTML = "None";
-		document.getElementById("modifier2").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "None";
+		document.getElementById("gambit_right").innerHTML = "None";
 
-		document.getElementById("currentgambit").innerHTML = "None";
+		document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 		pickTABLECARD();
 	}
-
-
-
-
-
 
 // Life Point Related Functions
 
@@ -688,11 +630,6 @@
 		}
 	}
 
-
-
-
-
-
 // Blank Related Functions
 
 	function useBLANK() {
@@ -709,17 +646,12 @@
 
 		selectCARD();
 
-		currentValue = Math.floor(currentValue + streak + value / 2);
+		score = Math.floor(score + streak + value / 2);
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
 		updateDISPLAYS();
 		pickTABLECARD();
 	}
-
-
-
-
-
 
 // Selects the Player's Card
 
@@ -730,8 +662,6 @@
 			return;
 		}
 
-		document.getElementById("currenttablecard").textContent = currenttablecard;
-
 		const index = Math.floor(Math.random() * cards.length);
 		card = cards.splice(index, 1)[0];
 		value = card.value;
@@ -740,7 +670,7 @@
 		color = card.color;
 		result = rank.concat(" ", suit);
 
-
+		document.getElementById("remaining").textContent = cards.length;
 
 		if (value <= 7) {
 		
@@ -762,9 +692,6 @@
 			acecardscounter = acecardscounter + 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
-
-		document.getElementById("pickedCard").textContent = rank + " of " + suit + " (" + color + ")";
-		document.getElementById("remaining").textContent = cards.length;
 
 		if (color === "Red") {
 			redcardscounter = redcardscounter + 1;
@@ -802,11 +729,6 @@
 		}
 	}
 
-
-
-
-
-
 // Picks the Next Table Card
 
 	function pickTABLECARD() {
@@ -823,7 +745,9 @@
 		const color = card.color;
 		result2 = rank.concat(" ", suit);
 
-
+		document.getElementById("tablecard").textContent = result2;
+		document.getElementById("remaining").textContent = cards.length;
+		acevalue = card.value;
 
 		if (value <= 7) {
 		
@@ -845,13 +769,6 @@
 			acecardscounter = acecardscounter + 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
-
-		document.getElementById("tablecard").textContent = result2;
-
-		currenttablecard = document.getElementById("tablecard").textContent;
-
-		document.getElementById("remaining").textContent = cards.length;
-		acevalue = card.value;
 
 		if (color === "Red") {
 			redcardscounter = redcardscounter + 1;
@@ -891,11 +808,6 @@
 
 	pickTABLECARD();
 
-
-
-
-
-
 // Sets the Joker Gambit
 
 	function jokerGAMBIT() {
@@ -910,7 +822,7 @@
 		selectCARD();
 
 		if (color === 'Special') {
-			currentValue = currentValue + value * 10;
+			score = score + value * 10;
 			addORremove('streak', 1, '+');
 			updateDISPLAYS();
 			pickTABLECARD();
@@ -925,15 +837,10 @@
 		}
 	}
 
-
-
-
-
-
 // Sets the Color, Suit, Number and Number & Suit Gambits
 
 	function gambit() {
-		if (document.getElementById("modifier1").innerHTML === "None" && document.getElementById("modifier2").innerHTML === "None") return;
+		if (document.getElementById("gambit_left").innerHTML === "None" && document.getElementById("gambit_right").innerHTML === "None") return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -945,7 +852,7 @@
 		eval('var check = ' + element);
 
 		if (variable === check || color === 'Special') {
-			currentValue = currentValue + streak + value * multiplier;
+			score = score + streak + value * multiplier;
 			addORremove('streak', 1, '+');
 			updateDISPLAYS();
 			pickTABLECARD();
@@ -954,14 +861,7 @@
 		}
 	}
 
-
-
-
-
-
 // Sets the High and Low Gambits
-
-	let empty = "empty";
 
 	function gambitVALUE() {
 		if (lifepoints === 0) return;
@@ -978,7 +878,7 @@
 			SPEvalue = acevalue;
 
 			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
-				currentValue = currentValue + streak + value * multiplier;
+				score = score + streak + value * multiplier;
 				addORremove('streak', 1, '+');
 				updateDISPLAYS();
 				pickTABLECARD();
@@ -987,7 +887,7 @@
 			}
 		} else {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
-				currentValue = currentValue + streak + value * multiplier;
+				score = score + streak + value * multiplier;
 				addORremove('streak', 1, '+');
 				updateDISPLAYS();
 				pickTABLECARD();
@@ -996,11 +896,6 @@
 			}
 		}
 	}
-
-
-
-
-
 
 // Activates When the Gambit is Lost
 
@@ -1011,158 +906,166 @@
 			pickTABLECARD();
 	}
 
-
-
 </script>
 
 <style>
-
+	
 	body {
-		font-family: 'Trebuchet MS';
-		font-size: 20px;
-		text-align: center;
-		color: white;
-		background-color: #191919;
-		line-height: 1.3;
-	}
-
-	.current_cards {
-		font-size: 30px;
-	}
-
-	.info {
-		font-size: 25px;
-	}
-
-	.card_history_title  {
-		font-size: 25px;
-	}
-
-	.high_score {
-		color: white;
-		font-size: 45px;
-	}
-
-	.score {
-		font-size: 35px;
-	}
-
-	.small_break {
-		content: "";
-		margin: 8px;
-		display: block;
-	}
-
-	.current_gambit {
-		font-size: 30px;
-		line-height: 1;
-		padding: 5px;
-	}
-
-	.cheats_button {
-		border: 0px;
-		background-color: #191919;
-	}
-
-	button {
-		width: fit-content;
-		color: black;
-		background-color: white;
-		border: 3px solid #D3D3D3;
-		border-radius: 5px;
-	}
-
-	button:hover  {
-		color: white;
-		background-color: #A9A9A9;
-	}
-
-	.button_content {
-		font-family: 'Trebuchet MS';
-		font-size: 20px;
-	}
-
-	.button_content2 {
-		font-family: 'Trebuchet MS';
-		font-size: 15px;
-	}
-
-	.button_divisions {
-		padding: 5px;
-	}
-
-	.card_history{
-		line-height: 1.5;
-		overflow: auto;
-		margin: auto;
-		min-height: 35px;
-		max-height: 350px;
-		border-right: 0px solid white;
-		border-radius: 5px;
-		text-align: right;
-	}
-
-	.cheats{
-		display: none;
-	}
-
-	.icon_counter{
-		line-height: 1.5;
-		text-align: right;
-	}
-
-	.history_icons{
-		font-size: 22px;
-		width: 290px;
-		margin: auto;
-		margin-top: 5px;
-		padding: 5px;
-	}
-
-/* Handle on hover */
-.card_history::-webkit-scrollbar-thumb:hover {
-  background: #290663;
+	font-family: 'Trebuchet MS';
+	font-size: 1.25rem; /* 20px */
+	text-align: center;
+	color: white;
+	background-color: #191919;
+	line-height: 1.3;
 }
 
-/* width */
+.current_cards {
+	font-size: 1.875rem; /* 30px */
+}
+
+.info {
+	font-size: 1.5625rem; /* 25px */
+}
+
+.card_history_title {
+	font-size: 1.5625rem; /* 25px */
+}
+
+.high_score {
+	color: white;
+	font-size: 2.8125rem; /* 45px */
+}
+
+.score {
+	font-size: 2.1875rem; /* 35px */
+}
+
+.small_break {
+	content: "";
+	margin: 0.5rem; /* 8px */
+	display: block;
+}
+
+.current_gambit {
+	font-size: 1.875rem; /* 30px */
+	line-height: 1;
+	padding: 0.3125rem; /* 5px */
+}
+
+.cheats_button {
+	border: 0;
+	background-color: #191919;
+}
+
+.special_button {
+	width: fit-content;
+	color: #191919;
+	background-color: #D3D3D3;
+	border: 0.1875rem solid #b5b5b5; /* 3px */
+	border-radius: 0.3125rem; /* 5px */
+}
+
+button {
+	width: fit-content;
+	color: black;
+	background-color: white;
+	border: 0.1875rem solid #D3D3D3; /* 3px */
+	border-radius: 0.3125rem; /* 5px */
+}
+
+button:hover {
+	color: white;
+	background-color: #A9A9A9;
+}
+
+.button_content {
+	font-family: 'Trebuchet MS';
+	font-size: 1.25rem; /* 20px */
+}
+
+.button_content2 {
+	font-family: 'Trebuchet MS';
+	font-size: 0.9375rem; /* 15px */
+}
+
+.button_divisions {
+	padding: 0.3125rem; /* 5px */
+}
+
+.card_history {
+	line-height: 1.5;
+	overflow: auto;
+	margin: auto;
+	height: 16.5625rem; /* 265px */
+	border-radius: 0.3125rem; /* 5px */
+	text-align: right;
+}
+
+.cheats {
+	display: none;
+}
+
+.icon_counter {
+	line-height: 1.5;
+	text-align: right;
+}
+
+.history_icons {
+	font-size: 1.375rem; /* 22px */
+	width: 13rem; /* 280px */
+	margin: auto;
+	margin-top: 0.3125rem; /* 5px */
+	padding: 0.3125rem; /* 5px */
+}
+
+/* Scrollbar styling */
 .card_history::-webkit-scrollbar {
-  width: 5px;
+	width: 0.3125rem; /* 5px */
 }
 
-/* Track */
 .card_history::-webkit-scrollbar-track {
-  background: #191919;
-  border-radius: 10px;
+	background: #191919;
+	border-radius: 0.625rem; /* 10px */
 }
 
-/* Handle */
 .card_history::-webkit-scrollbar-thumb {
-  background: white;
-  border-radius: 10px;
+	background: white;
+	border-radius: 0.625rem; /* 10px */
 }
 
-/* Handle on hover */
 .card_history::-webkit-scrollbar-thumb:hover {
-  background: #D3D3D3;
+	background: #D3D3D3;
 }
 
-	.numbergambitbuttons{
-		display: none;
-	}
+.numbergambitbuttons {
+	display: none;
+}
 
-	.numbersuitgambitbuttons{
-		display: none;
-	}
+.numbersuitgambitbuttons {
+	display: none;
+}
 
-	.flex-container {
-		display: flex;
-		margin: auto;
-		max-width: fit-content;
-		width: fit-content;
-		text-align: center;
-		justify-content: center;
-		align-items: start;
-	}
+.flex-container {
+	display: flex;
+	margin: auto;
+	max-width: fit-content;
+	width: fit-content;
+	text-align: center;
+	justify-content: center;
+	align-items: start;
+}
+
+.flex_element_1 {
+	padding-right: 0.625rem; /* 10px */
+}
+
+.flex_element_2 {
+	width: 28.75rem; /* 460px */
+	border-left: 0.25rem solid white; /* 4px */
+	border-radius: 0.3125rem; /* 5px */
+	text-align: center;
+	padding-left: 0.625rem; /* 10px */
+}
 
 </style>
 </body>
