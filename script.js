@@ -1,5 +1,3 @@
-	window.onload = pickTABLECARD();
-
 // Variables Used
 
 	let currentscore = 0;
@@ -661,6 +659,8 @@
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
 	}
+
+	window.onload = pickTABLECARD();
 
 // Sets the Joker Gambit
 
