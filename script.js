@@ -660,7 +660,9 @@
 		}
 	}
 
-	window.onload = pickTABLECARD();
+	window.onload = picktablecardONLOAD() {
+		pickTABLECARD();
+	}
 
 // Sets the Joker Gambit
 
