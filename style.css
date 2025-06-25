@@ -18,6 +18,10 @@
 			padding-right: 0rem;
 			text-align: center;
 		}
+		.history_icons {
+			flex-direction: row;
+			align-items: center;
+		}
 	}
 
 
