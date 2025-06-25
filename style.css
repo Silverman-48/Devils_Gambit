@@ -115,13 +115,12 @@
 	.history_icons {
 		font-size: 1.375rem; /* 22px */
 		line-height: 1.5;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.icon_counter {
 		flex: 1;
 		padding-bottom: 0.313rem;
+		width: fit-content;
 	}
 
 	.card_history {
@@ -132,6 +131,7 @@
 		border-top: 0.25rem solid white; /* 4px */
 		border-bottom: 0.25rem solid white; /* 4px */
 		border-radius: 0.3125rem; /* 5px */
+		width: fit-content;
 	}
 
 	.card_history::-webkit-scrollbar {
@@ -162,7 +162,9 @@
 			text-align: center;
 		}
 		.history_icons {
+			display: flex;
 			flex-direction: row;
 			align-items: center;
+			width: fit-content;
 		}
 	}
