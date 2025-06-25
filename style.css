@@ -9,23 +9,6 @@
 		margin: auto;
 	}
 
-	@media screen and (max-width: 531px) {
-		.flex-container {
-			flex-direction: column-reverse;
-			align-items: center;
-		}
-		.flex_element_1 {
-			padding-right: 0rem;
-			text-align: center;
-		}
-		.history_icons {
-			flex-direction: row;
-			align-items: center;
-		}
-	}
-
-
-
 	.flex-container {
 		display: flex;
 		margin: auto;
@@ -133,7 +116,6 @@
 		font-size: 1.375rem; /* 22px */
 		line-height: 1.5;
 		display: flex;
-		flex-direction: column-reverse;
 	}
 
 	.icon_counter {
@@ -165,4 +147,19 @@
 
 	.card_history::-webkit-scrollbar-thumb:hover {
 		background: #D3D3D3;
+	}
+
+	@media screen and (max-width: 531px) {
+		.flex-container {
+			flex-direction: column-reverse;
+			align-items: center;
+		}
+		.flex_element_1 {
+			padding-right: 0rem;
+			text-align: center;
+		}
+		.history_icons {
+			flex-direction: row;
+			align-items: center;
+		}
 	}
