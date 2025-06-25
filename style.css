@@ -1,0 +1,161 @@
+	body {
+		font-family: 'Trebuchet MS';
+		font-size: 1.25rem; /* 20px */
+		text-align: center;
+		color: white;
+		background-color: #191919;
+		line-height: 1.3;
+		height: fit-content;
+		margin: auto;
+	}
+
+	@media screen and (max-width: 531px) {
+		.flex-container {
+			flex-direction: column-reverse;
+			align-items: center;
+		}
+		.flex_element_1 {
+			padding-right: 0rem;
+			text-align: center;
+		}
+	}
+
+
+
+	.flex-container {
+		display: flex;
+		margin: auto;
+		max-width: fit-content;
+		width: fit-content;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.flex_element_1 {
+		padding-right: 0.625rem; /* 10px */
+		text-align: center;
+		width: 13rem; /* 280px */
+	}
+
+	.flex_element_2 {
+		width: 28.75rem; /* 460px */
+		border-left: 0.25rem solid white; /* 4px */
+		border-right: 0.25rem solid white; /* 4px */
+		border-radius: 0.3125rem; /* 5px */
+		text-align: center;
+	}
+
+
+
+	.high_score {
+		color: white;
+		font-size: 2.8125rem; /* 45px */
+	}
+
+	.score {
+		font-size: 2.1875rem; /* 35px */
+	}
+
+
+
+	.current_cards {
+		font-size: 1.875rem; /* 30px */
+	}
+
+	.current_gambit {
+		font-size: 1.875rem; /* 30px */
+		line-height: 1;
+		padding: 0.3125rem; /* 5px */
+	}
+
+
+
+	.info {
+		font-size: 1.5625rem; /* 25px */
+	}
+
+
+
+	.cheats {
+		display: none;
+	}
+
+	.cheats_button {
+		border: 0;
+		background-color: #191919;
+	}
+
+
+
+	button {
+		width: fit-content;
+		color: black;
+		background-color: white;
+		border: 0.1875rem solid #D3D3D3; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	button:hover {
+		color: white;
+		background-color: #A9A9A9;
+	}
+
+	.special_button {
+		width: fit-content;
+		color: #191919;
+		background-color: #D3D3D3;
+		border: 0.1875rem solid #b5b5b5; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	.button_content {
+		font-family: 'Trebuchet MS';
+		font-size: 1.25rem; /* 20px */
+	}
+
+	.button_content2 {
+		font-family: 'Trebuchet MS';
+		font-size: 0.9375rem; /* 15px */
+	}
+
+	.button_divisions {
+		padding: 0.3125rem; /* 5px */
+	}
+
+
+
+	.history_icons {
+		font-size: 1.375rem; /* 22px */
+		line-height: 1.5;
+	}
+
+	.icon_counter {
+	}
+
+	.card_history {
+		overflow: auto;
+		margin: auto;
+		height: 16.5625rem; /* 265px */
+		border-top: 0.25rem solid white; /* 4px */
+		border-bottom: 0.25rem solid white; /* 4px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	.card_history::-webkit-scrollbar {
+		width: 0.3125rem; /* 5px */
+	}
+
+	.card_history::-webkit-scrollbar-track {
+		background: #191919;
+		border-radius: 0.625rem; /* 10px */
+	}
+
+	.card_history::-webkit-scrollbar-thumb {
+		background: white;
+		border-radius: 0.625rem; /* 10px */
+	}
+
+	.card_history::-webkit-scrollbar-thumb:hover {
+		background: #D3D3D3;
+	}
