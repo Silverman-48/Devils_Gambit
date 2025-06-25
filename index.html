@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Devil's Gambit</title>
+	<script type="text/javascript" src="script.js"></script>
+	</head>
+
+<body>
+	<div class="flex-container">
+	<div class="flex_element_1">
+
+		<div class="history_icons">
+
+			<div class="icon_counter">
+				🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
+				<br>
+				♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
+				<br>
+				♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
+				<br>
+				▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
+				<br>
+				🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span>
+				<br>
+				Cards Left: <span id="remaining"></span>
+				<br>
+				Card History:
+				<br>
+				(Table & Hand)
+			</div>
+
+			<div id="card_history" class="card_history"></div>
+
+		</div>
+	</div>
+
+	<div class="flex_element_2">
+
+		<button class="cheats_button" onclick="showELEMENT('cheats')">
+			<div class="high_score">
+				High Score: <span id="highscore">0</span>
+			</div>
+		</button>
+
+		<div id="cheats" class="cheats">
+			<div class="button_divisions">
+				Life: <button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1</span></button> 
+
+				Blank: <button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1</span></button> 
+
+				Streak: <button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1</span></button>
+			</div>
+		</div>
+
+		<div class="score">
+			Current Score: <span id="score">0</span>
+		</div>
+
+		<div class="current_cards">
+			Table Card: <span id="tablecard">None</span>
+		</div>
+
+		<div class="current_gambit">
+			<span id="currentgambit">Select Your Gambit</span>
+			<br class="small_break">
+			<span id="gambit_left">None</span> + <span id="gambit_right">None</span>
+		</div>
+
+		<div class="info">
+			Lives: <span id="lifepoints">3</span> 
+			Blanks: <span id="blanks">1</span> 
+			Streak: <span id="streak">0</span>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="runGAMBIT();"><span class="button_content">Set Gambit</span></button>
+			<button onclick="clearGAMBIT();"><span class="button_content">Clear Gambit</span></button>
+			<button onclick="reset();"><span class="button_content">Reset Game</span></button>
+		</div>
+
+		<div class="button_divisions" style="margin-top: 10px;">
+			<button class="special_button" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
+			<button class="special_button" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitLEFT('Ace');"><span class="button_content">Ace</span></button>
+			<button class="special_button" onclick="setgambitLEFT('Jack');"><span class="button_content">Jack</span></button>
+			<button class="special_button" onclick="setgambitLEFT('Queen');"><span class="button_content">Queen</span></button>
+			<button class="special_button" onclick="setgambitLEFT('King');"><span class="button_content">King</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitLEFT('2');"><span class="button_content">2</span></button>
+			<button class="special_button" onclick="setgambitLEFT('3');"><span class="button_content">3</span></button>
+			<button class="special_button" onclick="setgambitLEFT('4');"><span class="button_content">4</span></button>
+			<button class="special_button" onclick="setgambitLEFT('5');"><span class="button_content">5</span></button>
+			<button class="special_button" onclick="setgambitLEFT('6');"><span class="button_content">6</span></button>
+			<button class="special_button" onclick="setgambitLEFT('7');"><span class="button_content">7</span></button>
+			<button class="special_button" onclick="setgambitLEFT('8');"><span class="button_content">8</span></button>
+			<button class="special_button" onclick="setgambitLEFT('9');"><span class="button_content">9</span></button>
+			<button class="special_button" onclick="setgambitLEFT('10');"><span class="button_content">10</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="setgambitRIGHT('Clubs ♣️');"><span class="button_content">Clubs</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Spades ♠️');"><span class="button_content">Spades</span></button>
+			<button class="special_button" onclick="setgambitRIGHT('Hearts ♥️');"><span class="button_content">Hearts</span></button>
+		</div>
+
+		<div class="button_divisions" style="margin-bottom: 10px;">
+			<button class="special_button" onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
+			<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Streak Sacrifice</span></button>
+			<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<span class="info">Last Chance D4: </span>
+			<button class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
+			<button class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
+			<button class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
+			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
+			<span class="info">Output: <span id="output">0</span></span>
+		</div>
+
+	</div>
+	</div>
+
+<style>
+
+	body {
+	font-family: 'Trebuchet MS';
+	font-size: 1.25rem; /* 20px */
+	text-align: center;
+	color: white;
+	background-color: #191919;
+	line-height: 1.3;
+	height: fit-content;
+	margin: auto;
+}
+
+@media screen and (max-width: 531px) {
+	.flex-container {
+		flex-direction: column-reverse;
+		align-items: center;
+	}
+	.flex_element_1 {
+		padding-right: 0rem;
+		text-align: center;
+	}
+}
+
+.current_cards {
+	font-size: 1.875rem; /* 30px */
+}
+
+.info {
+	font-size: 1.5625rem; /* 25px */
+}
+
+.card_history_title {
+	font-size: 1.5625rem; /* 25px */
+}
+
+.high_score {
+	color: white;
+	font-size: 2.8125rem; /* 45px */
+}
+
+.score {
+	font-size: 2.1875rem; /* 35px */
+}
+
+.small_break {
+	content: "";
+	margin: 0.5rem; /* 8px */
+	display: block;
+}
+
+.current_gambit {
+	font-size: 1.875rem; /* 30px */
+	line-height: 1;
+	padding: 0.3125rem; /* 5px */
+}
+
+.cheats_button {
+	border: 0;
+	background-color: #191919;
+}
+
+.special_button {
+	width: fit-content;
+	color: #191919;
+	background-color: #D3D3D3;
+	border: 0.1875rem solid #b5b5b5; /* 3px */
+	border-radius: 0.3125rem; /* 5px */
+}
+
+button {
+	width: fit-content;
+	color: black;
+	background-color: white;
+	border: 0.1875rem solid #D3D3D3; /* 3px */
+	border-radius: 0.3125rem; /* 5px */
+}
+
+button:hover {
+	color: white;
+	background-color: #A9A9A9;
+}
+
+.button_content {
+	font-family: 'Trebuchet MS';
+	font-size: 1.25rem; /* 20px */
+}
+
+.button_content2 {
+	font-family: 'Trebuchet MS';
+	font-size: 0.9375rem; /* 15px */
+}
+
+.button_divisions {
+	padding: 0.3125rem; /* 5px */
+}
+
+.card_history {
+	line-height: 1.5;
+	overflow: auto;
+	margin: auto;
+	height: 16.5625rem; /* 265px */
+	border-radius: 0.3125rem; /* 5px */
+}
+
+.cheats {
+	display: none;
+}
+
+.icon_counter {
+	line-height: 1.5;
+}
+
+.history_icons {
+	font-size: 1.375rem; /* 22px */
+	width: 13rem; /* 280px */
+	margin: auto;
+	margin-top: 0.3125rem; /* 5px */
+	padding: 0.3125rem; /* 5px */
+}
+
+/* Scrollbar styling */
+.card_history::-webkit-scrollbar {
+	width: 0.3125rem; /* 5px */
+}
+
+.card_history::-webkit-scrollbar-track {
+	background: #191919;
+	border-radius: 0.625rem; /* 10px */
+}
+
+.card_history::-webkit-scrollbar-thumb {
+	background: white;
+	border-radius: 0.625rem; /* 10px */
+}
+
+.card_history::-webkit-scrollbar-thumb:hover {
+	background: #D3D3D3;
+}
+
+.numbergambitbuttons {
+	display: none;
+}
+
+.numbersuitgambitbuttons {
+	display: none;
+}
+
+.flex-container {
+	display: flex;
+	margin: auto;
+	max-width: fit-content;
+	width: fit-content;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+}
+
+.flex_element_1 {
+	padding-right: 0.625rem; /* 10px */
+	text-align: center;
+}
+
+.flex_element_2 {
+	width: 28.75rem; /* 460px */
+	border-left: 0.25rem solid white; /* 4px */
+	border-right: 0.25rem solid white; /* 4px */
+	border-radius: 0.3125rem; /* 5px */
+	text-align: center;
+}
+
+</style>
+</body>
+</html>
