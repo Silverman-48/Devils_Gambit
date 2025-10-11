@@ -1,4 +1,4 @@
-// Variables Used
+	// Variables Used
 
 	let currentscore = 0;
 	let lifepoints = 3;
@@ -215,7 +215,7 @@
 				valueswitch = -1;
 				variable = gambit2;
 				element = "suit";
-				multiplier = 1;
+				multiplier = 3;
 
 		}
 	}
@@ -342,6 +342,7 @@
 		if (randomNumber === diceroll) {
 
 			addORremove('lifepoints', 1, '+');
+			document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 		} else {
 
