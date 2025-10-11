@@ -321,8 +321,8 @@
 		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '-');
-		updateDISPLAYS();
 		selectCARD();
+		updateDISPLAYS();
 		pickTABLECARD();
 	}
 
