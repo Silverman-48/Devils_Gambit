@@ -9,10 +9,128 @@
 	</head>
 
 <body>
-	<div class="flex-container">
-	<div class="flex_element_1">
 
-		<div class="history_icons">
+<button style="margin-bottom: 10px; width: 200px;" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Show Card History</span></button>
+
+	<div id="flex_element_1" class="flex_element_1" style="display: block">
+
+		<button class="cheats_button" onclick="showELEMENT('cheats')">
+			<div class="high_score">
+				High Score: <span id="highscore">0</span>
+			</div>
+		</button>
+
+		<div id="cheats" class="cheats">
+			<div class="button_divisions">
+				Life: <button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1</span></button> 
+				<br>
+				Blank: <button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1</span></button> 
+				<br>
+				Streak: <button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1</span></button>
+				<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1</span></button>
+			</div>
+
+			<div>
+				Value Switch: <span id="valueswitch"></span>; 
+				Variable: <span id="variable"></span><br>
+				Element: <span id="element"></span>; 
+				Multiplier: <span id="multiplier"></span>
+			</div>
+		</div>
+
+		<div class="score">
+			Current Score: <span id="score">0</span>
+		</div>
+
+<div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content">
+
+<div style="margin: auto; background: white; border: 4px solid #EE4B2B; width: 60px; height: fit-content; padding: 5px; gap: 5px; display: flex; flex-direction: column; border-radius: 10px; height: stretch;">
+<span id="table_suit_1" style="font-size: 20px;"></span>
+<span id="table_number" style="font-size: 20px; color: black;"></span>
+<span id="table_suit_2" style="font-size: 20px;"></span>
+</div>
+
+<div style="margin: auto; background: white; border: 4px solid #800080; width: 60px; height: fit-content; padding: 5px; gap: 5px; display: flex; flex-direction: column; border-radius: 10px; height: stretch;">
+<span id="hand_suit_1" style="font-size: 20px;"></span>
+<span id="hand_number" style="font-size: 20px; color: black;"></span>
+<span id="hand_suit_2" style="font-size: 20px;"></span>
+</div>
+
+</div>
+
+		<div style="display: none" class="current_cards">
+			Table Card: <span id="tablecard">None</span>
+		</div>
+
+		<div class="current_gambit">
+			<span id="currentgambit">Select Your Gambit</span>
+			<br class="small_break">
+			<span id="empty_gambit">None</span><span id="gambit_left"></span> <span id="gambit_right"></span>
+		</div>
+
+		<div class="info">
+			Lives: <span id="lifepoints">3</span> 
+			Blanks: <span id="blanks">1</span> 
+			Streak: <span id="streak">0</span>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="runGAMBIT();"><span class="button_content">Set</span></button>
+			<button onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
+			<button onclick="reset();"><span class="button_content">Reset</span></button>
+		</div>
+
+		<div style="display: flex; margin: auto; width: fit-content; align-items: center;">
+
+			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; align-items: center;">
+				<button style="width: stretch;" class="special_button" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
+				<button style="width: stretch;" class="special_button" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
+			</div>
+
+			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; align-items: center;">
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
+			</div>
+
+			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; text-align: center;">
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♥️');"><span class="button_content">♥️</span></button>
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♣️');"><span class="button_content">♣️</span></button>
+			</div>
+
+			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; text-align: center;">
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♦️');"><span class="button_content">♦️</span></button>
+				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♠️');"><span class="button_content">♠️</span></button>
+			</div>
+
+		</div>
+
+		<div class="button_divisions">
+			<button class="special_button" onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
+			<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Sacrifice</span></button>
+			<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
+		</div>
+
+		<div class="button_divisions">
+			<span class="info">Last Chance D4: </span>
+			<button class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
+			<button class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
+			<button class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
+			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
+			<br>
+			<span class="info">Output: <span id="output">0</span></span>
+		</div>
+
+	</div>
+
+	<div id="flex_element_2" class="flex_element_2" style="display: none; background: #191919; border: 5px solid white; border-radius: 10px; padding: 10px;">
+
+		<div class="history_icons" style="display: flex; align-items: center; flex-direction: column;">
 
 			<div class="icon_counter">
 				🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
@@ -32,114 +150,12 @@
 				(Table & Hand)
 			</div>
 
-			<div id="card_history" class="card_history"></div>
+			<div id="card_history" class="card_history" style="width: stretch"></div>
 
 		</div>
-	</div>
 
-	<div class="flex_element_2">
-
-		<button class="cheats_button" onclick="showELEMENT('cheats')">
-			<div class="high_score">
-				High Score: <span id="highscore">0</span>
-			</div>
-		</button>
-
-		<div id="cheats" class="cheats">
-			<div class="button_divisions">
-				Life: <button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1</span></button> 
-
-				Blank: <button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1</span></button> 
-
-				Streak: <button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1</span></button>
-			</div>
-		</div>
-
-		<div class="score">
-			Current Score: <span id="score">0</span>
-		</div>
-
-		<div class="current_cards">
-			Table Card: <span id="tablecard">None</span>
-		</div>
-
-		<div class="current_gambit">
-			<span id="currentgambit">Select Your Gambit</span>
-			<br class="small_break">
-			<span id="gambit_left">None</span> + <span id="gambit_right">None</span>
-		</div>
-
-		<div class="info">
-			Lives: <span id="lifepoints">3</span> 
-			Blanks: <span id="blanks">1</span> 
-			Streak: <span id="streak">0</span>
-		</div>
-
-		<div class="button_divisions">
-			<button onclick="runGAMBIT();"><span class="button_content">Set Gambit</span></button>
-			<button onclick="clearGAMBIT();"><span class="button_content">Clear Gambit</span></button>
-			<button onclick="reset();"><span class="button_content">Reset Game</span></button>
-		</div>
-
-		<div class="button_divisions" style="margin-top: 10px;">
-			<button class="special_button" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
-			<button class="special_button" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
-			<button class="special_button" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
-			<button class="special_button" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<button class="special_button" onclick="setgambitLEFT('Ace');"><span class="button_content">Ace</span></button>
-			<button class="special_button" onclick="setgambitLEFT('Jack');"><span class="button_content">Jack</span></button>
-			<button class="special_button" onclick="setgambitLEFT('Queen');"><span class="button_content">Queen</span></button>
-			<button class="special_button" onclick="setgambitLEFT('King');"><span class="button_content">King</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<button class="special_button" onclick="setgambitLEFT('2');"><span class="button_content">2</span></button>
-			<button class="special_button" onclick="setgambitLEFT('3');"><span class="button_content">3</span></button>
-			<button class="special_button" onclick="setgambitLEFT('4');"><span class="button_content">4</span></button>
-			<button class="special_button" onclick="setgambitLEFT('5');"><span class="button_content">5</span></button>
-			<button class="special_button" onclick="setgambitLEFT('6');"><span class="button_content">6</span></button>
-			<button class="special_button" onclick="setgambitLEFT('7');"><span class="button_content">7</span></button>
-			<button class="special_button" onclick="setgambitLEFT('8');"><span class="button_content">8</span></button>
-			<button class="special_button" onclick="setgambitLEFT('9');"><span class="button_content">9</span></button>
-			<button class="special_button" onclick="setgambitLEFT('10');"><span class="button_content">10</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<button class="special_button" onclick="setgambitRIGHT('Clubs ♣️');"><span class="button_content">Clubs</span></button>
-			<button class="special_button" onclick="setgambitRIGHT('Diamonds ♦️');"><span class="button_content">Diamonds</span></button>
-			<button class="special_button" onclick="setgambitRIGHT('Spades ♠️');"><span class="button_content">Spades</span></button>
-			<button class="special_button" onclick="setgambitRIGHT('Hearts ♥️');"><span class="button_content">Hearts</span></button>
-		</div>
-
-		<div class="button_divisions" style="margin-bottom: 10px;">
-			<button class="special_button" onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Use Blank</span></button>
-			<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Streak Sacrifice</span></button>
-			<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip Round</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<span class="info">Last Chance D4: </span>
-			<button class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
-			<button class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
-			<button class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
-			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
-			<span class="info">Output: <span id="output">0</span></span>
-		</div>
-
-	</div>
 	</div>
 
     <script src="script.js" type="text/javascript"></script>
 </body>
 </html>
-
