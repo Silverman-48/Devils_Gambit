@@ -9,33 +9,16 @@
 		margin: 20px;
 	}
 
-	.flex-container {
-		display: flex;
-		margin: auto;
-		max-width: fit-content;
-		width: fit-content;
-		text-align: center;
-		justify-content: center;
-		align-items: center;
-	}
-
 	.flex_element_1 {
-		padding-right: 0.625rem; /* 10px */
 		text-align: center;
-		width: 13rem; /* 280px */
 		margin: auto;
 	}
 
 	.flex_element_2 {
-		width: 28.75rem; /* 460px */
-		border-left: 0.25rem solid white; /* 4px */
-		border-right: 0.25rem solid white; /* 4px */
-		border-radius: 0.3125rem; /* 5px */
 		text-align: center;
+		width: fit-content;
 		margin: auto;
 	}
-
-
 
 	.high_score {
 		color: white;
@@ -92,6 +75,7 @@
 
 	.special_button {
 		width: fit-content;
+		height: fit-content
 		color: #191919;
 		background-color: #D3D3D3;
 		border: 0.1875rem solid #b5b5b5; /* 3px */
@@ -149,20 +133,4 @@
 
 	.card_history::-webkit-scrollbar-thumb:hover {
 		background: #D3D3D3;
-	}
-
-	@media screen and (max-width: 531px) {
-		.flex-container {
-			flex-direction: column-reverse;
-			align-items: center;
-		}
-		.flex_element_1 {
-			padding-right: 0rem;
-			width: 26rem; /* 280px */
-		}
-		.history_icons {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-		}
 	}
