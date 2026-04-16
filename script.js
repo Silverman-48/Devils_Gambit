@@ -8,8 +8,7 @@
 	let lastchance = 1;
 	let cards = [];
 
-	let numberarray = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'King', 'Queen', 'Jack'];
-	let suitarray = ['Clubs ♣️', 'Diamonds ♦️', 'Spades ♠️', 'Hearts ♥️'];
+	let suitarray = ['♣️', '♦️', '♠️', '♥️'];
 	let colorarray = ['Red', 'Black'];
 	let valuearray = ['Low', 'High'];
 
@@ -49,16 +48,18 @@
 			return;
 		}
 
-		document.getElementById("gambit_left").innerHTML = "None";
-		document.getElementById("gambit_right").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "";
+		document.getElementById("gambit_right").innerHTML = "";
 		setCURRENTGAMBIT();
 	}
 
 // Secondary Reset for Other Functions
 
 	function clearGAMBIT2() {
-		document.getElementById("gambit_left").innerHTML = "None";
-		document.getElementById("gambit_right").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "";
+		document.getElementById("gambit_right").innerHTML = "";
 
 		variable = "None";
 		element = "None";
@@ -75,6 +76,8 @@
 			return;
 		}
 
+		document.getElementById("empty_gambit").innerHTML = "";
+
 		let textgambit_left = document.getElementById("gambit_left");
 		let textgambit_right = document.getElementById("gambit_right");
 
@@ -82,20 +85,16 @@
 		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod1) {
-			textgambit_right.innerHTML = "None";
+			textgambit_right.innerHTML = "";
 			setCURRENTGAMBIT();
+			updateTESTVALUES();
 			return;
 		}
-		
-		if (valuearray.includes(buttonelement) && suitarray.includes(mod2)
-		|| numberarray.includes(buttonelement) && colorarray.includes(mod2)) {
-			textgambit_left.innerHTML = buttonelement;
-			textgambit_right.innerHTML = "None";
-		} else {
-			textgambit_left.innerHTML = buttonelement;
-		}
+
+		textgambit_left.innerHTML = buttonelement;
 
 		setCURRENTGAMBIT();
+		updateTESTVALUES();
 	}
 
 // Changes the Text for Right-Side Gambits
@@ -107,6 +106,8 @@
 			return;
 		}
 
+		document.getElementById("empty_gambit").innerHTML = "";
+
 		let textgambit_left = document.getElementById("gambit_left");
 		let textgambit_right = document.getElementById("gambit_right");
 
@@ -114,22 +115,16 @@
 		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod2) {
-			textgambit_left.innerHTML = "None";
+			textgambit_left.innerHTML = "";
 			setCURRENTGAMBIT();
+			updateTESTVALUES();
 			return;
 		}
 
-		if (colorarray.includes(buttonelement) && numberarray.includes(mod1)
-		|| suitarray.includes(buttonelement) && valuearray.includes(mod1)) {
-			textgambit_right.innerHTML = buttonelement;
-			textgambit_left.innerHTML = "None";
-			valueswitch = -1;
-
-		} else {
-			textgambit_right.innerHTML = buttonelement;
-		}
+		textgambit_right.innerHTML = buttonelement;
 
 		setCURRENTGAMBIT();
+		updateTESTVALUES();
 	}
 
 // Sets the Current Gambit Values
@@ -139,7 +134,7 @@
 		gambit1 = document.getElementById("gambit_left").innerHTML;
 		gambit2 = document.getElementById("gambit_right").innerHTML;
 
-		if (gambit1 === "None" && gambit2 === "None") {
+		if (gambit1 === "" && gambit2 === "") {
 				document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 				valueswitch = -1;
@@ -163,6 +158,19 @@
 					valueswitch = 1;
 				}
 
+			} else if (suitarray.includes(gambit2)) {
+				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x6)";
+
+				variable = gambit2;
+				element = "suit";
+				multiplier = 6;
+
+				if (gambit1 === "Low") {
+					valueswitch = 0;
+				} else {
+					valueswitch = 1;
+				}
+
 			} else {
 				document.getElementById("currentgambit").innerHTML = "Value Gambit (x1)";
 
@@ -179,27 +187,7 @@
 			}
 		}
 
-		if (numberarray.includes(gambit1)) {
-			if (suitarray.includes(gambit2)) {
-				document.getElementById("currentgambit").innerHTML = "Number & Suit Gambit (x10)";
-
-				valueswitch = -1;
-				variable = gambit1.concat(" ", gambit2);
-				element = "result";
-				multiplier = 10;
-
-			} else {
-				document.getElementById("currentgambit").innerHTML = "Number Gambit (x5)";
-
-				valueswitch = -1;
-				variable = gambit1;
-				element = "rank";
-				multiplier = 5;
-
-			}
-		}
-
-		if (colorarray.includes(gambit2) && gambit1 === "None") {
+		if (colorarray.includes(gambit2) && gambit1 === "") {
 				document.getElementById("currentgambit").innerHTML = "Color Gambit (x1)";
 
 				valueswitch = -1;
@@ -209,7 +197,7 @@
 
 		}
 
-		if (suitarray.includes(gambit2) && gambit1 === "None") {
+		if (suitarray.includes(gambit2) && gambit1 === "") {
 				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x3)";
 
 				valueswitch = -1;
@@ -257,14 +245,14 @@
 	function fillARRAY() {
 
 		const suits = [
-			{ suit: "Hearts ♥️", color: "Red" },
-			{ suit: "Diamonds ♦️", color: "Red" },
-			{ suit: "Clubs ♣️", color: "Black" },
-			{ suit: "Spades ♠️", color: "Black" }
+			{ suit: "♥️", color: "Red" },
+			{ suit: "♦️", color: "Red" },
+			{ suit: "♣️", color: "Black" },
+			{ suit: "♠️", color: "Black" }
 		]
 
 		const ranks = [
-			{ rank: "Ace", value: 20 },
+			{ rank: "A", value: 20 },
 			{ rank: "2", value: 2, },
 			{ rank: "3", value: 3 },
 			{ rank: "4", value: 4 },
@@ -274,9 +262,9 @@
 			{ rank: "8", value: 8 },
 			{ rank: "9", value: 9 },
 			{ rank: "10", value: 10 },
-			{ rank: "Queen", value: 10 },
-			{ rank: "Jack", value: 10 },
-			{ rank: "King", value: 10 }
+			{ rank: "Q", value: 10 },
+			{ rank: "J", value: 10 },
+			{ rank: "K", value: 10 }
 		]
 
 		const deck = [];
@@ -288,8 +276,8 @@
 		});
 
 		deck.push(
-			{ rank: "Joker 1", value: 20, suit: "Society", color: "Special" },
-			{ rank: "Joker 2", value: 20, suit: "Society", color: "Special" }
+			{ rank: "J1", value: 20, suit: "🃏", color: "Special" },
+			{ rank: "J2", value: 20, suit: "🃏", color: "Special" }
 		);
 
 		let currentIndex = deck.length;
@@ -347,7 +335,7 @@
 		} else {
 
 			if (lifepoints === 0) {
-				document.getElementById("lifepoints").textContent = "You Lost!";
+				document.getElementById("lifepoints").textContent = "0";
 				document.getElementById("currentgambit").innerHTML = "Game Over";
 			} else {
 				return;
@@ -368,6 +356,23 @@
 		}
 	}
 
+// Show / Hide Main Interface and Card History
+
+	function toggleELEMENTS() {
+		var x = document.getElementById('flex_element_1');
+		var y = document.getElementById('flex_element_2');
+
+		if (x.style.display == "block") {
+			x.style.display = "none";
+			y.style.display = "block";
+			document.getElementById("togglebutton").innerHTML = "Show Game Screen";
+		} else {
+			x.style.display = "block";
+			y.style.display = "none";
+			document.getElementById("togglebutton").innerHTML = "Show Card History";
+		}
+	}
+
 // Triggers the “Empty Deck” Message
 
 	function emptyDECK() {
@@ -378,22 +383,38 @@
 
 	function updateDISPLAYS() {
 		document.getElementById("score").textContent = currentscore;
+		let gambithistoryvalue = "";
+		let gambithistoryvariable = "";
+
+		if (valueswitch === 0) {
+			gambithistoryvalue = "Low ";
+		} else if (valueswitch === 1) {
+			gambithistoryvalue = "High ";
+		} else {
+			gambithistoryvalue = "";
+		}
+
+		if (variable === "empty") {
+			gambithistoryvariable = "";
+		} else {
+			gambithistoryvariable = variable;
+		}
 
 		if (document.getElementById("card_history").innerHTML !== "") {
 			document.getElementById("card_history").innerHTML = 
-			result2 + "<br>" + result + "<br><br>" + document.getElementById("card_history").innerHTML;
+			gambithistoryvalue + gambithistoryvariable + "<br>" + result2 + "<br>" + result + "<br><br>" + document.getElementById("card_history").innerHTML;
 		} else {
 			document.getElementById("card_history").innerHTML = 
-			result2 + "<br>" + result + "<br>" + document.getElementById("card_history").innerHTML;
+			gambithistoryvalue + gambithistoryvariable + "<br>" + result2 + "<br>" + result + "<br>" + document.getElementById("card_history").innerHTML;
 		}
 
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
-			document.getElementById("lifepoints").textContent = "Last Chance!";
+			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available!";
 			clearGAMBIT2();
 		} else {
-			document.getElementById("lifepoints").textContent = "You Lost!";
+			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Game Over";
 			clearGAMBIT2();
 		}
@@ -412,6 +433,14 @@
 		}
 
 		cards = fillARRAY();
+
+		document.getElementById("table_suit_1").innerHTML = "";
+		document.getElementById("table_number").innerHTML = "";
+		document.getElementById("table_suit_2").innerHTML = "";
+
+		document.getElementById("hand_suit_1").innerHTML = "";
+		document.getElementById("hand_number").innerHTML = "";
+		document.getElementById("hand_suit_2").innerHTML = "";
 
 		currentscore = 0;
 		lifepoints = 3;
@@ -457,12 +486,14 @@
 		element = "None";
 		multiplier = 1;
 
-		document.getElementById("gambit_left").innerHTML = "None";
-		document.getElementById("gambit_right").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("gambit_left").innerHTML = "";
+		document.getElementById("gambit_right").innerHTML = "";
 
 		document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 		pickTABLECARD();
+		updateTESTVALUES();
 	}
 
 // Life Point Related Functions
@@ -543,7 +574,7 @@
 		
 		}
 
-		if (rank === "Ace") {
+		if (rank === "A") {
 			acecardscounter = acecardscounter + 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
@@ -563,25 +594,29 @@
 			document.getElementById("jokercards").innerHTML = jokercardscounter;
 		}
 
-		if (suit === "Clubs ♣️") {
+		if (suit === "♣️") {
 			clubscardscounter = clubscardscounter + 1;
 			document.getElementById("clubscards").innerHTML = clubscardscounter;
 		}
 
-		if (suit === "Spades ♠️") {
+		if (suit === "♠️") {
 			spadescardscounter = spadescardscounter + 1;
 			document.getElementById("spadescards").innerHTML = spadescardscounter;
 		}
 
-		if (suit === "Diamonds ♦️") {
+		if (suit === "♦️") {
 			diamondscardscounter = diamondscardscounter + 1;
 			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
 		}
 
-		if (suit === "Hearts ♥️") {
+		if (suit === "♥️") {
 			heartscardscounter = heartscardscounter + 1;
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
+
+		document.getElementById("hand_suit_1").innerHTML = suit;
+		document.getElementById("hand_number").innerHTML = rank;
+		document.getElementById("hand_suit_2").innerHTML = suit;
 	}
 
 // Picks the Next Table Card
@@ -620,7 +655,7 @@
 		
 		}
 
-		if (rank === "Ace") {
+		if (rank === "A") {
 			acecardscounter = acecardscounter + 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
@@ -640,25 +675,29 @@
 			document.getElementById("jokercards").innerHTML = jokercardscounter;
 		}
 
-		if (suit === "Clubs ♣️") {
+		if (suit === "♣️") {
 			clubscardscounter = clubscardscounter + 1;
 			document.getElementById("clubscards").innerHTML = clubscardscounter;
 		}
 
-		if (suit === "Spades ♠️") {
+		if (suit === "♠️") {
 			spadescardscounter = spadescardscounter + 1;
 			document.getElementById("spadescards").innerHTML = spadescardscounter;
 		}
 
-		if (suit === "Diamonds ♦️") {
+		if (suit === "♦️") {
 			diamondscardscounter = diamondscardscounter + 1;
 			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
 		}
 
-		if (suit === "Hearts ♥️") {
+		if (suit === "♥️") {
 			heartscardscounter = heartscardscounter + 1;
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
+
+		document.getElementById("table_suit_1").innerHTML = suit;
+		document.getElementById("table_number").innerHTML = rank;
+		document.getElementById("table_suit_2").innerHTML = suit;
 	}
 
 		pickTABLECARD();
@@ -683,7 +722,7 @@
 			pickTABLECARD();
 		} else {
 			lifepoints = 0;
-			document.getElementById("lifepoints").textContent = "You Lost!";
+			document.getElementById("lifepoints").textContent = "0";
 			streak = 0;
 			document.getElementById("streak").textContent = "0";
 			lastchance = 0;
@@ -695,7 +734,7 @@
 // Sets the Color, Suit, Number and Number & Suit Gambits
 
 	function gambit() {
-		if (document.getElementById("gambit_left").innerHTML === "None" && document.getElementById("gambit_right").innerHTML === "None") return;
+		if (document.getElementById("gambit_left").innerHTML === "" && document.getElementById("gambit_right").innerHTML === "") return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -729,7 +768,7 @@
 
 		eval('var check = ' + element);
 
-		if (rank === 'Ace') {
+		if (rank === 'A') {
 			SPEvalue = acevalue;
 
 			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
