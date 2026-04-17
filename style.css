@@ -73,13 +73,20 @@
 		background-color: #A9A9A9;
 	}
 
-	.special_button {
+	.special_button_1,
+	.special_button_2 {
 		width: fit-content;
-		height: fit-content
+		height: fit-content;
 		color: #191919;
 		background-color: #D3D3D3;
 		border: 0.1875rem solid #b5b5b5; /* 3px */
 		border-radius: 0.3125rem; /* 5px */
+	}
+
+	.special_button_1.highlight,
+	.special_button_2.highlight {
+		color: white;
+		background-color: #A9A9A9;
 	}
 
 	.button_content {
