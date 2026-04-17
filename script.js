@@ -29,6 +29,13 @@
 	let valuemodifiertable = 0;
 	let valuemodifierhand = 0;
 
+	let valuemultiplier = 1;
+	let colormultiplier = 1;
+	let suitmultiplier = 3;
+	let valuecolormultiplier = 3;
+	let valuesuitmultiplier = 6;
+	let jokermultiplier = 10;
+
 	let redcardscounter = 0;
 	let blackcardscounter = 0;
 	let jokercardscounter = 0;
@@ -201,14 +208,13 @@
 				multiplier = 1;
 
 				document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
-
 		}
 
 		if (valuearray.includes(gambit1)) {
 			if (colorarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "color";
-				multiplier = 3;
+				multiplier = valuecolormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
 
@@ -221,7 +227,7 @@
 			} else if (suitarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "suit";
-				multiplier = 6;
+				multiplier = valuesuitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
 
@@ -234,7 +240,7 @@
 			} else {
 				variable = "empty";
 				element = "empty";
-				multiplier = 1;
+				multiplier = valuemultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
 
@@ -251,7 +257,7 @@
 				valueswitch = -1;
 				variable = gambit2;
 				element = "color";
-				multiplier = 1;
+				multiplier = colormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
 
@@ -261,7 +267,7 @@
 				valueswitch = -1;
 				variable = gambit2;
 				element = "suit";
-				multiplier = 3;
+				multiplier = suitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
 
@@ -271,7 +277,7 @@
 				valueswitch = -1;
 				variable = gambit1;
 				element = "color";
-				multiplier = 10;
+				multiplier = jokermultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
 		}
@@ -298,6 +304,134 @@
 			eval('document.getElementById(variable).textContent = ' + variable);
 		}
 	}
+
+// Set Up Multipliers
+
+function setMULTIPLIERS() {
+	document.getElementById("value_mult_disp").value = valuemultiplier;
+	document.getElementById("color_mult_disp").value = colormultiplier;
+	document.getElementById("suit_mult_disp").value = suitmultiplier;
+	document.getElementById("value_color_mult_disp").value = valuecolormultiplier;
+	document.getElementById("value_suit_mult_disp").value = valuesuitmultiplier;
+	document.getElementById("joker_mult_disp").value = jokermultiplier;
+}
+
+setMULTIPLIERS();
+
+// Change Multiplier
+
+function changeMultiplier(type, delta) {
+    let newValue = 1;
+    
+    switch(type) {
+        case 'value': 
+            valuemultiplier = Math.min(20, Math.max(1, valuemultiplier + delta));
+            newValue = valuemultiplier;
+            break;
+        case 'color': 
+            colormultiplier = Math.min(20, Math.max(1, colormultiplier + delta));
+            newValue = colormultiplier;
+            break;
+        case 'suit': 
+            suitmultiplier = Math.min(20, Math.max(1, suitmultiplier + delta));
+            newValue = suitmultiplier;
+            break;
+        case 'value_color': 
+            valuecolormultiplier = Math.min(20, Math.max(1, valuecolormultiplier + delta));
+            newValue = valuecolormultiplier;
+            break;
+        case 'value_suit': 
+            valuesuitmultiplier = Math.min(20, Math.max(1, valuesuitmultiplier + delta));
+            newValue = valuesuitmultiplier;
+            break;
+        case 'joker': 
+            jokermultiplier = Math.min(20, Math.max(1, jokermultiplier + delta));
+            newValue = jokermultiplier;
+            break;
+    }
+
+    const displayElement = document.getElementById(type + "_mult_disp");
+    if (displayElement) {
+        displayElement.value = newValue;
+    }
+}
+
+// Handle Deck Presets
+
+let currentPresetIndex = 0;
+
+const presets = [
+    {
+        name: "Standard",
+        config: {
+            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
+            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
+            "value_mult": 1, "color_mult": 1, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10
+        }
+    },
+    {
+        name: "Face-Off",
+        config: {
+            "include-numbers": false, "include-faces": true, "include-aces": true,
+            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 0,
+            "value_mult": 2, "color_mult": 2, "suit_mult": 3, "value_color_mult": 4, "value_suit_mult": 5, "joker_mult": 1
+        }
+    },
+    {
+        name: "Chaos",
+        config: {
+            "include-numbers": true, "include-faces": false, "include-aces": true,
+            "suit-hearts": true, "suit-diamonds": false, "suit-clubs": true, "suit-spades": false, "include-jokers": true,
+            "mult-hearts": 2, "mult-diamonds": 0, "mult-clubs": 2, "mult-spades": 0, "mult-jokers": 5,
+            "value_mult": 5, "color_mult": 5, "suit_mult": 5, "value_color_mult": 10, "value_suit_mult": 10, "joker_mult": 20
+        }
+    }
+];
+
+function applyPreset() {
+    const preset = presets[currentPresetIndex];
+    const cfg = preset.config;
+
+    // 1. Update UI Element Name
+    document.getElementById('preset-name').textContent = `${preset.name}`;
+
+    // 2. Update Checkboxes
+    const checkboxes = ["include-numbers", "include-faces", "include-aces", "suit-hearts", "suit-diamonds", "suit-clubs", "suit-spades", "include-jokers"];
+    checkboxes.forEach(id => {
+        document.getElementById(id).checked = cfg[id];
+    });
+
+    // 3. Update Suit Quantity Inputs
+    const quantities = ["mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-jokers"];
+    quantities.forEach(id => {
+        document.getElementById(id).value = cfg[id];
+    });
+
+    // 4. Update Global Multiplier Variables
+    valuemultiplier = cfg["value_mult"];
+    colormultiplier = cfg["color_mult"];
+    suitmultiplier = cfg["suit_mult"];
+    valuecolormultiplier = cfg["value_color_mult"];
+    valuesuitmultiplier = cfg["value_suit_mult"];
+    jokermultiplier = cfg["joker_mult"];
+
+    // 5. Update Multiplier Display Inputs
+    document.getElementById('value_mult_disp').value = valuemultiplier;
+    document.getElementById('color_mult_disp').value = colormultiplier;
+    document.getElementById('suit_mult_disp').value = suitmultiplier;
+    document.getElementById('value_color_mult_disp').value = valuecolormultiplier;
+    document.getElementById('value_suit_mult_disp').value = valuesuitmultiplier;
+    document.getElementById('joker_mult_disp').value = jokermultiplier;
+}
+
+function changePreset(delta) {
+    currentPresetIndex += delta;
+    if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
+    if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
+    applyPreset();
+}
 
 // Deck of Cards Maker
 
@@ -706,7 +840,7 @@ function generateCustomDeck() {
 		selectCARD();
 
 		currentscore = Math.floor(currentscore + streak + value / 2);
-		addORremove('lifepoints', 1, '-');
+		// addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
 		updateDISPLAYS();
 		updateTESTVALUES();
