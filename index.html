@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 
@@ -78,44 +76,38 @@
 			Streak: <span id="streak">0</span>
 		</div>
 
-		<div class="button_divisions">
-			<button onclick="runGAMBIT();"><span class="button_content">Set</span></button>
-			<button onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
-			<button onclick="reset();"><span class="button_content">Reset</span></button>
+		<div class="button_divisions" style="width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
+			<button style="width: stretch; flex: 1; height: 35px" onclick="runGAMBIT();"><span class="button_content">Set</span></button>
+			<button style="width: stretch; flex: 1; height: 35px" onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
+			<button style="width: stretch; flex: 1; height: 35px" onclick="reset();"><span class="button_content">Reset</span></button>
 		</div>
 
-		<div style="display: flex; margin: auto; width: fit-content; align-items: center;">
+		<div class="button_divisions" style="display: flex; gap: 5px; margin: auto; flex-direction: column; align-items: center;">
 
-			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; align-items: center;">
-				<button style="width: stretch;" class="special_button" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
-				<button style="width: stretch;" class="special_button" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
+			<div style="margin: auto; display: flex; width: 300px; gap: 5px; align-items: center;">
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_1" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♥️');"><span class="button_content">♥️</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♦️');"><span class="button_content">♦️</span></button>
 			</div>
 
-			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; align-items: center;">
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
+			<div style="margin: auto; display: flex; width: 300px; gap: 5px; align-items: center;">
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_1" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♣️');"><span class="button_content">♣️</span></button>
+				<button style="width: stretch; flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♠️');"><span class="button_content">♠️</span></button>
 			</div>
 
-			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; text-align: center;">
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♥️');"><span class="button_content">♥️</span></button>
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♣️');"><span class="button_content">♣️</span></button>
-			</div>
-
-			<div class="button_divisions" style="margin: auto; display: flex; gap: 5px; flex-direction: column; text-align: center;">
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♦️');"><span class="button_content">♦️</span></button>
-				<button style="width: stretch;" class="special_button" onclick="setgambitRIGHT('♠️');"><span class="button_content">♠️</span></button>
+			<div style="margin: auto; display: flex; width: 300px; gap: 5px; align-items: center;">
+				<button id="joker_button" style="width: stretch; flex: 1; height: 35px" class="special_button_1" onclick="setgambitLEFT('Special')"><span class="button_content">I'm Feeling Lucky</span></button>
 			</div>
 
 		</div>
 
-		<div class="button_divisions">
-			<button class="special_button" onclick="jokerGAMBIT(); clearGAMBIT2();"><span class="button_content">I'm Feeling Lucky</span></button>
-		</div>
-
-		<div class="button_divisions">
-			<button onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
-			<button onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Sacrifice</span></button>
-			<button onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
+		<div class="button_divisions" style="width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
+			<button style="width: stretch; flex: 1; height: 35px" onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
+			<button style="width: stretch; flex: 1; height: 35px" onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Sacrifice</span></button>
+			<button style="width: stretch; flex: 1; height: 35px" onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
 		</div>
 
 		<div class="button_divisions">
@@ -134,23 +126,26 @@
 
 		<div class="history_icons" style="display: flex; align-items: center; flex-direction: column;">
 
-			<div class="icon_counter">
-				🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
-				<br>
-				♣️: <span id="clubscards">0</span> ♦️: <span id="diamondscards">0</span>
-				<br>
-				♠️: <span id="spadescards">0</span> ♥️: <span id="heartscards">0</span>
-				<br>
-				▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span>
-				<br>
-				🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span>
-				<br>
-				Cards Left: <span id="remaining"></span>
-				<br>
-				Card History:
-				<br>
-				(Table & Hand)
+			<div class="icon_counter" style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
+				<div>
+					🟥: <span id="redcards">0</span><br>
+					♦️: <span id="diamondscards">0</span><br>
+					♥️: <span id="heartscards">0</span><br>
+					▼: <span id="lowcards">0</span><br>
+					🂡: <span id="acecards">0</span>
+				</div>
+				<div>
+					⬛: <span id="blackcards">0</span><br>
+					♣️: <span id="clubscards">0</span><br>
+					♠️: <span id="spadescards">0</span><br>
+					▲: <span id="highcards">0</span><br>
+					🃏: <span id="jokercards">0</span>
+				</div>
 			</div>
+
+			<div>Cards Left: <span id="remaining"></span></div>
+			<div>Card History:</div>
+			<div>(Table & Hand)</div>
 
 			<div id="card_history" class="card_history" style="width: stretch"></div>
 
