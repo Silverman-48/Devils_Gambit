@@ -11,9 +11,10 @@
 <body>
 
 <div id="main_menu" style="display: none">
-	<button style="margin-bottom: 10px; width: 200px;" onclick="toggleMAINMENU(); reset();"><span class="button_content">Apply Deck Changes</span></button>
 
 <div style="display: flex; flex-direction: column; gap: 5px; border: 5px solid white; width: 320px; margin: auto; padding: 10px; border-radius: 10px; text-align: left;">
+
+	<button style="width: 200px; margin: auto;" onclick="toggleMAINMENU(); reset();"><span class="button_content">Apply Deck Changes</span></button>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
     <button type="button" onclick="changePreset(-1)" style="height: 30px; width: 40px"><span class="button_content"> « </span></button>
@@ -133,8 +134,6 @@
 
 	<div id="flex_element_1" class="flex_element_1" style="display: block">
 
-	<button style="margin-bottom: 10px; width: fit-content;" onclick="toggleMAINMENU();"><span class="button_content">Change Deck</span></button><br>
-
 		<button class="cheats_button" onclick="showELEMENT('cheats')">
 			<div class="high_score">
 				High Score: <span id="highscore">0</span>
@@ -213,44 +212,41 @@
 			Streak: <span id="streak">0</span>
 		</div>
 
-		<div class="button_divisions" style="max-width: 370px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
+		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
 			<button style="width: stretch; flex: 1; height: 35px" onclick="runGAMBIT();"><span class="button_content">Set</span></button>
 			<button style="width: stretch; flex: 1; height: 35px" onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
 			<button style="width: stretch; flex: 1; height: 35px" onclick="reset();"><span class="button_content">Reset</span></button>
 		</div>
 
 	<div id="gameplay_buttons" style="display: block">
-		<div class="button_divisions" style="display: flex; gap: 5px; justify-content: center; align-items: flex-start; max-width: 370px; margin: auto;">
-
-			<div style="display: flex; flex: 4; gap: 5px; flex-direction: column;">
+		<div class="button_divisions" style="display: flex; flex-direction: column; gap: 5px; justify-content: center; align-items: flex-start; max-width: 300px; margin: auto;">
         
-				<div style="display: flex; gap: 5px;">
+				<div style="display: flex; gap: 5px; width: 300px;">
 					<button style="flex: 1; height: 35px" class="special_button_1" onclick="setgambitLEFT('Low');"><span class="button_content">Low</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('Red');"><span class="button_content">Red</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♥️');"><span class="button_content">♥️</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♦️');"><span class="button_content">♦️</span></button>
 				</div>
 
-				<div style="display: flex; gap: 5px;">
+				<div style="display: flex; gap: 5px; width: 300px;">
 					<button style="flex: 1; height: 35px" class="special_button_1" onclick="setgambitLEFT('High');"><span class="button_content">High</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('Black');"><span class="button_content">Black</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♣️');"><span class="button_content">♣️</span></button>
 					<button style="flex: 1; height: 35px" class="special_button_2" onclick="setgambitRIGHT('♠️');"><span class="button_content">♠️</span></button>
 				</div>
-			</div>
 
-			<button id="joker_button" style="flex: 1; height: 75px; display: flex; align-items: center; justify-content: center;" class="special_button_1" onclick="setgambitLEFT('Special')">
-				<span class="button_content" style="font-size: 18px">I'm Feeling Lucky</span>
+			<button id="joker_button" style="flex: 1; height: 35px; display: flex; align-items: center; justify-content: center; width: 100%" class="special_button_1" onclick="setgambitLEFT('Special')">
+				<span class="button_content">I'm Feeling Lucky</span>
 			</button>
 
 		</div>
 
-		<div class="button_divisions" style="max-width: 370px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
-			<button style="width: stretch; flex: 1; height: 35px" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Cards</span></button>
+		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
 			<button style="width: stretch; flex: 1; height: 35px" onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
 			<button style="width: stretch; flex: 1; height: 35px" onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Sacrifice</span></button>
 			<button style="width: stretch; flex: 1; height: 35px" onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
 		</div>
+
 	</div>
 
 		<div id="last_chance" class="button_divisions" style="display: none">
@@ -262,6 +258,11 @@
 			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
 			<br>
 			<span class="info">Output: <span id="output">0</span></span>
+		</div>
+
+		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
+			<button style="width: stretch; flex: 1; height: 35px" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Cards</span></button>
+			<button style="width: stretch; flex: 1; height: 35px" onclick="toggleMAINMENU();"><span class="button_content">Presets</span></button>
 		</div>
 
 	</div>
