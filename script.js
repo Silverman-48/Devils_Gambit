@@ -9,7 +9,7 @@
 	let cards = [];
 
 	let suitarray = ['♣️', '♦️', '♠️', '♥️'];
-	let colorarray = ['Red', 'Black'];
+	let colorarray = ['Red', 'Black', 'Special'];
 	let valuearray = ['Low', 'High'];
 
 	let variable = "None";
@@ -48,15 +48,29 @@
 			return;
 		}
 
+		const buttons_1 = document.querySelectorAll('.special_button_1');
+		buttons_1.forEach(btn => btn.classList.remove('highlight'));
+
+		const buttons_2 = document.querySelectorAll('.special_button_2');
+		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
 		document.getElementById("empty_gambit").innerHTML = "None";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
+
 		setCURRENTGAMBIT();
+		updateTESTVALUES();
 	}
 
 // Secondary Reset for Other Functions
 
 	function clearGAMBIT2() {
+		const buttons_1 = document.querySelectorAll('.special_button_1');
+		buttons_1.forEach(btn => btn.classList.remove('highlight'));
+
+		const buttons_2 = document.querySelectorAll('.special_button_2');
+		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
 		document.getElementById("empty_gambit").innerHTML = "None";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
@@ -76,6 +90,10 @@
 			return;
 		}
 
+		const buttons = document.querySelectorAll('.special_button_1');
+
+		buttons.forEach(btn => btn.classList.remove('highlight'));
+
 		document.getElementById("empty_gambit").innerHTML = "";
 
 		let textgambit_left = document.getElementById("gambit_left");
@@ -85,13 +103,23 @@
 		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod1) {
-			textgambit_right.innerHTML = "";
+			if (mod2 === "") {
+				document.getElementById("empty_gambit").innerHTML = "None";
+			}
+			textgambit_left.innerHTML = "";
 			setCURRENTGAMBIT();
 			updateTESTVALUES();
 			return;
 		}
 
 		textgambit_left.innerHTML = buttonelement;
+
+		buttons.forEach(btn => {
+			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "I'm Feeling Lucky" && buttonelement === "Special") {
+				btn.classList.add('highlight');
+
+			}
+		});
 
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
@@ -106,22 +134,40 @@
 			return;
 		}
 
-		document.getElementById("empty_gambit").innerHTML = "";
+		const buttons = document.querySelectorAll('.special_button_2');
+
+		buttons.forEach(btn => btn.classList.remove('highlight'));
 
 		let textgambit_left = document.getElementById("gambit_left");
 		let textgambit_right = document.getElementById("gambit_right");
+
+		if (variable === "Special") {
+			textgambit_left.innerHTML = "";
+			document.getElementById("joker_button").classList.remove('highlight');
+		}
+
+		document.getElementById("empty_gambit").innerHTML = "";
 
 		let mod1 = textgambit_left.innerHTML;
 		let mod2 = textgambit_right.innerHTML;
 
 		if (buttonelement === mod2) {
-			textgambit_left.innerHTML = "";
+			if (mod1 === "") {
+				document.getElementById("empty_gambit").innerHTML = "None";
+			}
+			textgambit_right.innerHTML = "";
 			setCURRENTGAMBIT();
 			updateTESTVALUES();
 			return;
 		}
 
 		textgambit_right.innerHTML = buttonelement;
+
+		buttons.forEach(btn => {
+			if (btn.textContent.trim() === buttonelement) {
+				btn.classList.add('highlight');
+			}
+		});
 
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
@@ -206,15 +252,15 @@
 				multiplier = 3;
 
 		}
-	}
 
-// Checks If Gambit is Regular or Value, and Runs It
+		if (gambit1 === "Special") {
+				document.getElementById("currentgambit").innerHTML = "Joker Gambit";
 
-	function runGAMBIT() {
-		if (valueswitch > -1) {
-			gambitVALUE();
-		} else {
-			gambit();
+				valueswitch = -1;
+				variable = gambit1;
+				element = "color";
+				multiplier = 10;
+
 		}
 	}
 
@@ -305,12 +351,16 @@
 			return;
 		}
 
-		document.getElementById("currentgambit").innerHTML = "Round Skiped";
+		valueswitch = -1;
+		variable = "Skip";
+
+		document.getElementById("currentgambit").innerHTML = "Round Skipped";
 		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '-');
 		selectCARD();
 		updateDISPLAYS();
+		updateTESTVALUES();
 		pickTABLECARD();
 	}
 
@@ -492,6 +542,12 @@
 
 		document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
+		const buttons_1 = document.querySelectorAll('.special_button_1');
+		buttons_1.forEach(btn => btn.classList.remove('highlight'));
+
+		const buttons_2 = document.querySelectorAll('.special_button_2');
+		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
 		pickTABLECARD();
 		updateTESTVALUES();
 	}
@@ -510,8 +566,9 @@
 			document.getElementById("streak").textContent = streak;
 			lifepoints = lifepoints + 1;
 			document.getElementById("lifepoints").textContent = lifepoints;
-			document.getElementById("currentgambit").textContent = "Streak Sacrificed";
+			document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
 		} else {
+			document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/3)";
 			return;
 		}
 	}
@@ -526,6 +583,9 @@
 			return;
 		}
 
+		valueswitch = -1;
+		variable = "Blank";
+
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
 		addORremove('blanks', 1, '-');
@@ -536,6 +596,7 @@
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
 		updateDISPLAYS();
+		updateTESTVALUES();
 		pickTABLECARD();
 	}
 
@@ -711,14 +772,15 @@
 			return;
 		}
 
-		document.getElementById("currentgambit").innerHTML = "Joker Gambit (Win or Lose)";
+		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
 
 		selectCARD();
 
 		if (color === 'Special') {
-			currentscore = currentscore + value * 10;
+			currentscore = currentscore + value * multiplier;
 			addORremove('streak', 1, '+');
 			updateDISPLAYS();
+			updateTESTVALUES();
 			pickTABLECARD();
 		} else {
 			lifepoints = 0;
@@ -727,7 +789,20 @@
 			document.getElementById("streak").textContent = "0";
 			lastchance = 0;
 			updateDISPLAYS();
+			updateTESTVALUES();
 			pickTABLECARD();
+		}
+	}
+
+// Checks If Gambit is Regular or Value, and Runs It
+
+	function runGAMBIT() {
+		if (variable === "Special") {
+			jokerGAMBIT();
+		} else if (valueswitch > -1) {
+			gambitVALUE();
+		} else {
+			gambit();
 		}
 	}
 
