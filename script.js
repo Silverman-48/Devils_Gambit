@@ -8,6 +8,9 @@
 	let lastchance = 1;
 	let cards = [];
 
+	let firstTimeTable = true;
+	let firstTimeHand = true;
+
 	let suitarray = ['♣️', '♦️', '♠️', '♥️'];
 	let colorarray = ['Red', 'Black', 'Special'];
 	let valuearray = ['Low', 'High'];
@@ -91,6 +94,7 @@
 		}
 
 		const buttons = document.querySelectorAll('.special_button_1');
+		const buttons_2 = document.querySelectorAll('.special_button_2');
 
 		buttons.forEach(btn => btn.classList.remove('highlight'));
 
@@ -113,6 +117,19 @@
 		}
 
 		textgambit_left.innerHTML = buttonelement;
+		
+		setCURRENTGAMBIT();
+		updateTESTVALUES();
+
+		if (buttonelement === "Special") {
+			textgambit_right.innerHTML = "";
+			buttons.forEach(btn => {
+				btn.classList.remove('highlight');
+			});
+			buttons_2.forEach(btn => {
+				btn.classList.remove('highlight');
+			});
+		}
 
 		buttons.forEach(btn => {
 			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "I'm Feeling Lucky" && buttonelement === "Special") {
@@ -120,9 +137,6 @@
 
 			}
 		});
-
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
 	}
 
 // Changes the Text for Right-Side Gambits
@@ -163,14 +177,14 @@
 
 		textgambit_right.innerHTML = buttonelement;
 
+		setCURRENTGAMBIT();
+		updateTESTVALUES();
+
 		buttons.forEach(btn => {
 			if (btn.textContent.trim() === buttonelement) {
 				btn.classList.add('highlight');
 			}
 		});
-
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
 	}
 
 // Sets the Current Gambit Values
@@ -181,22 +195,22 @@
 		gambit2 = document.getElementById("gambit_right").innerHTML;
 
 		if (gambit1 === "" && gambit2 === "") {
-				document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
-
 				valueswitch = -1;
 				variable = "None";
 				element = "None";
 				multiplier = 1;
 
+				document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+
 		}
 
 		if (valuearray.includes(gambit1)) {
 			if (colorarray.includes(gambit2)) {
-				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x3)";
-
 				variable = gambit2;
 				element = "color";
 				multiplier = 3;
+
+				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -205,11 +219,11 @@
 				}
 
 			} else if (suitarray.includes(gambit2)) {
-				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x6)";
-
 				variable = gambit2;
 				element = "suit";
 				multiplier = 6;
+
+				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -218,11 +232,11 @@
 				}
 
 			} else {
-				document.getElementById("currentgambit").innerHTML = "Value Gambit (x1)";
-
 				variable = "empty";
 				element = "empty";
 				multiplier = 1;
+
+				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -234,33 +248,32 @@
 		}
 
 		if (colorarray.includes(gambit2) && gambit1 === "") {
-				document.getElementById("currentgambit").innerHTML = "Color Gambit (x1)";
-
 				valueswitch = -1;
 				variable = gambit2;
 				element = "color";
 				multiplier = 1;
 
+				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
+
 		}
 
 		if (suitarray.includes(gambit2) && gambit1 === "") {
-				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x3)";
-
 				valueswitch = -1;
 				variable = gambit2;
 				element = "suit";
 				multiplier = 3;
 
+				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
+
 		}
 
 		if (gambit1 === "Special") {
-				document.getElementById("currentgambit").innerHTML = "Joker Gambit";
-
 				valueswitch = -1;
 				variable = gambit1;
 				element = "color";
 				multiplier = 10;
 
+				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
 		}
 	}
 
@@ -288,58 +301,124 @@
 
 // Deck of Cards Maker
 
-	function fillARRAY() {
+	const standardSuits = [
+		{ suit: "♥️", color: "Red" },
+		{ suit: "♦️", color: "Red" },
+		{ suit: "♣️", color: "Black" },
+		{ suit: "♠️", color: "Black" }
+	];
 
-		const suits = [
-			{ suit: "♥️", color: "Red" },
-			{ suit: "♦️", color: "Red" },
-			{ suit: "♣️", color: "Black" },
-			{ suit: "♠️", color: "Black" }
-		]
+	const standardRanks = [
+		{ rank: "A", value: 20 },
+		{ rank: "2", value: 2 },
+		{ rank: "3", value: 3 },
+		{ rank: "4", value: 4 },
+		{ rank: "5", value: 5 },
+		{ rank: "6", value: 6 },
+		{ rank: "7", value: 7 },
+		{ rank: "8", value: 8 },
+		{ rank: "9", value: 9 },
+		{ rank: "10", value: 10 },
+		{ rank: "J", value: 10 },
+		{ rank: "Q", value: 10 },
+		{ rank: "K", value: 10 }
+	];
 
-		const ranks = [
-			{ rank: "A", value: 20 },
-			{ rank: "2", value: 2, },
-			{ rank: "3", value: 3 },
-			{ rank: "4", value: 4 },
-			{ rank: "5", value: 5 },
-			{ rank: "6", value: 6 },
-			{ rank: "7", value: 7 },
-			{ rank: "8", value: 8 },
-			{ rank: "9", value: 9 },
-			{ rank: "10", value: 10 },
-			{ rank: "Q", value: 10 },
-			{ rank: "J", value: 10 },
-			{ rank: "K", value: 10 }
-		]
+	const standardExtras = [
+		{ rank: "J1", value: 20, suit: "🃏", color: "Special" },
+		{ rank: "J2", value: 20, suit: "🃏", color: "Special" }
+	];
 
-		const deck = [];
-
-		suits.forEach(({ suit, color }) => {
-			ranks.forEach(({ rank, value }) => {
-				deck.push({ rank, value, suit: suit, color });
-			});
-		});
-
-		deck.push(
-			{ rank: "J1", value: 20, suit: "🃏", color: "Special" },
-			{ rank: "J2", value: 20, suit: "🃏", color: "Special" }
-		);
-
+	// Function purely for shuffling any array (Deck)
+	function shuffleDeck(deck) {
 		let currentIndex = deck.length;
 
-		while (currentIndex != 0) {
-
+		while (currentIndex !== 0) {
 			let randomIndex = Math.floor(Math.random() * currentIndex);
 			currentIndex--;
-
 			[deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]];
 		}
 
 		return deck;
 	}
 
-	cards = fillARRAY();
+	// Function to generate the deck based on provided rules
+	// We default extraCards to an empty array so it's optional
+	function createDeck(suits, ranks, extraCards = []) {
+		const deck = [];
+
+		// Generate the standard combinations
+		suits.forEach(({ suit, color }) => {
+			ranks.forEach(({ rank, value }) => {
+				deck.push({ rank, value, suit, color });
+			});
+		});
+
+		// Add any special cards (like Jokers) to the deck
+		deck.push(...extraCards);
+
+		// Return the shuffled deck
+		return shuffleDeck(deck);
+	}
+
+// Change Card Quantity
+
+function changeQty(id, delta) {
+    const input = document.getElementById(id);
+    let newValue = parseInt(input.value) + delta;
+    
+    // Enforce your hard limits (1 to 10)
+    if (newValue < 1) newValue = 1;
+    if (newValue > 10) newValue = 10;
+    
+    input.value = newValue;
+}
+
+// Generate Deck
+
+function generateCustomDeck() {
+    // 1. Handle Suits with Multipliers
+    const selectedSuits = [];
+    const suitIds = { "♥️": "hearts", "♦️": "diamonds", "♣️": "clubs", "♠️": "spades" };
+
+    standardSuits.forEach(s => {
+        const id = suitIds[s.suit];
+        const isChecked = document.getElementById(`suit-${id}`).checked;
+        if (isChecked) {
+            // Get the multiplier value (e.g., 2), restricted between 1 and 10
+            const mult = Math.min(Math.max(parseInt(document.getElementById(`mult-${id}`).value) || 1, 1), 10);
+            for (let i = 0; i < mult; i++) {
+                selectedSuits.push(s);
+            }
+        }
+    });
+
+    // 2. Handle Ranks (Keeping it simple/standard)
+    const includeNumbers = document.getElementById('include-numbers').checked;
+    const includeFaces = document.getElementById('include-faces').checked;
+    const includeAces = document.getElementById('include-aces').checked;
+
+    const selectedRanks = standardRanks.filter(r => {
+        if (r.rank === "A") return includeAces;
+        if (["J", "Q", "K"].includes(r.rank)) return includeFaces;
+        return includeNumbers;
+    });
+
+    // 3. Handle Jokers with Multipliers
+    const selectedExtras = [];
+    if (document.getElementById('include-jokers').checked) {
+        const jMult = Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 1, 1), 10);
+        for (let i = 0; i < jMult; i++) {
+            // This adds both J1 and J2 from your standardExtras for every 1x multiplier
+            selectedExtras.push(...standardExtras);
+        }
+    }
+
+    // 4. Return the deck to the global 'cards' variable
+    return createDeck(selectedSuits, selectedRanks, selectedExtras);
+}
+
+	cards = generateCustomDeck();
 
 // Skips a Round
 
@@ -368,10 +447,8 @@
 
 	function lastCHANCE(variable) {
 		if (lastchance === 0) return;
-		if (blanks === 0) return;
 
 		lastchance = lastchance - 1;
-		addORremove('blanks', 1, '-');
 
 		const randomNumber = Math.floor(Math.random() * 4) + 1;
 		document.getElementById("output").textContent = randomNumber;
@@ -380,7 +457,9 @@
 		if (randomNumber === diceroll) {
 
 			addORremove('lifepoints', 1, '+');
-			document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
+			document.getElementById("currentgambit").innerHTML = "One More Chance!";
+			document.getElementById("last_chance").style.display = "none";
+			document.getElementById("gameplay_buttons").style.display = "block";
 
 		} else {
 
@@ -406,6 +485,21 @@
 		}
 	}
 
+// Show / Hide Game or Main Menu
+
+	function toggleMAINMENU() {
+		var x = document.getElementById('main_menu');
+		var y = document.getElementById('game_screen');
+
+		if (x.style.display == "block") {
+			x.style.display = "none";
+			y.style.display = "block";
+		} else {
+			x.style.display = "block";
+			y.style.display = "none";
+		}
+	}
+
 // Show / Hide Main Interface and Card History
 
 	function toggleELEMENTS() {
@@ -415,18 +509,25 @@
 		if (x.style.display == "block") {
 			x.style.display = "none";
 			y.style.display = "block";
-			document.getElementById("togglebutton").innerHTML = "Show Game Screen";
 		} else {
 			x.style.display = "block";
 			y.style.display = "none";
-			document.getElementById("togglebutton").innerHTML = "Show Card History";
 		}
 	}
 
 // Triggers the “Empty Deck” Message
 
 	function emptyDECK() {
-		document.getElementById("tablecard").textContent = "No more cards left!";
+		document.getElementById("currentgambit").textContent = "No more cards left!";
+		document.getElementById("gambit_left").textContent = "";
+		document.getElementById("gambit_right").textContent = "";
+		document.getElementById("empty_gambit").textContent = "None";
+
+		const buttons_1 = document.querySelectorAll('.special_button_1');
+		buttons_1.forEach(btn => btn.classList.remove('highlight'));
+
+		const buttons_2 = document.querySelectorAll('.special_button_2');
+		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 	}
 
 // Update the Score, Card History and Score Displays
@@ -462,6 +563,8 @@
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available!";
+			document.getElementById("gameplay_buttons").style.display = "none";
+			document.getElementById("last_chance").style.display = "block";
 			clearGAMBIT2();
 		} else {
 			document.getElementById("lifepoints").textContent = "0";
@@ -482,7 +585,14 @@
 			document.getElementById("highscore").innerHTML = score;
 		}
 
-		cards = fillARRAY();
+		document.getElementById("prev_table_card").style.visibility = "hidden";
+		document.getElementById("prev_hand_card").style.visibility = "hidden";
+		document.getElementById("hand_card").style.visibility = "hidden";
+
+		document.getElementById("gameplay_buttons").style.display = "block";
+		document.getElementById("last_chance").style.display = "none";
+
+		cards = generateCustomDeck();
 
 		document.getElementById("table_suit_1").innerHTML = "";
 		document.getElementById("table_number").innerHTML = "";
@@ -498,6 +608,9 @@
 		streak = 0;
 		lastchance = 1;
 		acevalue = 0;
+
+		firstTimeTable = true;
+		firstTimeHand = true;
 
 		document.getElementById("score").innerHTML = currentscore;
 		document.getElementById("lifepoints").textContent = 3;
@@ -540,7 +653,7 @@
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
 
-		document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
+		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -607,6 +720,14 @@
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
+		}
+
+		if (firstTimeHand) {
+			firstTimeHand = false;
+			document.getElementById("hand_card").style.visibility = "visible";
+		} else {
+			document.getElementById("prev_hand_card").style.visibility = "visible";
+			document.getElementById("hand_suit_prev").innerHTML = document.getElementById("hand_suit_1").innerHTML;
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
@@ -688,6 +809,13 @@
 			return;
 		}
 
+		if (firstTimeTable) {
+			firstTimeTable = false;
+		} else {
+			document.getElementById("prev_table_card").style.visibility = "visible";
+			document.getElementById("table_suit_prev").innerHTML = document.getElementById("table_suit_1").innerHTML;
+		}
+
 		const index = Math.floor(Math.random() * cards.length);
 		const card = cards.splice(index, 1)[0];
 		const value = card.value;
@@ -761,7 +889,7 @@
 		document.getElementById("table_suit_2").innerHTML = suit;
 	}
 
-		pickTABLECARD();
+	pickTABLECARD();
 
 // Sets the Joker Gambit
 
@@ -803,6 +931,10 @@
 			gambitVALUE();
 		} else {
 			gambit();
+		}
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
 		}
 	}
 
