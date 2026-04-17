@@ -22,11 +22,11 @@
 
 	.high_score {
 		color: white;
-		font-size: 2.8125rem; /* 45px */
+		font-size: 1.875rem; /* 30px */
 	}
 
 	.score {
-		font-size: 2.1875rem; /* 35px */
+		font-size: 1.875rem; /* 30px */
 	}
 
 
@@ -141,3 +141,35 @@
 	.card_history::-webkit-scrollbar-thumb:hover {
 		background: #D3D3D3;
 	}
+
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.stepper button {
+		width: 30px;
+		height: 30px;
+		color: black;
+		background-color: white;
+		border: 0.1875rem solid #D3D3D3; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
+}
+
+.stepper button:hover {
+		color: white;
+		background-color: #A9A9A9;
+}
+
+.stepper input {
+    width: 30px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
