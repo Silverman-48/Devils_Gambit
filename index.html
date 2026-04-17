@@ -13,7 +13,14 @@
 <div id="main_menu" style="display: none">
 	<button style="margin-bottom: 10px; width: 200px;" onclick="toggleMAINMENU(); reset();"><span class="button_content">Apply Deck Changes</span></button>
 
-<div style="display: flex; flex-direction: column; gap: 5px; border: 5px solid white; width: 300px; margin: auto; padding: 10px; border-radius: 10px; text-align: left;">
+<div style="display: flex; flex-direction: column; gap: 5px; border: 5px solid white; width: 320px; margin: auto; padding: 10px; border-radius: 10px; text-align: left;">
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <button type="button" onclick="changePreset(-1)" style="height: 30px; width: 40px"><span class="button_content"> « </span></button>
+    <div style="text-align: center">Preset:<br><strong id="preset-name" style="text-align: center">Standard</strong></div>
+    <button type="button" onclick="changePreset(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
+</div>
+
         <label><input type="checkbox" id="include-numbers" checked> Numbers (2-10)</label>
         <label><input type="checkbox" id="include-faces" checked> Face Cards (J, Q, K)</label>
         <label><input type="checkbox" id="include-aces" checked> Aces (A)</label>
@@ -63,7 +70,62 @@
             </div>
         </label>
 
+        <label>
+		Value Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('value', -1);">-</button>
+			<input type="text" id="value_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('value', 1);">+</button>
+		</div>
+        </label>
+
+        <label>
+		Color Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('color', -1);">-</button>
+			<input type="text" id="color_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('color', 1);">+</button>
+		</div>
+        </label>
+
+        <label>
+		Suit Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('suit', -1);">-</button>
+			<input type="text" id="suit_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('suit', 1);">+</button>
+		</div>
+        </label>
+
+        <label>
+		Value & Color Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('value_color', -1);">-</button>
+			<input type="text" id="value_color_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('value_color', 1);">+</button>
+		</div>
+        </label>
+
+        <label>
+		Value & Suit Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('value_suit', -1);">-</button>
+			<input type="text" id="value_suit_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('value_suit', 1);">+</button>
+		</div>
+        </label>
+
+        <label>
+		Joker Mult.: 
+		<div class="stepper">
+		<button type="button" onclick="changeMultiplier('joker', -1);">-</button>
+			<input type="text" id="joker_mult_disp" readonly>
+		<button type="button" onclick="changeMultiplier('joker', 1);">+</button>
+		</div>
+        </label>
+
 </div>
+
 
 </div>
 
