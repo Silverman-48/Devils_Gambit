@@ -1,5 +1,10 @@
 	// Variables Used
 
+	let currentlifepoints = 3;
+	let currentblanks = 1;
+	let currentstreak = 0;
+	let currentlastchance = 1;
+
 	let currentscore = 0;
 	let lifepoints = 3;
 	let blanks = 1;
@@ -305,18 +310,43 @@
 		}
 	}
 
+	function addORremoveCHEATS(variable, value, sign, max) {
+    eval('var check = ' + variable);
+    
+    // 1. Keep your existing "Floor" (zero) check
+    if (check === 0 && sign === "-") {
+        return;
+    } else {
+        // 2. Perform the math
+        eval(variable + ' = ' + variable + sign + value);
+        
+        // 3. Perform the "Ceiling" (max) check
+        // We only care about the limit if a 'max' was actually provided
+        if (max !== undefined) {
+            eval('if (' + variable + ' > ' + max + ') { ' + variable + ' = ' + max + '; }');
+        }
+
+        // 4. Update the display
+        eval('if(document.getElementById(variable)) { document.getElementById(variable).value = ' + variable + '; }');
+    }
+}
+
 // Set Up Multipliers
 
-function setMULTIPLIERS() {
+function setMULTDISPLAYS() {
 	document.getElementById("value_mult_disp").value = valuemultiplier;
 	document.getElementById("color_mult_disp").value = colormultiplier;
 	document.getElementById("suit_mult_disp").value = suitmultiplier;
 	document.getElementById("value_color_mult_disp").value = valuecolormultiplier;
 	document.getElementById("value_suit_mult_disp").value = valuesuitmultiplier;
 	document.getElementById("joker_mult_disp").value = jokermultiplier;
+	document.getElementById("currentlifepoints").value = currentlifepoints;
+	document.getElementById("currentblanks").value = currentblanks;
+	document.getElementById("currentstreak").value = currentstreak;
+	document.getElementById("currentlastchance").value = currentlastchance;
 }
 
-setMULTIPLIERS();
+setMULTDISPLAYS();
 
 // Change Multiplier
 
@@ -362,32 +392,65 @@ let currentPresetIndex = 0;
 
 const presets = [
     {
-        name: "Standard",
+        name: "A Day In Hell",
         config: {
             "include-numbers": true, "include-faces": true, "include-aces": true,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
-            "value_mult": 1, "color_mult": 1, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10
+            "value_mult": 1, "color_mult": 1, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
+            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1
         }
     },
     {
-        name: "Face-Off",
+        name: "Black Plague",
         config: {
-            "include-numbers": false, "include-faces": true, "include-aces": true,
+            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "suit-hearts": false, "suit-diamonds": false, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
+            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 2, "mult-spades": 2, "mult-jokers": 1,
+            "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
+            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2
+        }
+    },
+    {
+        name: "Red Death",
+        config: {
+            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": false, "suit-spades": false, "include-jokers": true,
+            "mult-hearts": 2, "mult-diamonds": 2, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
+            "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
+            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2
+        }
+    },
+    {
+        name: "No Gods No Masters",
+        config: {
+            "include-numbers": true, "include-faces": false, "include-aces": false,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
-            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 0,
-            "value_mult": 2, "color_mult": 2, "suit_mult": 3, "value_color_mult": 4, "value_suit_mult": 5, "joker_mult": 1
+            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
+            "value_mult": 2, "color_mult": 1, "suit_mult": 3, "value_color_mult": 4, "value_suit_mult": 8, "joker_mult": 10,
+            "lifepoints": 3, "blanks": 0, "streak": 0, "lastchance": 0
         }
     },
     {
-        name: "Chaos",
+        name: "Dealing With The Devil",
         config: {
-            "include-numbers": true, "include-faces": false, "include-aces": true,
-            "suit-hearts": true, "suit-diamonds": false, "suit-clubs": true, "suit-spades": false, "include-jokers": true,
-            "mult-hearts": 2, "mult-diamonds": 0, "mult-clubs": 2, "mult-spades": 0, "mult-jokers": 5,
-            "value_mult": 5, "color_mult": 5, "suit_mult": 5, "value_color_mult": 10, "value_suit_mult": 10, "joker_mult": 20
+            "include-numbers": true, "include-faces": false, "include-aces": false,
+            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-hearts": 3, "mult-diamonds": 3, "mult-clubs": 3, "mult-spades": 3, "mult-jokers": 1,
+            "value_mult": 1, "color_mult": 1, "suit_mult": 2, "value_color_mult": 3, "value_suit_mult": 3, "joker_mult": 20,
+            "lifepoints": 5, "blanks": 1, "streak": 0, "lastchance": 1
         }
-    }
+    },
+    {
+        name: "Eternal Damnation",
+        config: {
+            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-hearts": 10, "mult-diamonds": 10, "mult-clubs": 10, "mult-spades": 10, "mult-jokers": 0,
+            "value_mult": 1, "color_mult": 1, "suit_mult": 1, "value_color_mult": 5, "value_suit_mult": 10, "joker_mult": 0,
+            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0
+        }
+    },
 ];
 
 function applyPreset() {
@@ -416,6 +479,10 @@ function applyPreset() {
     valuecolormultiplier = cfg["value_color_mult"];
     valuesuitmultiplier = cfg["value_suit_mult"];
     jokermultiplier = cfg["joker_mult"];
+    currentlifepoints = cfg["lifepoints"];
+    currentblanks = cfg["blanks"];
+    currentstreak = cfg["streak"];
+    currentlastchance = cfg["lastchance"];
 
     // 5. Update Multiplier Display Inputs
     document.getElementById('value_mult_disp').value = valuemultiplier;
@@ -424,6 +491,10 @@ function applyPreset() {
     document.getElementById('value_color_mult_disp').value = valuecolormultiplier;
     document.getElementById('value_suit_mult_disp').value = valuesuitmultiplier;
     document.getElementById('joker_mult_disp').value = jokermultiplier;
+    document.getElementById('currentlifepoints').value = currentlifepoints;
+    document.getElementById('currentblanks').value = currentblanks;
+    document.getElementById('currentstreak').value = currentstreak;
+    document.getElementById('currentlastchance').value = currentlastchance;
 }
 
 function changePreset(delta) {
@@ -597,11 +668,11 @@ function generateCustomDeck() {
 
 		} else {
 
-			if (lifepoints === 0) {
-				document.getElementById("lifepoints").textContent = "0";
-				document.getElementById("currentgambit").innerHTML = "Game Over";
-			} else {
+			if (lastchance >= 1) {
+				document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
 				return;
+			} else {
+				document.getElementById("currentgambit").innerHTML = "Game Over";
 			}
 
 		}
@@ -687,16 +758,20 @@ function generateCustomDeck() {
 
 		if (document.getElementById("card_history").innerHTML !== "") {
 			document.getElementById("card_history").innerHTML = 
-			gambithistoryvalue + gambithistoryvariable + "<br>" + result2 + "<br>" + result + "<br><br>" + document.getElementById("card_history").innerHTML;
+			gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
+			"<br>L:" + lifepoints + " B:" + blanks + " S:" + streak + " Score: " + currentscore + 
+			"<br>Table: " + result2 + "<br>Hand: " + result + "<br><br>" + document.getElementById("card_history").innerHTML;
 		} else {
 			document.getElementById("card_history").innerHTML = 
-			gambithistoryvalue + gambithistoryvariable + "<br>" + result2 + "<br>" + result + "<br>" + document.getElementById("card_history").innerHTML;
+			gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
+			"<br>L:" + lifepoints + " B:" + blanks + " S:" + streak + " Score: " + currentscore + 
+			"<br>Table: " + result2 + "<br>Hand: " + result + "<br>" + document.getElementById("card_history").innerHTML;
 		}
 
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "0";
-			document.getElementById("currentgambit").innerHTML = "Last Chance Available!";
+			document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
 			clearGAMBIT2();
@@ -719,9 +794,21 @@ function generateCustomDeck() {
 			document.getElementById("highscore").innerHTML = score;
 		}
 
-		document.getElementById("prev_table_card").style.visibility = "hidden";
-		document.getElementById("prev_hand_card").style.visibility = "hidden";
-		document.getElementById("hand_card").style.visibility = "hidden";
+		document.getElementById("hand_card").style.borderStyle = "dotted";
+		document.getElementById("hand_card").style.background = "none";
+
+		document.getElementById("prev_hand_card").style.borderStyle = "dotted";
+		document.getElementById("prev_hand_card").style.background = "none";
+		document.getElementById("prev_hand_card").style.borderRight = "none";
+
+		document.getElementById("prev_table_card").style.borderStyle = "dotted";
+		document.getElementById("prev_table_card").style.background = "none";
+		document.getElementById("prev_table_card").style.borderRight = "none";
+
+		document.getElementById("table_suit_prev").innerHTML = "";
+		document.getElementById("table_number_prev").innerHTML = "";
+		document.getElementById("hand_suit_prev").innerHTML = "";
+		document.getElementById("hand_number_prev").innerHTML = "";
 
 		document.getElementById("gameplay_buttons").style.display = "block";
 		document.getElementById("last_chance").style.display = "none";
@@ -737,17 +824,17 @@ function generateCustomDeck() {
 		document.getElementById("hand_suit_2").innerHTML = "";
 
 		currentscore = 0;
-		lifepoints = 3;
-		blanks = 1;
-		streak = 0;
-		lastchance = 1;
+		lifepoints = currentlifepoints;
+		blanks = currentblanks;
+		streak = currentstreak;
+		lastchance = currentlastchance;
 		acevalue = 0;
 
 		firstTimeTable = true;
 		firstTimeHand = true;
 
 		document.getElementById("score").innerHTML = currentscore;
-		document.getElementById("lifepoints").textContent = 3;
+		document.getElementById("lifepoints").textContent = lifepoints;
 		document.getElementById("blanks").innerHTML = blanks;
 		document.getElementById("streak").innerHTML = streak;
 		document.getElementById("output").innerHTML = "0";
@@ -801,21 +888,33 @@ function generateCustomDeck() {
 
 // Life Point Related Functions
 
-	function getLIFEPOINT() {
+	function sacrificeSTREAK(streaknumber, reward, id) {
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
+
+		streaknumber = parseInt(streaknumber);
 		
-		if (streak >= 3) {
-			streak = streak - 3;
+		if (streak >= streaknumber) {
+			streak = streak - streaknumber;
 			document.getElementById("streak").textContent = streak;
-			lifepoints = lifepoints + 1;
-			document.getElementById("lifepoints").textContent = lifepoints;
-			document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
+			reward = reward + 1;
+			document.getElementById(id).textContent = reward;
+
+			if (id === 'lifepoints') {
+				lifepoints = reward;
+				document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
+			}
+
+			if (id === 'blanks') {
+				blanks = reward;
+				document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Blank)";
+			}
+
 		} else {
-			document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/3)";
+			document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/" + streaknumber + ")";
 			return;
 		}
 	}
@@ -858,10 +957,14 @@ function generateCustomDeck() {
 
 		if (firstTimeHand) {
 			firstTimeHand = false;
-			document.getElementById("hand_card").style.visibility = "visible";
+			document.getElementById("hand_card").style.borderStyle = "solid";
+			document.getElementById("hand_card").style.background = "white";
 		} else {
-			document.getElementById("prev_hand_card").style.visibility = "visible";
+			document.getElementById("prev_hand_card").style.borderStyle = "solid";
+			document.getElementById("prev_hand_card").style.background = "#D4D4D4";
+			document.getElementById("prev_hand_card").style.borderRight = "none";
 			document.getElementById("hand_suit_prev").innerHTML = document.getElementById("hand_suit_1").innerHTML;
+			document.getElementById("hand_number_prev").innerHTML = document.getElementById("hand_number").innerHTML;
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
@@ -946,8 +1049,11 @@ function generateCustomDeck() {
 		if (firstTimeTable) {
 			firstTimeTable = false;
 		} else {
-			document.getElementById("prev_table_card").style.visibility = "visible";
+			document.getElementById("prev_table_card").style.borderStyle = "solid";
+			document.getElementById("prev_table_card").style.background = "#D4D4D4";
+			document.getElementById("prev_table_card").style.borderRight = "none";
 			document.getElementById("table_suit_prev").innerHTML = document.getElementById("table_suit_1").innerHTML;
+			document.getElementById("table_number_prev").innerHTML = document.getElementById("table_number").innerHTML;
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
