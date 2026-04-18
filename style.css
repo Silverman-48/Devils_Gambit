@@ -1,1505 +1,181 @@
-	// Variables Used
-
-	let playerwin = false;
-
-	let currentlifepoints = 3;
-	let currentblanks = 1;
-	let currentstreak = 0;
-	let currentlastchance = 1;
-
-	let savedscore = 100;
-	let currentscoretobeat = "∞";
-	let currentscore = 0;
-	let lifepoints = 3;
-	let blanks = 1;
-	let streak = 0;
-	let acevalue = 0;
-	let lastchance = 1;
-	let cards = [];
-
-	let firstTimeTable = true;
-	let firstTimeHand = true;
-
-	let suitarray = ['♣️', '♦️', '♠️', '♥️'];
-	let colorarray = ['Red', 'Black', 'Special'];
-	let valuearray = ['Low', 'High'];
-
-	let variable = "None";
-	let element = "None";
-	let multiplier = 1;
-	let valueswitch = -1;
-
-	let value = "";
-	let rank = "";
-	let suit = "";
-	let color = "";
-	let result = "";
-	let result2 = "";
-	let valuemodifiertable = 0;
-	let valuemodifierhand = 0;
-
-let gambitMultipliers = {
-    'Low': 1, 'High': 1,
-    'Red': 1, 'Black': 1,
-    '♥️': 3, '♦️': 3, '♣️': 3, '♠️': 3,
-    'Low Red': 3, 'Low Black': 3, 'High Red': 3, 'High Black': 3,
-    'Low ♥️': 6, 'Low ♦️': 6, 'Low ♣️': 6, 'Low ♠️': 6,
-    'High ♥️': 6, 'High ♦️': 6, 'High ♣️': 6, 'High ♠️': 6,
-    'Special': 10
-};
-
-	let sacrificelife = 3;
-	let sacrificeblanks = 6;
-
-	let redcardscounter = 0;
-	let blackcardscounter = 0;
-	let jokercardscounter = 0;
-	let clubscardscounter = 0;
-	let diamondscardscounter = 0;
-	let spadescardscounter = 0;
-	let heartscardscounter = 0;
-	let lowcardscounter = 0;
-	let highcardscounter = 0;
-	let acecardscounter = 0;
-
-	let lowredcardscounter = 0;
-	let lowblackcardscounter = 0;
-	let lowheartscardscounter = 0;
-	let lowdiamondscardscounter = 0;
-	let lowclubscardscounter = 0;
-	let lowspadescardscounter = 0;
-
-	let highredcardscounter = 0;
-	let highblackcardscounter = 0;
-	let highheartscardscounter = 0;
-	let highdiamondscardscounter = 0;
-	let highclubscardscounter = 0;
-	let highspadescardscounter = 0;
-
-	let empty = "empty";
-
-// Resets the Gambit Values
-
-	function clearGAMBIT() {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		const buttons_1 = document.querySelectorAll('.special_button_1');
-		buttons_1.forEach(btn => btn.classList.remove('highlight'));
-
-		const buttons_2 = document.querySelectorAll('.special_button_2');
-		buttons_2.forEach(btn => btn.classList.remove('highlight'));
-
-		document.getElementById("empty_gambit").innerHTML = "None";
-		document.getElementById("gambit_left").innerHTML = "";
-		document.getElementById("gambit_right").innerHTML = "";
-
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
+	body {
+		font-family: 'Trebuchet MS';
+		font-size: 1.25rem; /* 20px */
+		text-align: center;
+		color: white;
+		background-color: #191919;
+		line-height: 1.3;
+		height: fit-content;
+		margin: 20px;
 	}
 
-// Secondary Reset for Other Functions
-
-	function clearGAMBIT2() {
-		const buttons_1 = document.querySelectorAll('.special_button_1');
-		buttons_1.forEach(btn => btn.classList.remove('highlight'));
-
-		const buttons_2 = document.querySelectorAll('.special_button_2');
-		buttons_2.forEach(btn => btn.classList.remove('highlight'));
-
-		document.getElementById("empty_gambit").innerHTML = "None";
-		document.getElementById("gambit_left").innerHTML = "";
-		document.getElementById("gambit_right").innerHTML = "";
-
-		variable = "None";
-		element = "None";
-		multiplier = 1;
-		valueswitch = -1;
+	.flex_element_1 {
+		text-align: center;
+		margin: auto;
 	}
 
-// Changes the Text for Left-Side Gambits
-	
-	function setgambitLEFT(buttonelement) {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		const buttons = document.querySelectorAll('.special_button_1');
-		const buttons_2 = document.querySelectorAll('.special_button_2');
-
-		buttons.forEach(btn => btn.classList.remove('highlight'));
-
-		document.getElementById("empty_gambit").innerHTML = "";
-
-		let textgambit_left = document.getElementById("gambit_left");
-		let textgambit_right = document.getElementById("gambit_right");
-
-		let mod1 = textgambit_left.innerHTML;
-		let mod2 = textgambit_right.innerHTML;
-
-		if (buttonelement === "Special") {
-			textgambit_right.innerHTML = "";
-			buttons.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-			buttons_2.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-		}
-
-		if (buttonelement === mod1) {
-			if (mod2 === "") {
-				document.getElementById("empty_gambit").innerHTML = "None";
-				document.getElementById("percentage").innerHTML = "";
-			}
-			textgambit_left.innerHTML = "";
-			setCURRENTGAMBIT();
-			updateTESTVALUES();
-			return;
-		}
-
-		textgambit_left.innerHTML = buttonelement;
-		
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
-
-		buttons.forEach(btn => {
-			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "I'm Feeling Lucky" && buttonelement === "Special") {
-				btn.classList.add('highlight');
-
-			}
-		});
+	.flex_element_2 {
+		text-align: center;
+		width: fit-content;
+		margin: auto;
 	}
 
-// Changes the Text for Right-Side Gambits
-
-	function setgambitRIGHT(buttonelement) {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		const buttons = document.querySelectorAll('.special_button_2');
-
-		buttons.forEach(btn => btn.classList.remove('highlight'));
-
-		let textgambit_left = document.getElementById("gambit_left");
-		let textgambit_right = document.getElementById("gambit_right");
-
-		if (variable === "Special") {
-			textgambit_left.innerHTML = "";
-			document.getElementById("joker_button").classList.remove('highlight');
-		}
-
-		document.getElementById("empty_gambit").innerHTML = "";
-
-		let mod1 = textgambit_left.innerHTML;
-		let mod2 = textgambit_right.innerHTML;
-
-		if (buttonelement === mod2) {
-			if (mod1 === "") {
-				document.getElementById("empty_gambit").innerHTML = "None";
-				document.getElementById("percentage").innerHTML = "";
-			}
-			textgambit_right.innerHTML = "";
-			setCURRENTGAMBIT();
-			updateTESTVALUES();
-			return;
-		}
-
-		textgambit_right.innerHTML = buttonelement;
-
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
-
-		buttons.forEach(btn => {
-			if (btn.textContent.trim() === buttonelement) {
-				btn.classList.add('highlight');
-			}
-		});
+	.high_score {
+		color: white;
+		font-size: 1.875rem; /* 30px */
 	}
 
-// Sets the Current Gambit Values
-
-	function setCURRENTGAMBIT() {
-
-		calculateCHANCE();
-
-                let fullGambitText = document.getElementById("full_gambit").textContent.trim();
-    
-                multiplier = gambitMultipliers[fullGambitText] || 1;
-
-		gambit1 = document.getElementById("gambit_left").innerHTML;
-		gambit2 = document.getElementById("gambit_right").innerHTML;
-
-		if (gambit1 === "" && gambit2 === "") {
-				valueswitch = -1;
-				variable = "None";
-				element = "None";
-				multiplier = 1;
-
-				document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
-		}
-
-		if (valuearray.includes(gambit1)) {
-			if (colorarray.includes(gambit2)) {
-				variable = gambit2;
-				element = "color";
-
-				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
-
-				if (gambit1 === "Low") {
-					valueswitch = 0;
-				} else {
-					valueswitch = 1;
-				}
-
-			} else if (suitarray.includes(gambit2)) {
-				variable = gambit2;
-				element = "suit";
-
-				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
-
-				if (gambit1 === "Low") {
-					valueswitch = 0;
-				} else {
-					valueswitch = 1;
-				}
-
-			} else {
-				variable = "empty";
-				element = "empty";
-
-				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
-
-				if (gambit1 === "Low") {
-					valueswitch = 0;
-				} else {
-					valueswitch = 1;
-				}
-
-			}
-		}
-
-		if (colorarray.includes(gambit2) && gambit1 === "") {
-				valueswitch = -1;
-				variable = gambit2;
-				element = "color";
-
-				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
-
-		}
-
-		if (suitarray.includes(gambit2) && gambit1 === "") {
-				valueswitch = -1;
-				variable = gambit2;
-				element = "suit";
-
-				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
-
-		}
-
-		if (gambit1 === "Special") {
-				valueswitch = -1;
-				variable = gambit1;
-				element = "color";
-
-				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
-		}
+	.score {
+		font-size: 1.875rem; /* 30px */
 	}
 
-// Calculates Percentages of Gambit Success
 
-function calculateCHANCE() {
-    const gambit = document.getElementById("full_gambit").textContent.trim();
-    
-    let counter = 0;
 
-    // 2. Determine which counter to use
-    switch(gambit) {
-        case 'Low':     counter = lowcardscounter; break;
-        case 'High':    counter = highcardscounter; break;
-        case 'Red':     counter = redcardscounter; break;
-        case 'Black':    counter = blackcardscounter; break;
-        case '♥️':       counter = heartscardscounter; break;
-        case '♦️':       counter = diamondscardscounter; break;
-        case '♣️':       counter = clubscardscounter; break;
-        case '♠️':       counter = spadescardscounter; break;
-        case 'Special': counter = jokercardscounter; break;
+	.current_cards {
+		font-size: 1.875rem; /* 30px */
+	}
 
-        case 'Low Red':     counter = lowredcardscounter; break;
-        case 'Low Black':    counter = lowblackcardscounter; break;
-        case 'Low ♥️':     counter = lowheartscardscounter; break;
-        case 'Low ♦️':    counter = lowdiamondscardscounter; break;
-        case 'Low ♣️':     counter = lowclubscardscounter; break;
-        case 'Low ♠️':    counter = lowspadescardscounter; break;
+	.current_gambit {
+		font-size: 1.875rem; /* 30px */
+		line-height: 1;
+		padding: 0.3125rem; /* 5px */
+	}
 
-        case 'High Red':     counter = highredcardscounter; break;
-        case 'High Black':    counter = highblackcardscounter; break;
-        case 'High ♥️':     counter = highheartscardscounter; break;
-        case 'High ♦️':    counter = highdiamondscardscounter; break;
-        case 'High ♣️':     counter = highclubscardscounter; break;
-        case 'High ♠️':    counter = highspadescardscounter; break;
 
-        default:        counter = 0; document.getElementById("percentage").textContent = ""; return;
-    }
 
-    // 3. Safety check: avoid dividing by zero if the deck is empty
-    if (cards.length > 0) {
-        const chance = (counter / cards.length) * 100;
-        document.getElementById("percentage").textContent = chance.toFixed(2) + "%";
-    } else {
-        document.getElementById("percentage").textContent = "";
-    }
+	.info {
+		font-size: 1.5625rem; /* 25px */
+	}
+
+
+
+	.cheats {
+		display: none;
+	}
+
+	.cheats_button {
+		border: 0;
+		background-color: #191919;
+	}
+
+	.cheats_button:hover {
+		border: 0;
+		background-color: #191919;
+	}
+
+
+
+	button {
+		width: fit-content;
+		color: black;
+		background-color: white;
+		border: 0.1875rem solid #D3D3D3; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	button:hover {
+		color: white;
+		background-color: #A9A9A9;
+	}
+
+	.special_button,
+	.special_button_1,
+	.special_button_2 {
+		width: fit-content;
+		height: fit-content;
+		color: #191919;
+		background-color: #D3D3D3;
+		border: 0.1875rem solid #b5b5b5; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	.special_button.highlight,
+	.special_button_1.highlight,
+	.special_button_2.highlight {
+		color: white;
+		background-color: #A9A9A9;
+	}
+
+	.button_content {
+		font-family: 'Trebuchet MS';
+		font-size: 1.25rem; /* 20px */
+	}
+
+	.button_content2 {
+		font-family: 'Trebuchet MS';
+		font-size: 0.9375rem; /* 15px */
+	}
+
+	.button_divisions {
+		padding: 0.3125rem; /* 5px */
+	}
+
+
+
+	.history_icons {
+		font-size: 1.375rem; /* 22px */
+		line-height: 1.5;
+		margin: auto;
+	}
+
+	.icon_counter {
+		padding-bottom: 0.313rem;
+	}
+
+	.card_history {
+		overflow: auto;
+		margin: auto;
+		height: 16.5625rem; /* 265px */
+		border-top: 0.25rem solid white; /* 4px */
+		border-bottom: 0.25rem solid white; /* 4px */
+		border-radius: 0.3125rem; /* 5px */
+	}
+
+	.card_history::-webkit-scrollbar {
+		width: 0.3125rem; /* 5px */
+	}
+
+	.card_history::-webkit-scrollbar-track {
+		background: #191919;
+		border-radius: 0.625rem; /* 10px */
+	}
+
+	.card_history::-webkit-scrollbar-thumb {
+		background: white;
+		border-radius: 0.625rem; /* 10px */
+	}
+
+	.card_history::-webkit-scrollbar-thumb:hover {
+		background: #D3D3D3;
+	}
+
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    vertical-align: middle;
 }
 
-// Used to Check Debug Values
-
-	function updateTESTVALUES() {
-		document.getElementById("valueswitch").innerHTML = valueswitch;
-		document.getElementById("variable").innerHTML = variable;
-		document.getElementById("element").innerHTML = element;
-		document.getElementById("multiplier").innerHTML = multiplier;
-	}
-
-// New Add / Remove Function
-
-	function addORremove(variable, value, sign) {
-		eval('var check = ' + variable);
-		
-		if (check === 0 && sign === "-") {
-			return;
-		} else {
-			eval(variable + ' = ' + variable + sign + value);
-			eval('document.getElementById(variable).textContent = ' + variable);
-		}
-	}
-
-function addORremoveCHEATS(variableId, value, sign, max) {
-    // 1. Grab the exact input field using the passed ID
-    const inputElement = document.getElementById(variableId);
-    if (!inputElement) return;
-
-    // 2. Read the current value straight from the screen.
-    // This fixes the preset bug because the UI is now our source of truth!
-    let currentValue = parseInt(inputElement.value) || 0;
-    let newValue;
-
-    // 3. Perform the math
-    if (sign === "-") {
-        newValue = currentValue - value;
-        if (newValue <= 0) newValue = 1; // Your existing floor
-    } else if (sign === "+") {
-        newValue = currentValue + value;
-    }
-
-    // 4. Perform the "Ceiling" (max) check
-    if (max !== undefined && newValue > max) {
-        newValue = max;
-    }
-
-    // 5. Update the display
-    inputElement.value = newValue;
-
-    // 6. Safely update your global 'let' variables
-    // A switch statement maps the UI changes to your variables perfectly without eval()
-    switch (variableId) {
-        case 'currentscoretobeat': currentscoretobeat = newValue; break;
-        case 'currentlifepoints': currentlifepoints = newValue; break;
-        case 'currentblanks': currentblanks = newValue; break;
-        case 'currentstreak': currentstreak = newValue; break;
-        case 'currentlastchance': currentlastchance = newValue; break;
-        case 'sacrificelife': sacrificelife = newValue; break;
-        case 'sacrificeblanks': sacrificeblanks = newValue; break;
-    }
+.stepper button {
+		width: 30px;
+		height: 30px;
+		color: black;
+		background-color: white;
+		border: 0.1875rem solid #D3D3D3; /* 3px */
+		border-radius: 0.3125rem; /* 5px */
 }
 
-// Set Up Multipliers
-
-function setMULTDISPLAYS() {
-	document.getElementById("value_mult_disp").value = valuemultiplier;
-	document.getElementById("color_mult_disp").value = colormultiplier;
-	document.getElementById("suit_mult_disp").value = suitmultiplier;
-	document.getElementById("value_color_mult_disp").value = valuecolormultiplier;
-	document.getElementById("value_suit_mult_disp").value = valuesuitmultiplier;
-	document.getElementById("joker_mult_disp").value = jokermultiplier;
-	document.getElementById("currentlifepoints").value = currentlifepoints;
-	document.getElementById("currentblanks").value = currentblanks;
-	document.getElementById("currentstreak").value = currentstreak;
-	document.getElementById("currentlastchance").value = currentlastchance;
-	document.getElementById("sacrificelife").value = sacrificelife;
-	document.getElementById("sacrificeblanks").value = sacrificeblanks;
-	document.getElementById("currentscoretobeat").value = savedscore;
-	document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
+.stepper button:hover {
+		color: white;
+		background-color: #A9A9A9;
 }
 
-setMULTDISPLAYS();
-
-// Change Multiplier
-
-function changeMultiplier(type, delta) {
-    // Update the value in our map (type must match the keys in gambitMultipliers)
-    gambitMultipliers[type] = Math.min(20, Math.max(1, gambitMultipliers[type] + delta));
-    
-    // Update the specific input on the screen
-    // We replace spaces with underscores for the HTML IDs (e.g., "Low Red" becomes "Low_Red")
-    let displayId = type.replace(/\s+/g, '_') + "_mult_disp";
-    const displayElement = document.getElementById(displayId);
-    if (displayElement) {
-        displayElement.value = gambitMultipliers[type];
-    }
+.stepper input {
+    width: 30px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
 }
-
-// Activate Endless Mode
-
-function endlessMODE() {
-    const checkbox = document.getElementById("endless_mode");
-    const scoreInput = document.getElementById("currentscoretobeat");
-    
-    // 1. Find all buttons inside the same div as the score input
-    // This targets only the buttons in that specific 'stepper'
-    const stepperButtons = scoreInput.parentElement.querySelectorAll('button');
-
-    if (checkbox.checked) {
-        savedscore = scoreInput.value; 
-        scoreInput.value = "∞";
-        currentscoretobeat = "∞";
-
-        // 2. Disable all the buttons
-        stepperButtons.forEach(btn => btn.disabled = true);
-    } else {
-        scoreInput.value = savedscore;
-        currentscoretobeat = parseInt(savedscore);
-
-        // 3. Re-enable the buttons
-        stepperButtons.forEach(btn => btn.disabled = false);
-    }
-}
-
-// Handle Deck Presets
-
-let currentPresetIndex = 0;
-
-const presets = [
-    {
-        name: "A Day In Hell",
-        config: {
-            "currentscoretobeat": 100,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
-            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
-            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
-            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
-            "value_mult": 1, "color_mult": 1, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1,
-            "sacrificelife": 3, "sacrificeblanks": 6
-        }
-    },
-    {
-        name: "Black Plague",
-        config: {
-            "currentscoretobeat": 200,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
-            "suit-hearts": false, "suit-diamonds": false, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
-            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
-            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 2, "mult-spades": 2, "mult-jokers": 1,
-            "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2,
-            "sacrificelife": 4, "sacrificeblanks": 8
-        }
-    },
-    {
-        name: "Red Death",
-        config: {
-            "currentscoretobeat": 200,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
-            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": false, "suit-spades": false, "include-jokers": true,
-            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
-            "mult-hearts": 2, "mult-diamonds": 2, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
-            "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2,
-            "sacrificelife": 4, "sacrificeblanks": 8
-        }
-    },
-    {
-        name: "No Gods No Masters",
-        config: {
-            "currentscoretobeat": 200,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": false, "include-aces": false,
-            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
-            "mult-number-low": 4, "mult-number-mid": 4, "mult-number-high": 4, "mult-face": 1, "mult-ace": 1,
-            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
-            "value_mult": 2, "color_mult": 1, "suit_mult": 3, "value_color_mult": 4, "value_suit_mult": 8, "joker_mult": 10,
-            "lifepoints": 3, "blanks": 0, "streak": 0, "lastchance": 0,
-            "sacrificelife": 5, "sacrificeblanks": 10
-        }
-    },
-    {
-        name: "Dealing With The Devil",
-        config: {
-            "currentscoretobeat": 300,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": false, "include-aces": false,
-            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
-            "mult-number-low": 2, "mult-number-mid": 2, "mult-number-high": 2, "mult-face": 2, "mult-ace": 2,
-            "mult-hearts": 3, "mult-diamonds": 3, "mult-clubs": 3, "mult-spades": 3, "mult-jokers": 1,
-            "value_mult": 1, "color_mult": 1, "suit_mult": 2, "value_color_mult": 3, "value_suit_mult": 3, "joker_mult": 20,
-            "lifepoints": 5, "blanks": 1, "streak": 0, "lastchance": 1,
-            "sacrificelife": 3, "sacrificeblanks": 6
-        }
-    },
-    {
-        name: "Eternal Damnation",
-        config: {
-            "currentscoretobeat": 1000,
-            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
-            "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
-            "mult-number-low": 10, "mult-number-mid": 10, "mult-number-high": 10, "mult-face": 10, "mult-ace": 10,
-            "mult-hearts": 10, "mult-diamonds": 10, "mult-clubs": 10, "mult-spades": 10, "mult-jokers": 0,
-            "value_mult": 1, "color_mult": 1, "suit_mult": 1, "value_color_mult": 5, "value_suit_mult": 10, "joker_mult": 0,
-            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0,
-            "sacrificelife": 20, "sacrificeblanks": 20
-        }
-    },
-];
-
-function applyPreset() {
-    const preset = presets[currentPresetIndex];
-    const cfg = preset.config;
-
-    // 1. Update UI Element Name
-    document.getElementById('preset-name').textContent = `${preset.name}`;
-
-    // 2. Update Checkboxes (Numbers, Suits, etc.)
-    const checkboxes = ["include-numbers-low", "include-numbers-mid", "include-numbers-high", "include-faces", "include-aces", "suit-hearts", "suit-diamonds", "suit-clubs", "suit-spades", "include-jokers"];
-    checkboxes.forEach(id => {
-        document.getElementById(id).checked = cfg[id];
-    });
-
-    // 3. Update Suit Quantity Inputs (The card counts in the deck)
-    const quantities = ["mult-number-low", "mult-number-mid", "mult-number-high", "mult-face", "mult-ace", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-jokers"];
-    quantities.forEach(id => {
-        document.getElementById(id).value = cfg[id];
-    });
-
-    // 4. Update Game State Variables
-    currentlifepoints = cfg["lifepoints"];
-    currentblanks = cfg["blanks"];
-    currentstreak = cfg["streak"];
-    currentlastchance = cfg["lastchance"];
-    sacrificelife = cfg["sacrificelife"];
-    sacrificeblanks = cfg["sacrificeblanks"];
-    currentscoretobeat = cfg["currentscoretobeat"];
-
-    // 5. UPDATE THE MULTIPLIER MAP
-    // We map the generic preset values to all specific combinations
-    gambitMultipliers['Low'] = gambitMultipliers['High'] = cfg["value_mult"];
-    gambitMultipliers['Red'] = gambitMultipliers['Black'] = cfg["color_mult"];
-    gambitMultipliers['♥️'] = gambitMultipliers['♦️'] = gambitMultipliers['♣️'] = gambitMultipliers['♠️'] = cfg["suit_mult"];
-    
-    gambitMultipliers['Low Red'] = gambitMultipliers['Low Black'] = 
-    gambitMultipliers['High Red'] = gambitMultipliers['High Black'] = cfg["value_color_mult"];
-    
-    gambitMultipliers['Low ♥️'] = gambitMultipliers['Low ♦️'] = gambitMultipliers['Low ♣️'] = gambitMultipliers['Low ♠️'] = 
-    gambitMultipliers['High ♥️'] = gambitMultipliers['High ♦️'] = gambitMultipliers['High ♣️'] = gambitMultipliers['High ♠️'] = cfg["value_suit_mult"];
-    
-    gambitMultipliers['Special'] = cfg["joker_mult"];
-
-    for (let key in gambitMultipliers) {
-        if (cfg[key] !== undefined) {
-            gambitMultipliers[key] = cfg[key];
-        }
-    }
-
-    // 6. SYNC ALL UI STEPPERS
-    // This loop finds every key in your map and updates the matching HTML input
-    for (let key in gambitMultipliers) {
-        let displayId = key.replace(/\s+/g, '_') + "_mult_disp";
-        const element = document.getElementById(displayId);
-        if (element) {
-            element.value = gambitMultipliers[key];
-        }
-    }
-
-    // 7. Update the rest of the generic UI displays
-    document.getElementById('currentlifepoints').value = currentlifepoints;
-    document.getElementById('currentblanks').value = currentblanks;
-    document.getElementById('currentstreak').value = currentstreak;
-    document.getElementById('currentlastchance').value = currentlastchance;
-    document.getElementById('sacrificelife').value = sacrificelife;
-    document.getElementById('sacrificeblanks').value = sacrificeblanks;
-    document.getElementById('currentscoretobeat').value = currentscoretobeat;
-    document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
-}
-
-function changePreset(delta) {
-    currentPresetIndex += delta;
-    document.getElementById("endless_mode").checked = false;
-    endlessMODE();
-    if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
-    if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
-    applyPreset();
-}
-
-// Deck of Cards Maker
-
-	const standardSuits = [
-		{ suit: "♥️", color: "Red" },
-		{ suit: "♦️", color: "Red" },
-		{ suit: "♣️", color: "Black" },
-		{ suit: "♠️", color: "Black" }
-	];
-
-	const standardRanks = [
-		{ rank: "A", value: 20 },
-		{ rank: "2", value: 2 },
-		{ rank: "3", value: 3 },
-		{ rank: "4", value: 4 },
-		{ rank: "5", value: 5 },
-		{ rank: "6", value: 6 },
-		{ rank: "7", value: 7 },
-		{ rank: "8", value: 8 },
-		{ rank: "9", value: 9 },
-		{ rank: "10", value: 10 },
-		{ rank: "J", value: 10 },
-		{ rank: "Q", value: 10 },
-		{ rank: "K", value: 10 }
-	];
-
-	const standardExtras = [
-		{ rank: "J1", value: 20, suit: "🃏", color: "Special" },
-		{ rank: "J2", value: 20, suit: "🃏", color: "Special" }
-	];
-
-	// Function purely for shuffling any array (Deck)
-	function shuffleDeck(deck) {
-		let currentIndex = deck.length;
-
-		while (currentIndex !== 0) {
-			let randomIndex = Math.floor(Math.random() * currentIndex);
-			currentIndex--;
-			[deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]];
-		}
-
-		return deck;
-	}
-
-	// Function to generate the deck based on provided rules
-	// We default extraCards to an empty array so it's optional
-	function createDeck(suits, ranks, extraCards = []) {
-		const deck = [];
-
-		// Generate the standard combinations
-		suits.forEach(({ suit, color }) => {
-			ranks.forEach(({ rank, value }) => {
-				deck.push({ rank, value, suit, color });
-			});
-		});
-
-		// Add any special cards (like Jokers) to the deck
-		deck.push(...extraCards);
-
-		// Return the shuffled deck
-		return shuffleDeck(deck);
-	}
-
-// Change Card Quantity
-
-function changeQty(id, delta) {
-    const input = document.getElementById(id);
-    let newValue = parseInt(input.value) + delta;
-    
-    // Enforce your hard limits (1 to 10)
-    if (newValue < 1) newValue = 1;
-    if (newValue > 10) newValue = 10;
-    
-    input.value = newValue;
-}
-
-// Generate Deck
-
-function generateCustomDeck() {
-    // 1. Handle Suits with Multipliers
-    const selectedSuits = [];
-    const suitIds = { "♥️": "hearts", "♦️": "diamonds", "♣️": "clubs", "♠️": "spades" };
-
-    standardSuits.forEach(s => {
-        const id = suitIds[s.suit];
-        const isChecked = document.getElementById(`suit-${id}`).checked;
-        if (isChecked) {
-            const mult = Math.min(Math.max(parseInt(document.getElementById(`mult-${id}`).value) || 1, 1), 10);
-            for (let i = 0; i < mult; i++) {
-                selectedSuits.push(s);
-            }
-        }
-    });
-
-    // 2. Handle Ranks with Multipliers
-    const selectedRanks = [];
-
-    standardRanks.forEach(r => {
-        let isIncluded = false;
-        let mult = 1;
-
-        if (r.rank === "A") {
-            isIncluded = document.getElementById('include-aces').checked;
-            mult = parseInt(document.getElementById('mult-ace').value) || 1;
-        } else if (["J", "Q", "K"].includes(r.rank)) {
-            isIncluded = document.getElementById('include-faces').checked;
-            mult = parseInt(document.getElementById('mult-face').value) || 1;
-        } else {
-            const num = parseInt(r.rank); 
-            
-            if (num >= 2 && num <= 4) {
-                isIncluded = document.getElementById('include-numbers-low').checked;
-                mult = parseInt(document.getElementById('mult-number-low').value) || 1;
-            } else if (num >= 5 && num <= 7) {
-                isIncluded = document.getElementById('include-numbers-mid').checked;
-                mult = parseInt(document.getElementById('mult-number-mid').value) || 1;
-            } else if (num >= 8 && num <= 10) {
-                isIncluded = document.getElementById('include-numbers-high').checked;
-                mult = parseInt(document.getElementById('mult-number-high').value) || 1;
-            }
-        }
-
-        if (isIncluded) {
-            mult = Math.min(Math.max(mult, 1), 10);
-            for (let i = 0; i < mult; i++) {
-                selectedRanks.push(r);
-            }
-        }
-    });
-
-    // 3. Handle Jokers with Multipliers
-    const selectedExtras = [];
-    if (document.getElementById('include-jokers').checked) {
-        const jMult = Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 1, 1), 10);
-        for (let i = 0; i < jMult; i++) {
-            selectedExtras.push(...standardExtras);
-        }
-    }
-
-    // 4. Update the global card counters (REVISED)
-    const totalRanks = selectedRanks.length;
-    const totalSuits = selectedSuits.length;
-
-    // --- Base counts for multiplication ---
-    const h = selectedSuits.filter(s => s.suit === '♥️').length;
-    const d = selectedSuits.filter(s => s.suit === '♦️').length;
-    const c = selectedSuits.filter(s => s.suit === '♣️').length;
-    const s = selectedSuits.filter(s => s.suit === '♠️').length;
-    const red = h + d;
-    const black = c + s;
-
-    const low = selectedRanks.filter(r => parseInt(r.rank) >= 2 && parseInt(r.rank) <= 7).length;
-    const high = selectedRanks.filter(r => (parseInt(r.rank) >= 8 && parseInt(r.rank) <= 10) || ["J", "Q", "K"].includes(r.rank)).length;
-    const ace = selectedRanks.filter(r => r.rank === "A").length;
-
-    // --- Standard Counters ---
-    heartscardscounter = h * totalRanks;
-    diamondscardscounter = d * totalRanks;
-    clubscardscounter = c * totalRanks;
-    spadescardscounter = s * totalRanks;
-    redcardscounter = red * totalRanks;
-    blackcardscounter = black * totalRanks;
-    lowcardscounter = low * totalSuits;
-    highcardscounter = high * totalSuits;
-    acecardscounter = ace * totalSuits;
-    jokercardscounter = selectedExtras.length;
-
-    // --- Intersection Counters (Low + Suit/Color) ---
-    lowredcardscounter = low * red;
-    lowblackcardscounter = low * black;
-    lowheartscardscounter = low * h;
-    lowdiamondscardscounter = low * d;
-    lowclubscardscounter = low * c;
-    lowspadescardscounter = low * s;
-
-    // --- Intersection Counters (High + Suit/Color) ---
-    highredcardscounter = high * red;
-    highblackcardscounter = high * black;
-    highheartscardscounter = high * h;
-    highdiamondscardscounter = high * d;
-    highclubscardscounter = high * c;
-    highspadescardscounter = high * s;
-
-    // Update UI (Using your specific IDs)
-    document.getElementById("heartscards").innerHTML = heartscardscounter;
-    document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-    document.getElementById("clubscards").innerHTML = clubscardscounter;
-    document.getElementById("spadescards").innerHTML = spadescardscounter;
-    document.getElementById("redcards").innerHTML = redcardscounter;
-    document.getElementById("blackcards").innerHTML = blackcardscounter;
-    document.getElementById("lowcards").innerHTML = lowcardscounter;
-    document.getElementById("highcards").innerHTML = highcardscounter;
-    document.getElementById("acecards").innerHTML = acecardscounter;
-    document.getElementById("jokercards").innerHTML = jokercardscounter;
-
-    // 5. Return the deck
-    return createDeck(selectedSuits, selectedRanks, selectedExtras);
-}
-
-	cards = generateCustomDeck();
-
-// Skips a Round
-
-	function skipROUND() {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		valueswitch = -1;
-		variable = "Skip";
-		element = "none";
-		multiplier = 1;
-
-		document.getElementById("currentgambit").innerHTML = "Round Skipped";
-		
-		addORremove('lifepoints', 1, '-');
-		addORremove('streak', 1, '-');
-		selectCARD();
-		updateDISPLAYS();
-		updateTESTVALUES();
-		pickTABLECARD();
-
-		document.getElementById("percentage").innerHTML = "";
-	}
-
-// Last Chance Setup
-
-	function lastCHANCE(variable) {
-		if (lastchance === 0) return;
-
-		lastchance = lastchance - 1;
-
-		const randomNumber = Math.floor(Math.random() * 4) + 1;
-		document.getElementById("output").textContent = randomNumber;
-		const diceroll = Number(variable);
-
-		if (randomNumber === diceroll) {
-
-			addORremove('lifepoints', 1, '+');
-			document.getElementById("currentgambit").innerHTML = "One More Chance!";
-			document.getElementById("last_chance").style.display = "none";
-			document.getElementById("gameplay_buttons").style.display = "block";
-
-		} else {
-
-			if (lastchance >= 1) {
-				document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
-				return;
-			} else {
-				document.getElementById("currentgambit").innerHTML = "Game Over";
-			}
-
-		}
-	}
-
-// Show / Hide Elements
-
-	function showELEMENT(element) {
-		var x = document.getElementById(element);
-
-		if (x.style.display == "block") {
-			x.style.display = "none";
-		} else {
-			x.style.display = "block";
-		}
-	}
-
-	function showELEMENTFLEX(element) {
-		var x = document.getElementById(element);
-
-		if (x.style.display == "flex") {
-			x.style.display = "none";
-		} else {
-			x.style.display = "flex";
-		}
-	}
-
-// Show / Hide Game or Main Menu
-
-	function toggleMAINMENU() {
-		var x = document.getElementById('main_menu');
-		var y = document.getElementById('game_screen');
-
-		if (x.style.display == "block") {
-			x.style.display = "none";
-			y.style.display = "block";
-		} else {
-			x.style.display = "block";
-			y.style.display = "none";
-			document.getElementById("score").innerHTML = "0";
-			document.getElementById("highscore").innerHTML = "0";
-		}
-	}
-
-// Show / Hide Main Interface and Card History
-
-	function toggleELEMENTS() {
-		var x = document.getElementById('flex_element_1');
-		var y = document.getElementById('flex_element_2');
-
-		if (x.style.display == "block") {
-			x.style.display = "none";
-			y.style.display = "block";
-		} else {
-			x.style.display = "block";
-			y.style.display = "none";
-		}
-	}
-
-// Triggers the “Empty Deck” Message
-
-	function emptyDECK() {
-		document.getElementById("currentgambit").textContent = "No more cards left!";
-		document.getElementById("gambit_left").textContent = "";
-		document.getElementById("gambit_right").textContent = "";
-		document.getElementById("empty_gambit").textContent = "None";
-		document.getElementById("percentage").innerHTML = "";
-
-		const buttons_1 = document.querySelectorAll('.special_button_1');
-		buttons_1.forEach(btn => btn.classList.remove('highlight'));
-
-		const buttons_2 = document.querySelectorAll('.special_button_2');
-		buttons_2.forEach(btn => btn.classList.remove('highlight'));
-	}
-
-// Update the Score, Card History and Score Displays
-
-	function updateDISPLAYS() {
-		document.getElementById("score").textContent = currentscore;
-		let gambithistoryvalue = "";
-		let gambithistoryvariable = "";
-
-		calculateCHANCE();
-
-		if (valueswitch === 0) {
-			gambithistoryvalue = "Low ";
-		} else if (valueswitch === 1) {
-			gambithistoryvalue = "High ";
-		} else {
-			gambithistoryvalue = "";
-		}
-
-		if (variable === "empty") {
-			gambithistoryvariable = "";
-		} else {
-			gambithistoryvariable = variable;
-		}
-
-		if (document.getElementById("card_history").innerHTML !== "") {
-			document.getElementById("card_history").innerHTML = 
-			gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
-			"<br>L:" + lifepoints + " B:" + blanks + " S:" + streak + " Score: " + currentscore + 
-			"<br>Table: " + result2 + "<br>Hand: " + result + "<br><br>" + document.getElementById("card_history").innerHTML;
-		} else {
-			document.getElementById("card_history").innerHTML = 
-			gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
-			"<br>L:" + lifepoints + " B:" + blanks + " S:" + streak + " Score: " + currentscore + 
-			"<br>Table: " + result2 + "<br>Hand: " + result + "<br>" + document.getElementById("card_history").innerHTML;
-		}
-
-		if (currentscore >= currentscoretobeat) {
-			clearGAMBIT();
-			currentscore = currentscoretobeat;
-			document.getElementById("score").innerHTML = currentscore;
-			document.getElementById("currentgambit").innerHTML = "You Won! (This Time)";
-			playerwin = true;
-			return;
-		}
-
-		if (lifepoints > 0) return;
-		if (lifepoints === 0 && lastchance > 0) {
-			document.getElementById("lifepoints").textContent = "0";
-			document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
-			document.getElementById("gameplay_buttons").style.display = "none";
-			document.getElementById("last_chance").style.display = "block";
-			document.getElementById("percentage").innerHTML = "";
-			clearGAMBIT2();
-		} else {
-			document.getElementById("lifepoints").textContent = "0";
-			document.getElementById("currentgambit").innerHTML = "Game Over";
-			document.getElementById("percentage").innerHTML = "";
-			clearGAMBIT2();
-		}
-	}
-
-// Triggers the Game Reset
-
-	function reset() {
-		var score = document.getElementById("score").innerHTML;
-		var highscore = document.getElementById("highscore").innerHTML;
-		var numberscore = Number(score);
-		var numberhighscore = Number(highscore);
-
-		if (numberscore > numberhighscore) {
-			document.getElementById("highscore").innerHTML = score;
-		}
-
-		document.getElementById("hand_card").style.borderStyle = "dotted";
-		document.getElementById("hand_card").style.background = "none";
-
-		document.getElementById("prev_table_card").style.borderStyle = "dotted";
-		document.getElementById("prev_table_card").style.background = "none";
-		document.getElementById("prev_table_card").style.borderRight = "none";
-
-		document.getElementById("table_suit_prev").innerHTML = "";
-		document.getElementById("table_number_prev").innerHTML = "";
-
-		document.getElementById("gameplay_buttons").style.display = "block";
-		document.getElementById("last_chance").style.display = "none";
-
-		cards = generateCustomDeck();
-
-		document.getElementById("table_suit_1").innerHTML = "";
-		document.getElementById("table_number").innerHTML = "";
-		document.getElementById("table_suit_2").innerHTML = "";
-
-		document.getElementById("hand_suit_1").innerHTML = "";
-		document.getElementById("hand_number").innerHTML = "";
-		document.getElementById("hand_suit_2").innerHTML = "";
-
-		currentscore = 0;
-		lifepoints = currentlifepoints;
-		blanks = currentblanks;
-		streak = currentstreak;
-		lastchance = currentlastchance;
-		acevalue = 0;
-		playerwin = false;
-
-		firstTimeTable = true;
-		firstTimeHand = true;
-
-		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
-		document.getElementById("score").innerHTML = currentscore;
-		document.getElementById("lifepoints").textContent = lifepoints;
-		document.getElementById("blanks").innerHTML = blanks;
-		document.getElementById("streak").innerHTML = streak;
-		document.getElementById("output").innerHTML = "0";
-
-		document.getElementById("tablecard").textContent = "None";
-		document.getElementById("card_history").innerHTML = "";
-		document.getElementById("remaining").innerHTML = cards.length;
-
-		document.getElementById("redcards").innerHTML = redcardscounter;
-		document.getElementById("blackcards").innerHTML = blackcardscounter;
-		document.getElementById("jokercards").innerHTML = jokercardscounter;
-		document.getElementById("clubscards").innerHTML = clubscardscounter;
-		document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-		document.getElementById("spadescards").innerHTML = spadescardscounter;
-		document.getElementById("heartscards").innerHTML = heartscardscounter;
-		document.getElementById("lowcards").innerHTML = lowcardscounter;
-		document.getElementById("highcards").innerHTML = highcardscounter;
-		document.getElementById("acecards").innerHTML = acecardscounter;
-		document.getElementById("percentage").innerHTML = "";
-
-		valueswitch = -1;
-		variable = "None";
-		element = "None";
-		multiplier = 1;
-
-		document.getElementById("empty_gambit").innerHTML = "None";
-		document.getElementById("gambit_left").innerHTML = "";
-		document.getElementById("gambit_right").innerHTML = "";
-
-		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
-
-		const buttons_1 = document.querySelectorAll('.special_button_1');
-		buttons_1.forEach(btn => btn.classList.remove('highlight'));
-
-		const buttons_2 = document.querySelectorAll('.special_button_2');
-		buttons_2.forEach(btn => btn.classList.remove('highlight'));
-
-		pickTABLECARD();
-		updateTESTVALUES();
-	}
-
-// Life Point Related Functions
-
-function sacrificeSTREAK(type) {
-    if (playerwin === true) return;
-    if (lifepoints === 0) return;
-    if (cards.length === 0) {
-        emptyDECK();
-        return;
-    }
-
-	valueswitch = -1;
-	variable = "Sacrifice";
-	element = type;
-	multiplier = 1;
-
-	updateTESTVALUES();
-
-    var streaknumber = (type === "lifepoints") ? sacrificelife : sacrificeblanks;
-
-    // 1. Check if user has enough streak first
-    if (streak < streaknumber) {
-        document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/" + streaknumber + ")";
-	document.getElementById("percentage").innerHTML = "";
-        return;
-    }
-
-    // 2. Handle the sacrifice
-    streak -= streaknumber;
-    document.getElementById("streak").textContent = streak;
-
-    if (type === 'lifepoints') {
-        lifepoints++; // Update global variable
-        document.getElementById("lifepoints").textContent = lifepoints;
-        document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
-	document.getElementById("percentage").innerHTML = "";
-    } else if (type === 'blanks') {
-        blanks++; // Update global variable
-        document.getElementById("blanks").textContent = blanks;
-        document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Blank)";
-	document.getElementById("percentage").innerHTML = "";
-    }
-}
-
-// Blank Related Functions
-
-	function useBLANK() {
-		if (playerwin === true) return;
-		if (blanks === 0) {
-			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
-			document.getElementById("percentage").innerHTML = "";
-			return;
-		};
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		valueswitch = -1;
-		variable = "Blank";
-		element = "none";
-		multiplier = 1;
-
-		document.getElementById("currentgambit").innerHTML = "Blank Used";
-
-		addORremove('blanks', 1, '-');
-
-		selectCARD();
-
-		currentscore = Math.floor(currentscore + streak + acevalue / 2);
-		// addORremove('lifepoints', 1, '-');
-		addORremove('streak', 1, '+');
-		updateDISPLAYS();
-		updateTESTVALUES();
-		pickTABLECARD();
-
-		document.getElementById("percentage").innerHTML = "";
-	}
-
-// Selects the Player's Card
-
-	function selectCARD() {
-		if (playerwin === true) return;
-		if (lifepoints <= 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		if (firstTimeHand) {
-			firstTimeHand = false;
-			document.getElementById("hand_card").style.borderStyle = "solid";
-			document.getElementById("hand_card").style.background = "white";
-		}
-
-		const index = Math.floor(Math.random() * cards.length);
-		card = cards.splice(index, 1)[0];
-		value = card.value;
-		rank = card.rank;
-		suit = card.suit;
-		color = card.color;
-		result = rank.concat(" ", suit);
-
-		document.getElementById("remaining").textContent = cards.length;
-
-		if (value <= 7) {
-		
-			valuemodifierhand = 0;
-			lowcardscounter = lowcardscounter - 1;
-			document.getElementById("lowcards").innerHTML = lowcardscounter;
-		
-		}
-
-		if (value >= 8 && value !== 20) {
-		
-			valuemodifierhand = 1;
-			highcardscounter = highcardscounter - 1;
-			document.getElementById("highcards").innerHTML = highcardscounter;
-		
-		}
-
-		if (rank === "A") {
-			acecardscounter = acecardscounter - 1;
-			document.getElementById("acecards").innerHTML = acecardscounter;
-		}
-
-		if (color === "Red") {
-			redcardscounter = redcardscounter - 1;
-			document.getElementById("redcards").innerHTML = redcardscounter;
-		}
-
-		if (color === "Black") {
-			blackcardscounter = blackcardscounter - 1;
-			document.getElementById("blackcards").innerHTML = blackcardscounter;
-		}
-
-		if (color === "Special") {
-			jokercardscounter = jokercardscounter - 1;
-			document.getElementById("jokercards").innerHTML = jokercardscounter;
-		}
-
-		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter - 1;
-			document.getElementById("clubscards").innerHTML = clubscardscounter;
-		}
-
-		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter - 1;
-			document.getElementById("spadescards").innerHTML = spadescardscounter;
-		}
-
-		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter - 1;
-			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-		}
-
-		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter - 1;
-			document.getElementById("heartscards").innerHTML = heartscardscounter;
-		}
-
-		document.getElementById("hand_suit_1").innerHTML = suit;
-		document.getElementById("hand_number").innerHTML = rank;
-		document.getElementById("hand_suit_2").innerHTML = suit;
-	}
-
-// Picks the Next Table Card
-
-	function pickTABLECARD() {
-		if (playerwin === true) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		if (firstTimeTable) {
-			firstTimeTable = false;
-		} else {
-			document.getElementById("prev_table_card").style.borderStyle = "solid";
-			document.getElementById("prev_table_card").style.background = "white";
-			document.getElementById("prev_table_card").style.borderRight = "none";
-			document.getElementById("table_suit_prev").innerHTML = document.getElementById("table_suit_1").innerHTML;
-			document.getElementById("table_number_prev").innerHTML = document.getElementById("table_number").innerHTML;
-		}
-
-		const index = Math.floor(Math.random() * cards.length);
-		const card = cards.splice(index, 1)[0];
-		const value = card.value;
-		const rank = card.rank;
-		const suit = card.suit;
-		const color = card.color;
-		result2 = rank.concat(" ", suit);
-
-		document.getElementById("tablecard").textContent = result2;
-		document.getElementById("remaining").textContent = cards.length;
-		acevalue = card.value;
-
-		if (value <= 7) {
-		
-			valuemodifiertable = 0;
-			lowcardscounter = lowcardscounter - 1;
-			document.getElementById("lowcards").innerHTML = lowcardscounter;
-		
-		}
-
-		if (value >= 8 && value !== 20) {
-		
-			valuemodifiertable = 1;
-			highcardscounter = highcardscounter - 1;
-			document.getElementById("highcards").innerHTML = highcardscounter;
-		
-		}
-
-		if (rank === "A") {
-			acecardscounter = acecardscounter - 1;
-			document.getElementById("acecards").innerHTML = acecardscounter;
-		}
-
-		if (color === "Red") {
-			redcardscounter = redcardscounter - 1;
-			document.getElementById("redcards").innerHTML = redcardscounter;
-		}
-
-		if (color === "Black") {
-			blackcardscounter = blackcardscounter - 1;
-			document.getElementById("blackcards").innerHTML = blackcardscounter;
-		}
-
-		if (color === "Special") {
-			jokercardscounter = jokercardscounter - 1;
-			document.getElementById("jokercards").innerHTML = jokercardscounter;
-		}
-
-		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter - 1;
-			document.getElementById("clubscards").innerHTML = clubscardscounter;
-		}
-
-		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter - 1;
-			document.getElementById("spadescards").innerHTML = spadescardscounter;
-		}
-
-		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter - 1;
-			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-		}
-
-		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter - 1;
-			document.getElementById("heartscards").innerHTML = heartscardscounter;
-		}
-
-		document.getElementById("table_suit_1").innerHTML = suit;
-		document.getElementById("table_number").innerHTML = rank;
-		document.getElementById("table_suit_2").innerHTML = suit;
-	}
-
-	pickTABLECARD();
-
-// Checks If Gambit is Regular or Value, and Runs It
-
-	function runGAMBIT() {
-		if (variable === "Special") {
-			jokerGAMBIT();
-		} else if (valueswitch > -1) {
-			gambitVALUE();
-		} else {
-			gambit();
-		}
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-	}
-
-// Sets the Joker Gambit
-
-	function jokerGAMBIT() {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
-
-		selectCARD();
-
-		if (color === 'Special') {
-			currentscore = currentscore + acevalue * multiplier;
-			addORremove('streak', 1, '+');
-			updateDISPLAYS();
-			updateTESTVALUES();
-			pickTABLECARD();
-		} else {
-			lifepoints = 0;
-			document.getElementById("lifepoints").textContent = "0";
-			streak = 0;
-			document.getElementById("streak").textContent = "0";
-			lastchance = 0;
-			updateDISPLAYS();
-			updateTESTVALUES();
-			pickTABLECARD();
-		}
-	}
-
-// Sets the Color, Suit, Number and Number & Suit Gambits
-
-	function gambit() {
-		if (playerwin === true) return;
-		if (document.getElementById("gambit_left").innerHTML === "" && document.getElementById("gambit_right").innerHTML === "") return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		selectCARD();
-
-		eval('var check = ' + element);
-
-		if (variable === check || color === 'Special') {
-			currentscore = currentscore + streak + acevalue * multiplier;
-			addORremove('streak', 1, '+');
-			updateDISPLAYS();
-			pickTABLECARD();
-		} else {
-			lostGAMBIT();
-		}
-	}
-
-// Sets the High and Low Gambits
-
-	function gambitVALUE() {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		selectCARD();
-
-		eval('var check = ' + element);
-
-		if (rank === 'A') {
-			SPEvalue = acevalue;
-
-			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
-				currentscore = currentscore + streak + acevalue * multiplier;
-				addORremove('streak', 1, '+');
-				updateDISPLAYS();
-				pickTABLECARD();
-			} else {
-				lostGAMBIT();
-			}
-		} else {
-			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
-				currentscore = currentscore + streak + acevalue * multiplier;
-				addORremove('streak', 1, '+');
-				updateDISPLAYS();
-				pickTABLECARD();
-			} else {
-				lostGAMBIT();
-			}
-		}
-	}
-
-// Activates When the Gambit is Lost
-
-	function lostGAMBIT() {
-			addORremove('streak', 1, '-');
-			addORremove('lifepoints', 1, '-');
-			updateDISPLAYS();
-			pickTABLECARD();
-	}
