@@ -14,11 +14,11 @@
 
 <div style="display: flex; flex-direction: column; gap: 5px; border: 5px solid white; width: 320px; margin: auto; padding: 10px; border-radius: 10px; text-align: left;">
 
-	<button style="width: 200px; margin: auto;" onclick="toggleMAINMENU(); reset();"><span class="button_content">Apply Deck Changes</span></button>
+	<button style="width: stretch; margin: auto;" onclick="toggleMAINMENU(); reset();"><span class="button_content">Apply Deck Changes</span></button>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
     <button type="button" onclick="changePreset(-1)" style="height: 30px; width: 40px"><span class="button_content"> « </span></button>
-    <div style="text-align: center">Preset:<br><strong id="preset-name" style="text-align: center">Standard</strong></div>
+    <div style="text-align: center">Preset:<br><strong id="preset-name" style="text-align: center">A Day In Hell</strong></div>
     <button type="button" onclick="changePreset(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
 </div>
 
@@ -125,6 +125,42 @@
 		</div>
         </label>
 
+        <label>
+		Life Points: 
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="currentlifepoints" readonly>
+			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '+', 20); updateCHEATDISPLAYS(currentlifepoints, 'life_disp')"><span class="button_content2">+</span></button>
+		</div>
+        </label>
+
+        <label>
+		Blanks: 
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('currentblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="currentblanks" readonly>
+			<button onclick="addORremoveCHEATS('currentblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
+		</div>
+        </label>
+
+        <label>
+		Initial Streak: 
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('currentstreak', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="currentstreak" readonly>
+			<button onclick="addORremoveCHEATS('currentstreak', 1, '+', 20)"><span class="button_content2">+</span></button>
+		</div>
+        </label>
+
+        <label>
+		Last Chance D4: 
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="currentlastchance" readonly>
+			<button onclick="addORremoveCHEATS('currentlastchance', 1, '+', 20)"><span class="button_content2">+</span></button>
+		</div>
+        </label>
+
 </div>
 
 
@@ -141,38 +177,26 @@
 		</button>
 
 		<div id="cheats" class="cheats">
-			<div class="button_divisions">
-				Life: <button onclick="addORremove('lifepoints', 1, '+');"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('lifepoints', 1, '-');"><span class="button_content2">-1</span></button> 
-				<br>
-				Blank: <button onclick="addORremove('blanks', 1, '+')"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('blanks', 1, '-')"><span class="button_content2">-1</span></button> 
-				<br>
-				Streak: <button onclick="addORremove('streak', 1, '+')"><span class="button_content2">+1</span></button>
-				<button onclick="addORremove('streak', 1, '-')"><span class="button_content2">-1</span></button>
-			</div>
-
-			<div>
-				Value Switch: <span id="valueswitch"></span>; 
-				Variable: <span id="variable"></span><br>
-				Element: <span id="element"></span>; 
-				Multiplier: <span id="multiplier"></span>
-			</div>
+			Value Switch: <span id="valueswitch"></span>; 
+			Variable: <span id="variable"></span><br>
+			Element: <span id="element"></span>; 
+			Multiplier: <span id="multiplier"></span>
 		</div>
 
 		<div class="score">
 			Current Score: <span id="score">0</span>
 		</div>
 
-<div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content">
+<div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content; margin-top: 10px; margin-bottom: 10px;">
 
 <div style="display: flex">
 
-<span id="prev_table_card" style="visibility: hidden; margin: auto; background: white; border: 4px solid #EE4B2B; border-right: none; width: 30px; padding: 5px; border-radius: 10px 0px 0px 10px; height: stretch;">
+<span id="prev_table_card" style="display: flex; flex-direction: column; gap: 10px; margin: auto; background: none; border: 4px dotted #EE4B2B; border-right: none; width: 30px; padding: 5px; border-radius: 10px 0px 0px 10px; height: stretch;">
 <span id="table_suit_prev" style="text-align: left; font-size: 25px;"></span>
+<span id="table_number_prev" style="text-align: center; font-size: 30px; color: black;"></span>
 </span>
 
-<div style="margin: auto; background: white; border: 4px solid #EE4B2B; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 0px 10px 10px 0px; height: stretch;">
+<div id="table_card" style="margin: auto; background: white; border: 4px solid #EE4B2B; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 0px 10px 10px 0px; height: stretch;">
 <span id="table_suit_1" style="text-align: left; font-size: 25px;"></span>
 <span id="table_number" style="font-size: 30px; color: black;"></span>
 <span id="table_suit_2" style="text-align: right; font-size: 25px;"></span>
@@ -180,13 +204,14 @@
 
 </div>
 
-<div id="hand_card" style="display: flex; visibility: hidden">
+<div style="display: flex;">
 
-<span id="prev_hand_card" style="visibility: hidden; margin: auto; background: white; border: 4px solid #EE4B2B; border-right: none; width: 30px; padding: 5px; border-radius: 10px 0px 0px 10px; height: stretch;">
+<span id="prev_hand_card" style="display: flex; flex-direction: column; gap: 10px; margin: auto; background: none; border: 4px dotted #800080; border-right: none; width: 30px; padding: 5px; border-radius: 10px 0px 0px 10px; height: stretch;">
 <span id="hand_suit_prev" style="text-align: left; font-size: 25px;"></span>
+<span id="hand_number_prev" style="text-align: center; font-size: 30px; color: black;"></span>
 </span>
 
-<div style="margin: auto; background: white; border: 4px solid #800080; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 0px 10px 10px 0px; height: stretch;">
+<div id="hand_card" style="margin: auto; background: none; border: 4px dotted #800080; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 0px 10px 10px 0px; height: stretch;">
 <span id="hand_suit_1" style="text-align: left; font-size: 25px;"></span>
 <span id="hand_number" style="font-size: 30px; color: black;"></span>
 <span id="hand_suit_2" style="text-align: right; font-size: 25px;"></span>
@@ -242,9 +267,14 @@
 		</div>
 
 		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
-			<button style="width: stretch; flex: 1; height: 35px" onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
-			<button style="width: stretch; flex: 1; height: 35px" onclick="getLIFEPOINT(); clearGAMBIT2();"><span class="button_content">Sacrifice</span></button>
-			<button style="width: stretch; flex: 1; height: 35px" onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
+			<button style="width: stretch; flex: 1; height: stretch" onclick="useBLANK(); clearGAMBIT2();"><span class="button_content">Blank</span></button>
+
+			<div style="display: flex; flex-direction: column;">
+			<button style="width: stretch; flex: 1; height: 20px; border-bottom: 1.5px solid #D3D3D3; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('3', lifepoints, 'lifepoints'); clearGAMBIT2();"><span class="button_content">Sacrifice (Life)</span></button>
+			<button style="width: stretch; flex: 1; height: 20px; border-top: 1.5px solid #D3D3D3; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('6', blanks, 'blanks'); clearGAMBIT2();"><span class="button_content">Sacrifice (Blank)</span></button>
+			</div>
+
+			<button style="width: stretch; flex: 1; height: stretch" onclick="skipROUND(); clearGAMBIT2();"><span class="button_content">Skip</span></button>
 		</div>
 
 	</div>
@@ -267,7 +297,7 @@
 
 	</div>
 
-	<div id="flex_element_2" class="flex_element_2" style="display: none; background: #191919; border: 5px solid white; border-radius: 10px; padding: 10px;">
+	<div id="flex_element_2" class="flex_element_2" style="display: none; width: 300px; background: #191919; border: 5px solid white; border-radius: 10px; padding: 10px;">
 
 		<button style="margin-bottom: 10px; width: stretch;" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Resume Game</span></button>
 
@@ -275,18 +305,11 @@
 
 			<div class="icon_counter" style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
 				<div>
-					🟥: <span id="redcards">0</span><br>
-					♦️: <span id="diamondscards">0</span><br>
-					♥️: <span id="heartscards">0</span><br>
-					▼: <span id="lowcards">0</span><br>
-					🂡: <span id="acecards">0</span>
-				</div>
-				<div>
-					⬛: <span id="blackcards">0</span><br>
-					♣️: <span id="clubscards">0</span><br>
-					♠️: <span id="spadescards">0</span><br>
-					▲: <span id="highcards">0</span><br>
-					🃏: <span id="jokercards">0</span>
+					🟥: <span id="redcards">0</span> ⬛: <span id="blackcards">0</span>
+					▼: <span id="lowcards">0</span> ▲: <span id="highcards">0</span><br>
+					♦️: <span id="diamondscards">0</span> ♥️: <span id="heartscards">0</span>
+					♣️: <span id="clubscards">0</span> ♠️: <span id="spadescards">0</span><br>
+					🂡: <span id="acecards">0</span> 🃏: <span id="jokercards">0</span>
 				</div>
 			</div>
 
