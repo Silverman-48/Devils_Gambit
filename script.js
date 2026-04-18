@@ -38,15 +38,12 @@
 	let valuemodifiertable = 0;
 	let valuemodifierhand = 0;
 
-let gambitMultipliers = {
-    'Low': 1, 'High': 1,
-    'Red': 1, 'Black': 1,
-    '♥️': 3, '♦️': 3, '♣️': 3, '♠️': 3,
-    'Low Red': 3, 'Low Black': 3, 'High Red': 3, 'High Black': 3,
-    'Low ♥️': 6, 'Low ♦️': 6, 'Low ♣️': 6, 'Low ♠️': 6,
-    'High ♥️': 6, 'High ♦️': 6, 'High ♣️': 6, 'High ♠️': 6,
-    'Special': 10
-};
+	let valuemultiplier = 1;
+	let colormultiplier = 1;
+	let suitmultiplier = 3;
+	let valuecolormultiplier = 3;
+	let valuesuitmultiplier = 6;
+	let jokermultiplier = 10;
 
 	let sacrificelife = 3;
 	let sacrificeblanks = 6;
@@ -234,10 +231,6 @@ let gambitMultipliers = {
 
 		calculateCHANCE();
 
-                let fullGambitText = document.getElementById("full_gambit").textContent.trim();
-    
-                multiplier = gambitMultipliers[fullGambitText] || 1;
-
 		gambit1 = document.getElementById("gambit_left").innerHTML;
 		gambit2 = document.getElementById("gambit_right").innerHTML;
 
@@ -254,6 +247,7 @@ let gambitMultipliers = {
 			if (colorarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "color";
+				multiplier = valuecolormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
 
@@ -266,6 +260,7 @@ let gambitMultipliers = {
 			} else if (suitarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "suit";
+				multiplier = valuesuitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
 
@@ -278,6 +273,7 @@ let gambitMultipliers = {
 			} else {
 				variable = "empty";
 				element = "empty";
+				multiplier = valuemultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
 
@@ -294,6 +290,7 @@ let gambitMultipliers = {
 				valueswitch = -1;
 				variable = gambit2;
 				element = "color";
+				multiplier = colormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
 
@@ -303,6 +300,7 @@ let gambitMultipliers = {
 				valueswitch = -1;
 				variable = gambit2;
 				element = "suit";
+				multiplier = suitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
 
@@ -312,6 +310,7 @@ let gambitMultipliers = {
 				valueswitch = -1;
 				variable = gambit1;
 				element = "color";
+				multiplier = jokermultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
 		}
@@ -447,15 +446,38 @@ setMULTDISPLAYS();
 // Change Multiplier
 
 function changeMultiplier(type, delta) {
-    // Update the value in our map (type must match the keys in gambitMultipliers)
-    gambitMultipliers[type] = Math.min(20, Math.max(1, gambitMultipliers[type] + delta));
+    let newValue = 1;
     
-    // Update the specific input on the screen
-    // We replace spaces with underscores for the HTML IDs (e.g., "Low Red" becomes "Low_Red")
-    let displayId = type.replace(/\s+/g, '_') + "_mult_disp";
-    const displayElement = document.getElementById(displayId);
+    switch(type) {
+        case 'value': 
+            valuemultiplier = Math.min(20, Math.max(1, valuemultiplier + delta));
+            newValue = valuemultiplier;
+            break;
+        case 'color': 
+            colormultiplier = Math.min(20, Math.max(1, colormultiplier + delta));
+            newValue = colormultiplier;
+            break;
+        case 'suit': 
+            suitmultiplier = Math.min(20, Math.max(1, suitmultiplier + delta));
+            newValue = suitmultiplier;
+            break;
+        case 'value_color': 
+            valuecolormultiplier = Math.min(20, Math.max(1, valuecolormultiplier + delta));
+            newValue = valuecolormultiplier;
+            break;
+        case 'value_suit': 
+            valuesuitmultiplier = Math.min(20, Math.max(1, valuesuitmultiplier + delta));
+            newValue = valuesuitmultiplier;
+            break;
+        case 'joker': 
+            jokermultiplier = Math.min(20, Math.max(1, jokermultiplier + delta));
+            newValue = jokermultiplier;
+            break;
+    }
+
+    const displayElement = document.getElementById(type + "_mult_disp");
     if (displayElement) {
-        displayElement.value = gambitMultipliers[type];
+        displayElement.value = newValue;
     }
 }
 
@@ -577,19 +599,25 @@ function applyPreset() {
     // 1. Update UI Element Name
     document.getElementById('preset-name').textContent = `${preset.name}`;
 
-    // 2. Update Checkboxes (Numbers, Suits, etc.)
+    // 2. Update Checkboxes
     const checkboxes = ["include-numbers-low", "include-numbers-mid", "include-numbers-high", "include-faces", "include-aces", "suit-hearts", "suit-diamonds", "suit-clubs", "suit-spades", "include-jokers"];
     checkboxes.forEach(id => {
         document.getElementById(id).checked = cfg[id];
     });
 
-    // 3. Update Suit Quantity Inputs (The card counts in the deck)
+    // 3. Update Suit Quantity Inputs
     const quantities = ["mult-number-low", "mult-number-mid", "mult-number-high", "mult-face", "mult-ace", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-jokers"];
     quantities.forEach(id => {
         document.getElementById(id).value = cfg[id];
     });
 
-    // 4. Update Game State Variables
+    // 4. Update Global Multiplier Variables
+    valuemultiplier = cfg["value_mult"];
+    colormultiplier = cfg["color_mult"];
+    suitmultiplier = cfg["suit_mult"];
+    valuecolormultiplier = cfg["value_color_mult"];
+    valuesuitmultiplier = cfg["value_suit_mult"];
+    jokermultiplier = cfg["joker_mult"];
     currentlifepoints = cfg["lifepoints"];
     currentblanks = cfg["blanks"];
     currentstreak = cfg["streak"];
@@ -598,37 +626,13 @@ function applyPreset() {
     sacrificeblanks = cfg["sacrificeblanks"];
     currentscoretobeat = cfg["currentscoretobeat"];
 
-    // 5. UPDATE THE MULTIPLIER MAP
-    // We map the generic preset values to all specific combinations
-    gambitMultipliers['Low'] = gambitMultipliers['High'] = cfg["value_mult"];
-    gambitMultipliers['Red'] = gambitMultipliers['Black'] = cfg["color_mult"];
-    gambitMultipliers['♥️'] = gambitMultipliers['♦️'] = gambitMultipliers['♣️'] = gambitMultipliers['♠️'] = cfg["suit_mult"];
-    
-    gambitMultipliers['Low Red'] = gambitMultipliers['Low Black'] = 
-    gambitMultipliers['High Red'] = gambitMultipliers['High Black'] = cfg["value_color_mult"];
-    
-    gambitMultipliers['Low ♥️'] = gambitMultipliers['Low ♦️'] = gambitMultipliers['Low ♣️'] = gambitMultipliers['Low ♠️'] = 
-    gambitMultipliers['High ♥️'] = gambitMultipliers['High ♦️'] = gambitMultipliers['High ♣️'] = gambitMultipliers['High ♠️'] = cfg["value_suit_mult"];
-    
-    gambitMultipliers['Special'] = cfg["joker_mult"];
-
-    for (let key in gambitMultipliers) {
-        if (cfg[key] !== undefined) {
-            gambitMultipliers[key] = cfg[key];
-        }
-    }
-
-    // 6. SYNC ALL UI STEPPERS
-    // This loop finds every key in your map and updates the matching HTML input
-    for (let key in gambitMultipliers) {
-        let displayId = key.replace(/\s+/g, '_') + "_mult_disp";
-        const element = document.getElementById(displayId);
-        if (element) {
-            element.value = gambitMultipliers[key];
-        }
-    }
-
-    // 7. Update the rest of the generic UI displays
+    // 5. Update Multiplier Display Inputs
+    document.getElementById('value_mult_disp').value = valuemultiplier;
+    document.getElementById('color_mult_disp').value = colormultiplier;
+    document.getElementById('suit_mult_disp').value = suitmultiplier;
+    document.getElementById('value_color_mult_disp').value = valuecolormultiplier;
+    document.getElementById('value_suit_mult_disp').value = valuesuitmultiplier;
+    document.getElementById('joker_mult_disp').value = jokermultiplier;
     document.getElementById('currentlifepoints').value = currentlifepoints;
     document.getElementById('currentblanks').value = currentblanks;
     document.getElementById('currentstreak').value = currentstreak;
