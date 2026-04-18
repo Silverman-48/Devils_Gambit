@@ -1,10 +1,14 @@
 	// Variables Used
 
+	let playerwin = false;
+
 	let currentlifepoints = 3;
 	let currentblanks = 1;
 	let currentstreak = 0;
 	let currentlastchance = 1;
 
+	let savedscore = 100;
+	let currentscoretobeat = "∞";
 	let currentscore = 0;
 	let lifepoints = 3;
 	let blanks = 1;
@@ -34,12 +38,18 @@
 	let valuemodifiertable = 0;
 	let valuemodifierhand = 0;
 
-	let valuemultiplier = 1;
-	let colormultiplier = 1;
-	let suitmultiplier = 3;
-	let valuecolormultiplier = 3;
-	let valuesuitmultiplier = 6;
-	let jokermultiplier = 10;
+let gambitMultipliers = {
+    'Low': 1, 'High': 1,
+    'Red': 1, 'Black': 1,
+    '♥️': 3, '♦️': 3, '♣️': 3, '♠️': 3,
+    'Low Red': 3, 'Low Black': 3, 'High Red': 3, 'High Black': 3,
+    'Low ♥️': 6, 'Low ♦️': 6, 'Low ♣️': 6, 'Low ♠️': 6,
+    'High ♥️': 6, 'High ♦️': 6, 'High ♣️': 6, 'High ♠️': 6,
+    'Special': 10
+};
+
+	let sacrificelife = 3;
+	let sacrificeblanks = 6;
 
 	let redcardscounter = 0;
 	let blackcardscounter = 0;
@@ -52,11 +62,26 @@
 	let highcardscounter = 0;
 	let acecardscounter = 0;
 
+	let lowredcardscounter = 0;
+	let lowblackcardscounter = 0;
+	let lowheartscardscounter = 0;
+	let lowdiamondscardscounter = 0;
+	let lowclubscardscounter = 0;
+	let lowspadescardscounter = 0;
+
+	let highredcardscounter = 0;
+	let highblackcardscounter = 0;
+	let highheartscardscounter = 0;
+	let highdiamondscardscounter = 0;
+	let highclubscardscounter = 0;
+	let highspadescardscounter = 0;
+
 	let empty = "empty";
 
 // Resets the Gambit Values
 
 	function clearGAMBIT() {
+		if (playerwin === true) return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -99,6 +124,7 @@
 // Changes the Text for Left-Side Gambits
 	
 	function setgambitLEFT(buttonelement) {
+		if (playerwin === true) return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -118,9 +144,20 @@
 		let mod1 = textgambit_left.innerHTML;
 		let mod2 = textgambit_right.innerHTML;
 
+		if (buttonelement === "Special") {
+			textgambit_right.innerHTML = "";
+			buttons.forEach(btn => {
+				btn.classList.remove('highlight');
+			});
+			buttons_2.forEach(btn => {
+				btn.classList.remove('highlight');
+			});
+		}
+
 		if (buttonelement === mod1) {
 			if (mod2 === "") {
 				document.getElementById("empty_gambit").innerHTML = "None";
+				document.getElementById("percentage").innerHTML = "";
 			}
 			textgambit_left.innerHTML = "";
 			setCURRENTGAMBIT();
@@ -133,16 +170,6 @@
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
 
-		if (buttonelement === "Special") {
-			textgambit_right.innerHTML = "";
-			buttons.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-			buttons_2.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-		}
-
 		buttons.forEach(btn => {
 			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "I'm Feeling Lucky" && buttonelement === "Special") {
 				btn.classList.add('highlight');
@@ -154,6 +181,7 @@
 // Changes the Text for Right-Side Gambits
 
 	function setgambitRIGHT(buttonelement) {
+		if (playerwin === true) return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -180,6 +208,7 @@
 		if (buttonelement === mod2) {
 			if (mod1 === "") {
 				document.getElementById("empty_gambit").innerHTML = "None";
+				document.getElementById("percentage").innerHTML = "";
 			}
 			textgambit_right.innerHTML = "";
 			setCURRENTGAMBIT();
@@ -203,6 +232,12 @@
 
 	function setCURRENTGAMBIT() {
 
+		calculateCHANCE();
+
+                let fullGambitText = document.getElementById("full_gambit").textContent.trim();
+    
+                multiplier = gambitMultipliers[fullGambitText] || 1;
+
 		gambit1 = document.getElementById("gambit_left").innerHTML;
 		gambit2 = document.getElementById("gambit_right").innerHTML;
 
@@ -219,7 +254,6 @@
 			if (colorarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "color";
-				multiplier = valuecolormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
 
@@ -232,7 +266,6 @@
 			} else if (suitarray.includes(gambit2)) {
 				variable = gambit2;
 				element = "suit";
-				multiplier = valuesuitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
 
@@ -245,7 +278,6 @@
 			} else {
 				variable = "empty";
 				element = "empty";
-				multiplier = valuemultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
 
@@ -262,7 +294,6 @@
 				valueswitch = -1;
 				variable = gambit2;
 				element = "color";
-				multiplier = colormultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
 
@@ -272,7 +303,6 @@
 				valueswitch = -1;
 				variable = gambit2;
 				element = "suit";
-				multiplier = suitmultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
 
@@ -282,11 +312,55 @@
 				valueswitch = -1;
 				variable = gambit1;
 				element = "color";
-				multiplier = jokermultiplier;
 
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
 		}
 	}
+
+// Calculates Percentages of Gambit Success
+
+function calculateCHANCE() {
+    const gambit = document.getElementById("full_gambit").textContent.trim();
+    
+    let counter = 0;
+
+    // 2. Determine which counter to use
+    switch(gambit) {
+        case 'Low':     counter = lowcardscounter; break;
+        case 'High':    counter = highcardscounter; break;
+        case 'Red':     counter = redcardscounter; break;
+        case 'Black':    counter = blackcardscounter; break;
+        case '♥️':       counter = heartscardscounter; break;
+        case '♦️':       counter = diamondscardscounter; break;
+        case '♣️':       counter = clubscardscounter; break;
+        case '♠️':       counter = spadescardscounter; break;
+        case 'Special': counter = jokercardscounter; break;
+
+        case 'Low Red':     counter = lowredcardscounter; break;
+        case 'Low Black':    counter = lowblackcardscounter; break;
+        case 'Low ♥️':     counter = lowheartscardscounter; break;
+        case 'Low ♦️':    counter = lowdiamondscardscounter; break;
+        case 'Low ♣️':     counter = lowclubscardscounter; break;
+        case 'Low ♠️':    counter = lowspadescardscounter; break;
+
+        case 'High Red':     counter = highredcardscounter; break;
+        case 'High Black':    counter = highblackcardscounter; break;
+        case 'High ♥️':     counter = highheartscardscounter; break;
+        case 'High ♦️':    counter = highdiamondscardscounter; break;
+        case 'High ♣️':     counter = highclubscardscounter; break;
+        case 'High ♠️':    counter = highspadescardscounter; break;
+
+        default:        counter = 0; document.getElementById("percentage").textContent = ""; return;
+    }
+
+    // 3. Safety check: avoid dividing by zero if the deck is empty
+    if (cards.length > 0) {
+        const chance = (counter / cards.length) * 100;
+        document.getElementById("percentage").textContent = chance.toFixed(2) + "%";
+    } else {
+        document.getElementById("percentage").textContent = "";
+    }
+}
 
 // Used to Check Debug Values
 
@@ -310,24 +384,42 @@
 		}
 	}
 
-	function addORremoveCHEATS(variable, value, sign, max) {
-    eval('var check = ' + variable);
-    
-    // 1. Keep your existing "Floor" (zero) check
-    if (check === 0 && sign === "-") {
-        return;
-    } else {
-        // 2. Perform the math
-        eval(variable + ' = ' + variable + sign + value);
-        
-        // 3. Perform the "Ceiling" (max) check
-        // We only care about the limit if a 'max' was actually provided
-        if (max !== undefined) {
-            eval('if (' + variable + ' > ' + max + ') { ' + variable + ' = ' + max + '; }');
-        }
+function addORremoveCHEATS(variableId, value, sign, max) {
+    // 1. Grab the exact input field using the passed ID
+    const inputElement = document.getElementById(variableId);
+    if (!inputElement) return;
 
-        // 4. Update the display
-        eval('if(document.getElementById(variable)) { document.getElementById(variable).value = ' + variable + '; }');
+    // 2. Read the current value straight from the screen.
+    // This fixes the preset bug because the UI is now our source of truth!
+    let currentValue = parseInt(inputElement.value) || 0;
+    let newValue;
+
+    // 3. Perform the math
+    if (sign === "-") {
+        newValue = currentValue - value;
+        if (newValue <= 0) newValue = 1; // Your existing floor
+    } else if (sign === "+") {
+        newValue = currentValue + value;
+    }
+
+    // 4. Perform the "Ceiling" (max) check
+    if (max !== undefined && newValue > max) {
+        newValue = max;
+    }
+
+    // 5. Update the display
+    inputElement.value = newValue;
+
+    // 6. Safely update your global 'let' variables
+    // A switch statement maps the UI changes to your variables perfectly without eval()
+    switch (variableId) {
+        case 'currentscoretobeat': currentscoretobeat = newValue; break;
+        case 'currentlifepoints': currentlifepoints = newValue; break;
+        case 'currentblanks': currentblanks = newValue; break;
+        case 'currentstreak': currentstreak = newValue; break;
+        case 'currentlastchance': currentlastchance = newValue; break;
+        case 'sacrificelife': sacrificelife = newValue; break;
+        case 'sacrificeblanks': sacrificeblanks = newValue; break;
     }
 }
 
@@ -344,6 +436,10 @@ function setMULTDISPLAYS() {
 	document.getElementById("currentblanks").value = currentblanks;
 	document.getElementById("currentstreak").value = currentstreak;
 	document.getElementById("currentlastchance").value = currentlastchance;
+	document.getElementById("sacrificelife").value = sacrificelife;
+	document.getElementById("sacrificeblanks").value = sacrificeblanks;
+	document.getElementById("currentscoretobeat").value = savedscore;
+	document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
 }
 
 setMULTDISPLAYS();
@@ -351,38 +447,41 @@ setMULTDISPLAYS();
 // Change Multiplier
 
 function changeMultiplier(type, delta) {
-    let newValue = 1;
+    // Update the value in our map (type must match the keys in gambitMultipliers)
+    gambitMultipliers[type] = Math.min(20, Math.max(1, gambitMultipliers[type] + delta));
     
-    switch(type) {
-        case 'value': 
-            valuemultiplier = Math.min(20, Math.max(1, valuemultiplier + delta));
-            newValue = valuemultiplier;
-            break;
-        case 'color': 
-            colormultiplier = Math.min(20, Math.max(1, colormultiplier + delta));
-            newValue = colormultiplier;
-            break;
-        case 'suit': 
-            suitmultiplier = Math.min(20, Math.max(1, suitmultiplier + delta));
-            newValue = suitmultiplier;
-            break;
-        case 'value_color': 
-            valuecolormultiplier = Math.min(20, Math.max(1, valuecolormultiplier + delta));
-            newValue = valuecolormultiplier;
-            break;
-        case 'value_suit': 
-            valuesuitmultiplier = Math.min(20, Math.max(1, valuesuitmultiplier + delta));
-            newValue = valuesuitmultiplier;
-            break;
-        case 'joker': 
-            jokermultiplier = Math.min(20, Math.max(1, jokermultiplier + delta));
-            newValue = jokermultiplier;
-            break;
-    }
-
-    const displayElement = document.getElementById(type + "_mult_disp");
+    // Update the specific input on the screen
+    // We replace spaces with underscores for the HTML IDs (e.g., "Low Red" becomes "Low_Red")
+    let displayId = type.replace(/\s+/g, '_') + "_mult_disp";
+    const displayElement = document.getElementById(displayId);
     if (displayElement) {
-        displayElement.value = newValue;
+        displayElement.value = gambitMultipliers[type];
+    }
+}
+
+// Activate Endless Mode
+
+function endlessMODE() {
+    const checkbox = document.getElementById("endless_mode");
+    const scoreInput = document.getElementById("currentscoretobeat");
+    
+    // 1. Find all buttons inside the same div as the score input
+    // This targets only the buttons in that specific 'stepper'
+    const stepperButtons = scoreInput.parentElement.querySelectorAll('button');
+
+    if (checkbox.checked) {
+        savedscore = scoreInput.value; 
+        scoreInput.value = "∞";
+        currentscoretobeat = "∞";
+
+        // 2. Disable all the buttons
+        stepperButtons.forEach(btn => btn.disabled = true);
+    } else {
+        scoreInput.value = savedscore;
+        currentscoretobeat = parseInt(savedscore);
+
+        // 3. Re-enable the buttons
+        stepperButtons.forEach(btn => btn.disabled = false);
     }
 }
 
@@ -394,61 +493,79 @@ const presets = [
     {
         name: "A Day In Hell",
         config: {
-            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "currentscoretobeat": 100,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
+            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
             "value_mult": 1, "color_mult": 1, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1
+            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1,
+            "sacrificelife": 3, "sacrificeblanks": 6
         }
     },
     {
         name: "Black Plague",
         config: {
-            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "currentscoretobeat": 200,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
             "suit-hearts": false, "suit-diamonds": false, "suit-clubs": true, "suit-spades": true, "include-jokers": true,
+            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 2, "mult-spades": 2, "mult-jokers": 1,
             "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2
+            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2,
+            "sacrificelife": 4, "sacrificeblanks": 8
         }
     },
     {
         name: "Red Death",
         config: {
-            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "currentscoretobeat": 200,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": false, "suit-spades": false, "include-jokers": true,
+            "mult-number-low": 1, "mult-number-mid": 1, "mult-number-high": 1, "mult-face": 1, "mult-ace": 1,
             "mult-hearts": 2, "mult-diamonds": 2, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
             "value_mult": 1, "color_mult": 0, "suit_mult": 3, "value_color_mult": 3, "value_suit_mult": 6, "joker_mult": 10,
-            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2
+            "lifepoints": 4, "blanks": 1, "streak": 0, "lastchance": 2,
+            "sacrificelife": 4, "sacrificeblanks": 8
         }
     },
     {
         name: "No Gods No Masters",
         config: {
-            "include-numbers": true, "include-faces": false, "include-aces": false,
+            "currentscoretobeat": 200,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": false, "include-aces": false,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-number-low": 4, "mult-number-mid": 4, "mult-number-high": 4, "mult-face": 1, "mult-ace": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-jokers": 1,
             "value_mult": 2, "color_mult": 1, "suit_mult": 3, "value_color_mult": 4, "value_suit_mult": 8, "joker_mult": 10,
-            "lifepoints": 3, "blanks": 0, "streak": 0, "lastchance": 0
+            "lifepoints": 3, "blanks": 0, "streak": 0, "lastchance": 0,
+            "sacrificelife": 5, "sacrificeblanks": 10
         }
     },
     {
         name: "Dealing With The Devil",
         config: {
-            "include-numbers": true, "include-faces": false, "include-aces": false,
+            "currentscoretobeat": 300,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": false, "include-aces": false,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-number-low": 2, "mult-number-mid": 2, "mult-number-high": 2, "mult-face": 2, "mult-ace": 2,
             "mult-hearts": 3, "mult-diamonds": 3, "mult-clubs": 3, "mult-spades": 3, "mult-jokers": 1,
             "value_mult": 1, "color_mult": 1, "suit_mult": 2, "value_color_mult": 3, "value_suit_mult": 3, "joker_mult": 20,
-            "lifepoints": 5, "blanks": 1, "streak": 0, "lastchance": 1
+            "lifepoints": 5, "blanks": 1, "streak": 0, "lastchance": 1,
+            "sacrificelife": 3, "sacrificeblanks": 6
         }
     },
     {
         name: "Eternal Damnation",
         config: {
-            "include-numbers": true, "include-faces": true, "include-aces": true,
+            "currentscoretobeat": 1000,
+            "include-numbers-low": true, "include-numbers-mid": true, "include-numbers-high": true, "include-faces": true, "include-aces": true,
             "suit-hearts": true, "suit-diamonds": true, "suit-clubs": true, "suit-spades": true, "include-jokers": false,
+            "mult-number-low": 10, "mult-number-mid": 10, "mult-number-high": 10, "mult-face": 10, "mult-ace": 10,
             "mult-hearts": 10, "mult-diamonds": 10, "mult-clubs": 10, "mult-spades": 10, "mult-jokers": 0,
             "value_mult": 1, "color_mult": 1, "suit_mult": 1, "value_color_mult": 5, "value_suit_mult": 10, "joker_mult": 0,
-            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0
+            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0,
+            "sacrificelife": 20, "sacrificeblanks": 20
         }
     },
 ];
@@ -460,45 +577,72 @@ function applyPreset() {
     // 1. Update UI Element Name
     document.getElementById('preset-name').textContent = `${preset.name}`;
 
-    // 2. Update Checkboxes
-    const checkboxes = ["include-numbers", "include-faces", "include-aces", "suit-hearts", "suit-diamonds", "suit-clubs", "suit-spades", "include-jokers"];
+    // 2. Update Checkboxes (Numbers, Suits, etc.)
+    const checkboxes = ["include-numbers-low", "include-numbers-mid", "include-numbers-high", "include-faces", "include-aces", "suit-hearts", "suit-diamonds", "suit-clubs", "suit-spades", "include-jokers"];
     checkboxes.forEach(id => {
         document.getElementById(id).checked = cfg[id];
     });
 
-    // 3. Update Suit Quantity Inputs
-    const quantities = ["mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-jokers"];
+    // 3. Update Suit Quantity Inputs (The card counts in the deck)
+    const quantities = ["mult-number-low", "mult-number-mid", "mult-number-high", "mult-face", "mult-ace", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-jokers"];
     quantities.forEach(id => {
         document.getElementById(id).value = cfg[id];
     });
 
-    // 4. Update Global Multiplier Variables
-    valuemultiplier = cfg["value_mult"];
-    colormultiplier = cfg["color_mult"];
-    suitmultiplier = cfg["suit_mult"];
-    valuecolormultiplier = cfg["value_color_mult"];
-    valuesuitmultiplier = cfg["value_suit_mult"];
-    jokermultiplier = cfg["joker_mult"];
+    // 4. Update Game State Variables
     currentlifepoints = cfg["lifepoints"];
     currentblanks = cfg["blanks"];
     currentstreak = cfg["streak"];
     currentlastchance = cfg["lastchance"];
+    sacrificelife = cfg["sacrificelife"];
+    sacrificeblanks = cfg["sacrificeblanks"];
+    currentscoretobeat = cfg["currentscoretobeat"];
 
-    // 5. Update Multiplier Display Inputs
-    document.getElementById('value_mult_disp').value = valuemultiplier;
-    document.getElementById('color_mult_disp').value = colormultiplier;
-    document.getElementById('suit_mult_disp').value = suitmultiplier;
-    document.getElementById('value_color_mult_disp').value = valuecolormultiplier;
-    document.getElementById('value_suit_mult_disp').value = valuesuitmultiplier;
-    document.getElementById('joker_mult_disp').value = jokermultiplier;
+    // 5. UPDATE THE MULTIPLIER MAP
+    // We map the generic preset values to all specific combinations
+    gambitMultipliers['Low'] = gambitMultipliers['High'] = cfg["value_mult"];
+    gambitMultipliers['Red'] = gambitMultipliers['Black'] = cfg["color_mult"];
+    gambitMultipliers['♥️'] = gambitMultipliers['♦️'] = gambitMultipliers['♣️'] = gambitMultipliers['♠️'] = cfg["suit_mult"];
+    
+    gambitMultipliers['Low Red'] = gambitMultipliers['Low Black'] = 
+    gambitMultipliers['High Red'] = gambitMultipliers['High Black'] = cfg["value_color_mult"];
+    
+    gambitMultipliers['Low ♥️'] = gambitMultipliers['Low ♦️'] = gambitMultipliers['Low ♣️'] = gambitMultipliers['Low ♠️'] = 
+    gambitMultipliers['High ♥️'] = gambitMultipliers['High ♦️'] = gambitMultipliers['High ♣️'] = gambitMultipliers['High ♠️'] = cfg["value_suit_mult"];
+    
+    gambitMultipliers['Special'] = cfg["joker_mult"];
+
+    for (let key in gambitMultipliers) {
+        if (cfg[key] !== undefined) {
+            gambitMultipliers[key] = cfg[key];
+        }
+    }
+
+    // 6. SYNC ALL UI STEPPERS
+    // This loop finds every key in your map and updates the matching HTML input
+    for (let key in gambitMultipliers) {
+        let displayId = key.replace(/\s+/g, '_') + "_mult_disp";
+        const element = document.getElementById(displayId);
+        if (element) {
+            element.value = gambitMultipliers[key];
+        }
+    }
+
+    // 7. Update the rest of the generic UI displays
     document.getElementById('currentlifepoints').value = currentlifepoints;
     document.getElementById('currentblanks').value = currentblanks;
     document.getElementById('currentstreak').value = currentstreak;
     document.getElementById('currentlastchance').value = currentlastchance;
+    document.getElementById('sacrificelife').value = sacrificelife;
+    document.getElementById('sacrificeblanks').value = sacrificeblanks;
+    document.getElementById('currentscoretobeat').value = currentscoretobeat;
+    document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
 }
 
 function changePreset(delta) {
     currentPresetIndex += delta;
+    document.getElementById("endless_mode").checked = false;
+    endlessMODE();
     if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
     if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
     applyPreset();
@@ -590,7 +734,6 @@ function generateCustomDeck() {
         const id = suitIds[s.suit];
         const isChecked = document.getElementById(`suit-${id}`).checked;
         if (isChecked) {
-            // Get the multiplier value (e.g., 2), restricted between 1 and 10
             const mult = Math.min(Math.max(parseInt(document.getElementById(`mult-${id}`).value) || 1, 1), 10);
             for (let i = 0; i < mult; i++) {
                 selectedSuits.push(s);
@@ -598,15 +741,40 @@ function generateCustomDeck() {
         }
     });
 
-    // 2. Handle Ranks (Keeping it simple/standard)
-    const includeNumbers = document.getElementById('include-numbers').checked;
-    const includeFaces = document.getElementById('include-faces').checked;
-    const includeAces = document.getElementById('include-aces').checked;
+    // 2. Handle Ranks with Multipliers
+    const selectedRanks = [];
 
-    const selectedRanks = standardRanks.filter(r => {
-        if (r.rank === "A") return includeAces;
-        if (["J", "Q", "K"].includes(r.rank)) return includeFaces;
-        return includeNumbers;
+    standardRanks.forEach(r => {
+        let isIncluded = false;
+        let mult = 1;
+
+        if (r.rank === "A") {
+            isIncluded = document.getElementById('include-aces').checked;
+            mult = parseInt(document.getElementById('mult-ace').value) || 1;
+        } else if (["J", "Q", "K"].includes(r.rank)) {
+            isIncluded = document.getElementById('include-faces').checked;
+            mult = parseInt(document.getElementById('mult-face').value) || 1;
+        } else {
+            const num = parseInt(r.rank); 
+            
+            if (num >= 2 && num <= 4) {
+                isIncluded = document.getElementById('include-numbers-low').checked;
+                mult = parseInt(document.getElementById('mult-number-low').value) || 1;
+            } else if (num >= 5 && num <= 7) {
+                isIncluded = document.getElementById('include-numbers-mid').checked;
+                mult = parseInt(document.getElementById('mult-number-mid').value) || 1;
+            } else if (num >= 8 && num <= 10) {
+                isIncluded = document.getElementById('include-numbers-high').checked;
+                mult = parseInt(document.getElementById('mult-number-high').value) || 1;
+            }
+        }
+
+        if (isIncluded) {
+            mult = Math.min(Math.max(mult, 1), 10);
+            for (let i = 0; i < mult; i++) {
+                selectedRanks.push(r);
+            }
+        }
     });
 
     // 3. Handle Jokers with Multipliers
@@ -614,12 +782,67 @@ function generateCustomDeck() {
     if (document.getElementById('include-jokers').checked) {
         const jMult = Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 1, 1), 10);
         for (let i = 0; i < jMult; i++) {
-            // This adds both J1 and J2 from your standardExtras for every 1x multiplier
             selectedExtras.push(...standardExtras);
         }
     }
 
-    // 4. Return the deck to the global 'cards' variable
+    // 4. Update the global card counters (REVISED)
+    const totalRanks = selectedRanks.length;
+    const totalSuits = selectedSuits.length;
+
+    // --- Base counts for multiplication ---
+    const h = selectedSuits.filter(s => s.suit === '♥️').length;
+    const d = selectedSuits.filter(s => s.suit === '♦️').length;
+    const c = selectedSuits.filter(s => s.suit === '♣️').length;
+    const s = selectedSuits.filter(s => s.suit === '♠️').length;
+    const red = h + d;
+    const black = c + s;
+
+    const low = selectedRanks.filter(r => parseInt(r.rank) >= 2 && parseInt(r.rank) <= 7).length;
+    const high = selectedRanks.filter(r => (parseInt(r.rank) >= 8 && parseInt(r.rank) <= 10) || ["J", "Q", "K"].includes(r.rank)).length;
+    const ace = selectedRanks.filter(r => r.rank === "A").length;
+
+    // --- Standard Counters ---
+    heartscardscounter = h * totalRanks;
+    diamondscardscounter = d * totalRanks;
+    clubscardscounter = c * totalRanks;
+    spadescardscounter = s * totalRanks;
+    redcardscounter = red * totalRanks;
+    blackcardscounter = black * totalRanks;
+    lowcardscounter = low * totalSuits;
+    highcardscounter = high * totalSuits;
+    acecardscounter = ace * totalSuits;
+    jokercardscounter = selectedExtras.length;
+
+    // --- Intersection Counters (Low + Suit/Color) ---
+    lowredcardscounter = low * red;
+    lowblackcardscounter = low * black;
+    lowheartscardscounter = low * h;
+    lowdiamondscardscounter = low * d;
+    lowclubscardscounter = low * c;
+    lowspadescardscounter = low * s;
+
+    // --- Intersection Counters (High + Suit/Color) ---
+    highredcardscounter = high * red;
+    highblackcardscounter = high * black;
+    highheartscardscounter = high * h;
+    highdiamondscardscounter = high * d;
+    highclubscardscounter = high * c;
+    highspadescardscounter = high * s;
+
+    // Update UI (Using your specific IDs)
+    document.getElementById("heartscards").innerHTML = heartscardscounter;
+    document.getElementById("diamondscards").innerHTML = diamondscardscounter;
+    document.getElementById("clubscards").innerHTML = clubscardscounter;
+    document.getElementById("spadescards").innerHTML = spadescardscounter;
+    document.getElementById("redcards").innerHTML = redcardscounter;
+    document.getElementById("blackcards").innerHTML = blackcardscounter;
+    document.getElementById("lowcards").innerHTML = lowcardscounter;
+    document.getElementById("highcards").innerHTML = highcardscounter;
+    document.getElementById("acecards").innerHTML = acecardscounter;
+    document.getElementById("jokercards").innerHTML = jokercardscounter;
+
+    // 5. Return the deck
     return createDeck(selectedSuits, selectedRanks, selectedExtras);
 }
 
@@ -628,7 +851,7 @@ function generateCustomDeck() {
 // Skips a Round
 
 	function skipROUND() {
-
+		if (playerwin === true) return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -637,6 +860,8 @@ function generateCustomDeck() {
 
 		valueswitch = -1;
 		variable = "Skip";
+		element = "none";
+		multiplier = 1;
 
 		document.getElementById("currentgambit").innerHTML = "Round Skipped";
 		
@@ -646,6 +871,8 @@ function generateCustomDeck() {
 		updateDISPLAYS();
 		updateTESTVALUES();
 		pickTABLECARD();
+
+		document.getElementById("percentage").innerHTML = "";
 	}
 
 // Last Chance Setup
@@ -690,6 +917,16 @@ function generateCustomDeck() {
 		}
 	}
 
+	function showELEMENTFLEX(element) {
+		var x = document.getElementById(element);
+
+		if (x.style.display == "flex") {
+			x.style.display = "none";
+		} else {
+			x.style.display = "flex";
+		}
+	}
+
 // Show / Hide Game or Main Menu
 
 	function toggleMAINMENU() {
@@ -702,6 +939,8 @@ function generateCustomDeck() {
 		} else {
 			x.style.display = "block";
 			y.style.display = "none";
+			document.getElementById("score").innerHTML = "0";
+			document.getElementById("highscore").innerHTML = "0";
 		}
 	}
 
@@ -727,6 +966,7 @@ function generateCustomDeck() {
 		document.getElementById("gambit_left").textContent = "";
 		document.getElementById("gambit_right").textContent = "";
 		document.getElementById("empty_gambit").textContent = "None";
+		document.getElementById("percentage").innerHTML = "";
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -741,6 +981,8 @@ function generateCustomDeck() {
 		document.getElementById("score").textContent = currentscore;
 		let gambithistoryvalue = "";
 		let gambithistoryvariable = "";
+
+		calculateCHANCE();
 
 		if (valueswitch === 0) {
 			gambithistoryvalue = "Low ";
@@ -768,16 +1010,27 @@ function generateCustomDeck() {
 			"<br>Table: " + result2 + "<br>Hand: " + result + "<br>" + document.getElementById("card_history").innerHTML;
 		}
 
+		if (currentscore >= currentscoretobeat) {
+			clearGAMBIT();
+			currentscore = currentscoretobeat;
+			document.getElementById("score").innerHTML = currentscore;
+			document.getElementById("currentgambit").innerHTML = "You Won! (This Time)";
+			playerwin = true;
+			return;
+		}
+
 		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
+			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
 		} else {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Game Over";
+			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
 		}
 	}
@@ -797,18 +1050,12 @@ function generateCustomDeck() {
 		document.getElementById("hand_card").style.borderStyle = "dotted";
 		document.getElementById("hand_card").style.background = "none";
 
-		document.getElementById("prev_hand_card").style.borderStyle = "dotted";
-		document.getElementById("prev_hand_card").style.background = "none";
-		document.getElementById("prev_hand_card").style.borderRight = "none";
-
 		document.getElementById("prev_table_card").style.borderStyle = "dotted";
 		document.getElementById("prev_table_card").style.background = "none";
 		document.getElementById("prev_table_card").style.borderRight = "none";
 
 		document.getElementById("table_suit_prev").innerHTML = "";
 		document.getElementById("table_number_prev").innerHTML = "";
-		document.getElementById("hand_suit_prev").innerHTML = "";
-		document.getElementById("hand_number_prev").innerHTML = "";
 
 		document.getElementById("gameplay_buttons").style.display = "block";
 		document.getElementById("last_chance").style.display = "none";
@@ -829,10 +1076,12 @@ function generateCustomDeck() {
 		streak = currentstreak;
 		lastchance = currentlastchance;
 		acevalue = 0;
+		playerwin = false;
 
 		firstTimeTable = true;
 		firstTimeHand = true;
 
+		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
 		document.getElementById("score").innerHTML = currentscore;
 		document.getElementById("lifepoints").textContent = lifepoints;
 		document.getElementById("blanks").innerHTML = blanks;
@@ -842,17 +1091,6 @@ function generateCustomDeck() {
 		document.getElementById("tablecard").textContent = "None";
 		document.getElementById("card_history").innerHTML = "";
 		document.getElementById("remaining").innerHTML = cards.length;
-
-		redcardscounter = 0;
-		blackcardscounter = 0;
-		jokercardscounter = 0;
-		clubscardscounter = 0;
-		diamondscardscounter = 0;
-		spadescardscounter = 0;
-		heartscardscounter = 0;
-		lowcardscounter = 0;
-		highcardscounter = 0;
-		acecardscounter = 0;
 
 		document.getElementById("redcards").innerHTML = redcardscounter;
 		document.getElementById("blackcards").innerHTML = blackcardscounter;
@@ -864,6 +1102,7 @@ function generateCustomDeck() {
 		document.getElementById("lowcards").innerHTML = lowcardscounter;
 		document.getElementById("highcards").innerHTML = highcardscounter;
 		document.getElementById("acecards").innerHTML = acecardscounter;
+		document.getElementById("percentage").innerHTML = "";
 
 		valueswitch = -1;
 		variable = "None";
@@ -888,41 +1127,56 @@ function generateCustomDeck() {
 
 // Life Point Related Functions
 
-	function sacrificeSTREAK(streaknumber, reward, id) {
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+function sacrificeSTREAK(type) {
+    if (playerwin === true) return;
+    if (lifepoints === 0) return;
+    if (cards.length === 0) {
+        emptyDECK();
+        return;
+    }
 
-		streaknumber = parseInt(streaknumber);
-		
-		if (streak >= streaknumber) {
-			streak = streak - streaknumber;
-			document.getElementById("streak").textContent = streak;
-			reward = reward + 1;
-			document.getElementById(id).textContent = reward;
+	valueswitch = -1;
+	variable = "Sacrifice";
+	element = type;
+	multiplier = 1;
 
-			if (id === 'lifepoints') {
-				lifepoints = reward;
-				document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
-			}
+	updateTESTVALUES();
 
-			if (id === 'blanks') {
-				blanks = reward;
-				document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Blank)";
-			}
+    var streaknumber = (type === "lifepoints") ? sacrificelife : sacrificeblanks;
 
-		} else {
-			document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/" + streaknumber + ")";
-			return;
-		}
-	}
+    // 1. Check if user has enough streak first
+    if (streak < streaknumber) {
+        document.getElementById("currentgambit").textContent = "Not Enough Streak (" + streak + "/" + streaknumber + ")";
+	document.getElementById("percentage").innerHTML = "";
+        return;
+    }
+
+    // 2. Handle the sacrifice
+    streak -= streaknumber;
+    document.getElementById("streak").textContent = streak;
+
+    if (type === 'lifepoints') {
+        lifepoints++; // Update global variable
+        document.getElementById("lifepoints").textContent = lifepoints;
+        document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Life)";
+	document.getElementById("percentage").innerHTML = "";
+    } else if (type === 'blanks') {
+        blanks++; // Update global variable
+        document.getElementById("blanks").textContent = blanks;
+        document.getElementById("currentgambit").textContent = "Streak Sacrificed (+1 Blank)";
+	document.getElementById("percentage").innerHTML = "";
+    }
+}
 
 // Blank Related Functions
 
 	function useBLANK() {
-		if (blanks === 0) return;
+		if (playerwin === true) return;
+		if (blanks === 0) {
+			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
+			document.getElementById("percentage").innerHTML = "";
+			return;
+		};
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -931,6 +1185,8 @@ function generateCustomDeck() {
 
 		valueswitch = -1;
 		variable = "Blank";
+		element = "none";
+		multiplier = 1;
 
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
@@ -938,17 +1194,20 @@ function generateCustomDeck() {
 
 		selectCARD();
 
-		currentscore = Math.floor(currentscore + streak + value / 2);
+		currentscore = Math.floor(currentscore + streak + acevalue / 2);
 		// addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
 		updateDISPLAYS();
 		updateTESTVALUES();
 		pickTABLECARD();
+
+		document.getElementById("percentage").innerHTML = "";
 	}
 
 // Selects the Player's Card
 
 	function selectCARD() {
+		if (playerwin === true) return;
 		if (lifepoints <= 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -959,12 +1218,6 @@ function generateCustomDeck() {
 			firstTimeHand = false;
 			document.getElementById("hand_card").style.borderStyle = "solid";
 			document.getElementById("hand_card").style.background = "white";
-		} else {
-			document.getElementById("prev_hand_card").style.borderStyle = "solid";
-			document.getElementById("prev_hand_card").style.background = "#D4D4D4";
-			document.getElementById("prev_hand_card").style.borderRight = "none";
-			document.getElementById("hand_suit_prev").innerHTML = document.getElementById("hand_suit_1").innerHTML;
-			document.getElementById("hand_number_prev").innerHTML = document.getElementById("hand_number").innerHTML;
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
@@ -980,7 +1233,7 @@ function generateCustomDeck() {
 		if (value <= 7) {
 		
 			valuemodifierhand = 0;
-			lowcardscounter = lowcardscounter + 1;
+			lowcardscounter = lowcardscounter - 1;
 			document.getElementById("lowcards").innerHTML = lowcardscounter;
 		
 		}
@@ -988,48 +1241,48 @@ function generateCustomDeck() {
 		if (value >= 8 && value !== 20) {
 		
 			valuemodifierhand = 1;
-			highcardscounter = highcardscounter + 1;
+			highcardscounter = highcardscounter - 1;
 			document.getElementById("highcards").innerHTML = highcardscounter;
 		
 		}
 
 		if (rank === "A") {
-			acecardscounter = acecardscounter + 1;
+			acecardscounter = acecardscounter - 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
 
 		if (color === "Red") {
-			redcardscounter = redcardscounter + 1;
+			redcardscounter = redcardscounter - 1;
 			document.getElementById("redcards").innerHTML = redcardscounter;
 		}
 
 		if (color === "Black") {
-			blackcardscounter = blackcardscounter + 1;
+			blackcardscounter = blackcardscounter - 1;
 			document.getElementById("blackcards").innerHTML = blackcardscounter;
 		}
 
 		if (color === "Special") {
-			jokercardscounter = jokercardscounter + 1;
+			jokercardscounter = jokercardscounter - 1;
 			document.getElementById("jokercards").innerHTML = jokercardscounter;
 		}
 
 		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter + 1;
+			clubscardscounter = clubscardscounter - 1;
 			document.getElementById("clubscards").innerHTML = clubscardscounter;
 		}
 
 		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter + 1;
+			spadescardscounter = spadescardscounter - 1;
 			document.getElementById("spadescards").innerHTML = spadescardscounter;
 		}
 
 		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter + 1;
+			diamondscardscounter = diamondscardscounter - 1;
 			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
 		}
 
 		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter + 1;
+			heartscardscounter = heartscardscounter - 1;
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
 
@@ -1041,6 +1294,7 @@ function generateCustomDeck() {
 // Picks the Next Table Card
 
 	function pickTABLECARD() {
+		if (playerwin === true) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
@@ -1050,7 +1304,7 @@ function generateCustomDeck() {
 			firstTimeTable = false;
 		} else {
 			document.getElementById("prev_table_card").style.borderStyle = "solid";
-			document.getElementById("prev_table_card").style.background = "#D4D4D4";
+			document.getElementById("prev_table_card").style.background = "white";
 			document.getElementById("prev_table_card").style.borderRight = "none";
 			document.getElementById("table_suit_prev").innerHTML = document.getElementById("table_suit_1").innerHTML;
 			document.getElementById("table_number_prev").innerHTML = document.getElementById("table_number").innerHTML;
@@ -1071,7 +1325,7 @@ function generateCustomDeck() {
 		if (value <= 7) {
 		
 			valuemodifiertable = 0;
-			lowcardscounter = lowcardscounter + 1;
+			lowcardscounter = lowcardscounter - 1;
 			document.getElementById("lowcards").innerHTML = lowcardscounter;
 		
 		}
@@ -1079,48 +1333,48 @@ function generateCustomDeck() {
 		if (value >= 8 && value !== 20) {
 		
 			valuemodifiertable = 1;
-			highcardscounter = highcardscounter + 1;
+			highcardscounter = highcardscounter - 1;
 			document.getElementById("highcards").innerHTML = highcardscounter;
 		
 		}
 
 		if (rank === "A") {
-			acecardscounter = acecardscounter + 1;
+			acecardscounter = acecardscounter - 1;
 			document.getElementById("acecards").innerHTML = acecardscounter;
 		}
 
 		if (color === "Red") {
-			redcardscounter = redcardscounter + 1;
+			redcardscounter = redcardscounter - 1;
 			document.getElementById("redcards").innerHTML = redcardscounter;
 		}
 
 		if (color === "Black") {
-			blackcardscounter = blackcardscounter + 1;
+			blackcardscounter = blackcardscounter - 1;
 			document.getElementById("blackcards").innerHTML = blackcardscounter;
 		}
 
 		if (color === "Special") {
-			jokercardscounter = jokercardscounter + 1;
+			jokercardscounter = jokercardscounter - 1;
 			document.getElementById("jokercards").innerHTML = jokercardscounter;
 		}
 
 		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter + 1;
+			clubscardscounter = clubscardscounter - 1;
 			document.getElementById("clubscards").innerHTML = clubscardscounter;
 		}
 
 		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter + 1;
+			spadescardscounter = spadescardscounter - 1;
 			document.getElementById("spadescards").innerHTML = spadescardscounter;
 		}
 
 		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter + 1;
+			diamondscardscounter = diamondscardscounter - 1;
 			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
 		}
 
 		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter + 1;
+			heartscardscounter = heartscardscounter - 1;
 			document.getElementById("heartscards").innerHTML = heartscardscounter;
 		}
 
@@ -1130,37 +1384,6 @@ function generateCustomDeck() {
 	}
 
 	pickTABLECARD();
-
-// Sets the Joker Gambit
-
-	function jokerGAMBIT() {
-		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
-
-		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
-
-		selectCARD();
-
-		if (color === 'Special') {
-			currentscore = currentscore + value * multiplier;
-			addORremove('streak', 1, '+');
-			updateDISPLAYS();
-			updateTESTVALUES();
-			pickTABLECARD();
-		} else {
-			lifepoints = 0;
-			document.getElementById("lifepoints").textContent = "0";
-			streak = 0;
-			document.getElementById("streak").textContent = "0";
-			lastchance = 0;
-			updateDISPLAYS();
-			updateTESTVALUES();
-			pickTABLECARD();
-		}
-	}
 
 // Checks If Gambit is Regular or Value, and Runs It
 
@@ -1178,9 +1401,42 @@ function generateCustomDeck() {
 		}
 	}
 
+// Sets the Joker Gambit
+
+	function jokerGAMBIT() {
+		if (playerwin === true) return;
+		if (lifepoints === 0) return;
+		if (cards.length === 0) {
+			emptyDECK();
+			return;
+		}
+
+		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
+
+		selectCARD();
+
+		if (color === 'Special') {
+			currentscore = currentscore + acevalue * multiplier;
+			addORremove('streak', 1, '+');
+			updateDISPLAYS();
+			updateTESTVALUES();
+			pickTABLECARD();
+		} else {
+			lifepoints = 0;
+			document.getElementById("lifepoints").textContent = "0";
+			streak = 0;
+			document.getElementById("streak").textContent = "0";
+			lastchance = 0;
+			updateDISPLAYS();
+			updateTESTVALUES();
+			pickTABLECARD();
+		}
+	}
+
 // Sets the Color, Suit, Number and Number & Suit Gambits
 
 	function gambit() {
+		if (playerwin === true) return;
 		if (document.getElementById("gambit_left").innerHTML === "" && document.getElementById("gambit_right").innerHTML === "") return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
@@ -1193,7 +1449,7 @@ function generateCustomDeck() {
 		eval('var check = ' + element);
 
 		if (variable === check || color === 'Special') {
-			currentscore = currentscore + streak + value * multiplier;
+			currentscore = currentscore + streak + acevalue * multiplier;
 			addORremove('streak', 1, '+');
 			updateDISPLAYS();
 			pickTABLECARD();
@@ -1205,6 +1461,7 @@ function generateCustomDeck() {
 // Sets the High and Low Gambits
 
 	function gambitVALUE() {
+		if (playerwin === true) return;
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
@@ -1219,7 +1476,7 @@ function generateCustomDeck() {
 			SPEvalue = acevalue;
 
 			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
-				currentscore = currentscore + streak + value * multiplier;
+				currentscore = currentscore + streak + acevalue * multiplier;
 				addORremove('streak', 1, '+');
 				updateDISPLAYS();
 				pickTABLECARD();
@@ -1228,7 +1485,7 @@ function generateCustomDeck() {
 			}
 		} else {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
-				currentscore = currentscore + streak + value * multiplier;
+				currentscore = currentscore + streak + acevalue * multiplier;
 				addORremove('streak', 1, '+');
 				updateDISPLAYS();
 				pickTABLECARD();
