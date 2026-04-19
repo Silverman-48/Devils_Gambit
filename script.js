@@ -868,9 +868,9 @@ function generateCustomDeck() {
 		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
-		selectCARD();
-		updateTESTVALUES();
 		waitforPLAYER('invalid');
+		updateTESTVALUES();
+		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
 	}
@@ -1221,15 +1221,12 @@ function sacrificeSTREAK(type) {
 
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
-		addORremove('blanks', 1, '-');
-
-		selectCARD();
-
 		currentscore = Math.floor(currentscore + streak + acevalue / 2);
-		// addORremove('lifepoints', 1, '-');
-		// addORremove('streak', 1, '+');
-		updateTESTVALUES();
+
+		addORremove('blanks', 1, '-');
 		waitforPLAYER('invalid');
+		updateTESTVALUES();
+		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
 	}
