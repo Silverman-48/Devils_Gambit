@@ -863,13 +863,14 @@ function generateCustomDeck() {
 		variable = "Skip";
 		element = "none";
 		multiplier = 1;
-
+		
+		updateTESTVALUES();
+		waitforPLAYER(true);
+		
 		document.getElementById("currentgambit").innerHTML = "Round Skipped";
 		
 		addORremove('lifepoints', 1, '-');
 		addORremove('streak', 1, '+');
-		waitforPLAYER('invalid');
-		updateTESTVALUES();
 		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
@@ -1219,13 +1220,15 @@ function sacrificeSTREAK(type) {
 		element = "none";
 		multiplier = 1;
 
+		updateTESTVALUES();
+		waitforPLAYER(true);
+		
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
 		currentscore = Math.floor(currentscore + streak + acevalue / 2);
 
 		addORremove('blanks', 1, '-');
-		waitforPLAYER('invalid');
-		updateTESTVALUES();
+
 		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
@@ -1525,11 +1528,6 @@ function sacrificeSTREAK(type) {
 
 		const gameButtons = document.querySelectorAll('button');
 		gameButtons.forEach(btn => btn.disabled = true);
-
-		if (wonGambit === "invalid") {
-			setTimeout(resumeGAME, 1500);
-			return;
-		}
 
 		if (wonGambit) {
 			document.getElementById("empty_gambit").innerHTML = "...";
