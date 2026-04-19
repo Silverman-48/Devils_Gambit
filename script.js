@@ -897,6 +897,11 @@ function generateCustomDeck() {
 			document.getElementById("gameplay_buttons").style.display = "block";
 			document.getElementById("continue_button").disabled = false;
 
+			document.getElementById("table_card").style.borderStyle = "solid";
+			document.getElementById("table_card").style.background = "white";
+
+			pickTABLECARD();
+
 		} else {
 
 			if (lastchance >= 1) {
