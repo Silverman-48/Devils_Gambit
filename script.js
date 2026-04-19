@@ -17,9 +17,6 @@
 	let lastchance = 1;
 	let cards = [];
 
-	let firstTimeTable = true;
-	let firstTimeHand = true;
-
 	let suitarray = ['♣️', '♦️', '♠️', '♥️'];
 	let colorarray = ['Red', 'Black', 'Special'];
 	let valuearray = ['Low', 'High'];
@@ -91,7 +88,7 @@
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
-		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "...";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
 
@@ -108,7 +105,7 @@
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
-		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "...";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
 
@@ -153,7 +150,7 @@
 
 		if (buttonelement === mod1) {
 			if (mod2 === "") {
-				document.getElementById("empty_gambit").innerHTML = "None";
+				document.getElementById("empty_gambit").innerHTML = "...";
 				document.getElementById("percentage").innerHTML = "";
 			}
 			textgambit_left.innerHTML = "";
@@ -204,7 +201,7 @@
 
 		if (buttonelement === mod2) {
 			if (mod1 === "") {
-				document.getElementById("empty_gambit").innerHTML = "None";
+				document.getElementById("empty_gambit").innerHTML = "...";
 				document.getElementById("percentage").innerHTML = "";
 			}
 			textgambit_right.innerHTML = "";
@@ -870,11 +867,10 @@ function generateCustomDeck() {
 		document.getElementById("currentgambit").innerHTML = "Round Skipped";
 		
 		addORremove('lifepoints', 1, '-');
-		addORremove('streak', 1, '-');
+		addORremove('streak', 1, '+');
 		selectCARD();
-		updateDISPLAYS();
 		updateTESTVALUES();
-		pickTABLECARD();
+		waitforPLAYER('invalid');
 
 		document.getElementById("percentage").innerHTML = "";
 	}
@@ -894,8 +890,12 @@ function generateCustomDeck() {
 
 			addORremove('lifepoints', 1, '+');
 			document.getElementById("currentgambit").innerHTML = "One More Chance!";
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = "";
+			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("last_chance").style.display = "none";
 			document.getElementById("gameplay_buttons").style.display = "block";
+			document.getElementById("continue_button").disabled = false;
 
 		} else {
 
@@ -969,7 +969,7 @@ function generateCustomDeck() {
 		document.getElementById("currentgambit").textContent = "No more cards left!";
 		document.getElementById("gambit_left").textContent = "";
 		document.getElementById("gambit_right").textContent = "";
-		document.getElementById("empty_gambit").textContent = "None";
+		document.getElementById("empty_gambit").textContent = "...";
 		document.getElementById("percentage").innerHTML = "";
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
@@ -1018,25 +1018,55 @@ function generateCustomDeck() {
 			clearGAMBIT();
 			currentscore = currentscoretobeat;
 			document.getElementById("score").innerHTML = currentscore;
-			document.getElementById("currentgambit").innerHTML = "You Won! (This Time)";
+			document.getElementById("table_suit_1").innerHTML = "";
+			document.getElementById("table_number").innerHTML = "";
+			document.getElementById("table_suit_2").innerHTML = "";
+			document.getElementById("table_card").style.borderStyle = "dotted";
+			document.getElementById("table_card").style.background = "none";
+			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
 			return;
 		}
 
-		if (lifepoints > 0) return;
 		if (lifepoints === 0 && lastchance > 0) {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
+			document.getElementById("table_suit_1").innerHTML = "";
+			document.getElementById("table_number").innerHTML = "";
+			document.getElementById("table_suit_2").innerHTML = "";
+			document.getElementById("table_card").style.borderStyle = "dotted";
+			document.getElementById("table_card").style.background = "none";
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = "";
+			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
+			document.getElementById("continue_button").disabled = true;
 			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
-		} else {
+			return;
+		} else if (lifepoints === 0) {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Game Over";
+			document.getElementById("table_suit_1").innerHTML = "";
+			document.getElementById("table_number").innerHTML = "";
+			document.getElementById("table_suit_2").innerHTML = "";
+			document.getElementById("table_card").style.borderStyle = "dotted";
+			document.getElementById("table_card").style.background = "none";
+
+			document.getElementById("hand_suit_1").innerHTML = "";
+			document.getElementById("hand_number").innerHTML = "";
+			document.getElementById("hand_suit_2").innerHTML = "";
+			document.getElementById("hand_card").style.borderStyle = "dotted";
+			document.getElementById("hand_card").style.background = "none";
+
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = "";
+			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
-		}
+			return;
+		} else if (lifepoints > 0) pickTABLECARD(); return;
 	}
 
 // Triggers the Game Reset
@@ -1054,12 +1084,8 @@ function generateCustomDeck() {
 		document.getElementById("hand_card").style.borderStyle = "dotted";
 		document.getElementById("hand_card").style.background = "none";
 
-		document.getElementById("prev_table_card").style.borderStyle = "dotted";
-		document.getElementById("prev_table_card").style.background = "none";
-		document.getElementById("prev_table_card").style.borderRight = "none";
-
-		document.getElementById("table_suit_prev").innerHTML = "";
-		document.getElementById("table_number_prev").innerHTML = "";
+		document.getElementById("table_card").style.borderStyle = "solid";
+		document.getElementById("table_card").style.background = "white";
 
 		document.getElementById("gameplay_buttons").style.display = "block";
 		document.getElementById("last_chance").style.display = "none";
@@ -1081,9 +1107,6 @@ function generateCustomDeck() {
 		lastchance = currentlastchance;
 		acevalue = 0;
 		playerwin = false;
-
-		firstTimeTable = true;
-		firstTimeHand = true;
 
 		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
 		document.getElementById("score").innerHTML = currentscore;
@@ -1113,7 +1136,7 @@ function generateCustomDeck() {
 		element = "None";
 		multiplier = 1;
 
-		document.getElementById("empty_gambit").innerHTML = "None";
+		document.getElementById("empty_gambit").innerHTML = "...";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
 
@@ -1200,10 +1223,9 @@ function sacrificeSTREAK(type) {
 
 		currentscore = Math.floor(currentscore + streak + acevalue / 2);
 		// addORremove('lifepoints', 1, '-');
-		addORremove('streak', 1, '+');
-		updateDISPLAYS();
+		// addORremove('streak', 1, '+');
 		updateTESTVALUES();
-		pickTABLECARD();
+		waitforPLAYER('invalid');
 
 		document.getElementById("percentage").innerHTML = "";
 	}
@@ -1212,17 +1234,13 @@ function sacrificeSTREAK(type) {
 
 	function selectCARD() {
 		if (playerwin === true) return;
-		if (lifepoints <= 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
 
-		if (firstTimeHand) {
-			firstTimeHand = false;
-			document.getElementById("hand_card").style.borderStyle = "solid";
-			document.getElementById("hand_card").style.background = "white";
-		}
+		document.getElementById("hand_card").style.borderStyle = "solid";
+		document.getElementById("hand_card").style.background = "white";
 
 		const index = Math.floor(Math.random() * cards.length);
 		card = cards.splice(index, 1)[0];
@@ -1302,16 +1320,6 @@ function sacrificeSTREAK(type) {
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
-		}
-
-		if (firstTimeTable) {
-			firstTimeTable = false;
-		} else {
-			document.getElementById("prev_table_card").style.borderStyle = "solid";
-			document.getElementById("prev_table_card").style.background = "white";
-			document.getElementById("prev_table_card").style.borderRight = "none";
-			document.getElementById("table_suit_prev").innerHTML = document.getElementById("table_suit_1").innerHTML;
-			document.getElementById("table_number_prev").innerHTML = document.getElementById("table_number").innerHTML;
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
@@ -1422,18 +1430,18 @@ function sacrificeSTREAK(type) {
 		if (color === 'Special') {
 			currentscore = currentscore + acevalue * multiplier;
 			addORremove('streak', 1, '+');
-			updateDISPLAYS();
 			updateTESTVALUES();
-			pickTABLECARD();
+			waitforPLAYER(true);
 		} else {
 			lifepoints = 0;
 			document.getElementById("lifepoints").textContent = "0";
 			streak = 0;
 			document.getElementById("streak").textContent = "0";
+			blanks = 0;
+			document.getElementById("blanks").textContent = "0";
 			lastchance = 0;
-			updateDISPLAYS();
+			waitforPLAYER(false);
 			updateTESTVALUES();
-			pickTABLECARD();
 		}
 	}
 
@@ -1455,8 +1463,7 @@ function sacrificeSTREAK(type) {
 		if (variable === check || color === 'Special') {
 			currentscore = currentscore + streak + acevalue * multiplier;
 			addORremove('streak', 1, '+');
-			updateDISPLAYS();
-			pickTABLECARD();
+			waitforPLAYER(true);
 		} else {
 			lostGAMBIT();
 		}
@@ -1482,8 +1489,7 @@ function sacrificeSTREAK(type) {
 			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
 				currentscore = currentscore + streak + acevalue * multiplier;
 				addORremove('streak', 1, '+');
-				updateDISPLAYS();
-				pickTABLECARD();
+				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
 			}
@@ -1491,8 +1497,7 @@ function sacrificeSTREAK(type) {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
 				currentscore = currentscore + streak + acevalue * multiplier;
 				addORremove('streak', 1, '+');
-				updateDISPLAYS();
-				pickTABLECARD();
+				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
 			}
@@ -1504,6 +1509,54 @@ function sacrificeSTREAK(type) {
 	function lostGAMBIT() {
 			addORremove('streak', 1, '-');
 			addORremove('lifepoints', 1, '-');
-			updateDISPLAYS();
-			pickTABLECARD();
+			waitforPLAYER(false);
+	}
+
+// Wait for the player to continue
+
+	function waitforPLAYER(wonGambit) {
+
+		const buttons_1 = document.querySelectorAll('.special_button_1');
+		buttons_1.forEach(btn => btn.classList.remove('highlight'));
+
+		const buttons_2 = document.querySelectorAll('.special_button_2');
+		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
+		const gameButtons = document.querySelectorAll('button');
+		gameButtons.forEach(btn => btn.disabled = true);
+
+		if (wonGambit === "invalid") {
+			setTimeout(resumeGAME, 1500);
+			return;
+		}
+
+		if (wonGambit) {
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = "";
+			document.getElementById("gambit_right").innerHTML = "";
+			document.getElementById("currentgambit").innerHTML = "Success";
+			setTimeout(resumeGAME, 1500);
+		} else {
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = "";
+			document.getElementById("gambit_right").innerHTML = "";
+			document.getElementById("currentgambit").innerHTML = "Fail";
+			setTimeout(resumeGAME, 1500);
+		}
+	}
+
+	function resumeGAME() {
+		const gameButtons = document.querySelectorAll('button');
+		gameButtons.forEach(btn => btn.disabled = false);
+
+		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+
+		document.getElementById("hand_card").style.borderStyle = "dotted";
+		document.getElementById("hand_card").style.background = "none";
+
+		document.getElementById("hand_suit_1").innerHTML = "";
+		document.getElementById("hand_number").innerHTML = "";
+		document.getElementById("hand_suit_2").innerHTML = "";
+
+		updateDISPLAYS();
 	}
