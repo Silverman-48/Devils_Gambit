@@ -888,6 +888,11 @@ function generateCustomDeck() {
 
 		if (randomNumber === diceroll) {
 
+			document.getElementById("table_card").style.borderStyle = "solid";
+			document.getElementById("table_card").style.background = "white";
+
+			pickTABLECARD();
+			
 			addORremove('lifepoints', 1, '+');
 			document.getElementById("currentgambit").innerHTML = "One More Chance!";
 			document.getElementById("empty_gambit").innerHTML = "...";
@@ -895,11 +900,6 @@ function generateCustomDeck() {
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("last_chance").style.display = "none";
 			document.getElementById("gameplay_buttons").style.display = "block";
-
-			document.getElementById("table_card").style.borderStyle = "solid";
-			document.getElementById("table_card").style.background = "white";
-
-			pickTABLECARD();
 
 		} else {
 
