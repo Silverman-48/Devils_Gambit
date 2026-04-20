@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -19,11 +18,11 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <button type="button" onclick="changePreset(-1)" style="height: 30px; width: 40px"><span class="button_content"> « </span></button>
-    <div style="text-align: center">Preset:<br><strong id="preset-name" style="text-align: center">A Day In Hell</strong></div>
+    <div style="text-align: center"><strong id="preset-name" style="text-align: center"></strong></div>
     <button type="button" onclick="changePreset(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
 </div>
 
-<div style="display: flex; flex-direction: column;">
+<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 
 	<div style="display: flex; flex-direction: row;">
         <label style="flex: 1">Score To Beat:</label>
@@ -44,7 +43,7 @@
 
 </div>
 
-<div style="display: flex; flex-direction: row; gap: 5px">
+<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 5px;">
 <button style="flex: 1" onclick="showELEMENTFLEX('card_options')"><span class="button_content">Cards</span></button>
 <button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Gambits</span></button>
 <button style="flex: 1" onclick="showELEMENTFLEX('stats_options')"><span class="button_content">Stats</span></button>
@@ -53,21 +52,18 @@
 
 <div id="card_options" style="display: none; flex-direction: column;">
 
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label>Number Of Decks:</label>
 		<div class="stepper">
-            <!-- Notice the '1' added as a third parameter to enforce a minimum -->
 			<button type="button" onclick="changeQty('mult-decks', -1, 1)">-</button>
 			<input type="text" id="mult-decks" value="1" readonly>
 			<button type="button" onclick="changeQty('mult-decks', 1, 1)">+</button>
 		</div>
 	</div>
 
-    <!-- The standalone Joker section was removed from here -->
-
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label><input type="checkbox" id="use_custom_ranks" onchange="toggleSpecificCards('ranks')" unchecked> Custom Ranks</label>
-	</div>
+
 	
 	<div id="custom_ranks_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
@@ -76,7 +72,7 @@
 			<label>Four (4)</label><label>Five (5)</label><label>Six (6)</label>
 			<label>Seven (7)</label><label>Eight (8)</label><label>Nine (9)</label>
 			<label>Ten (10)</label><label>Jack (J)</label><label>Queen (Q)</label><label>King (K)</label>
-            <label>Joker 1</label><label>Joker 2</label> <!-- Jokers moved here -->
+            		<label>Joker 1</label><label>Joker 2</label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
 
@@ -103,13 +99,13 @@
             		<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J2', -1)">-</button><input type="text" id="mult-rank-J2" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J2', 1)">+</button></div>
 		</div>
 	</div>
-
-	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label><input type="checkbox" id="use_custom_suits" onchange="toggleSpecificCards('suits')" unchecked> Custom Suits</label>
 	</div>
+
+	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
+		<label><input type="checkbox" id="use_custom_suits" onchange="toggleSpecificCards('suits')" unchecked> Custom Suits</label>
 	
 	<div id="custom_suits_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row">
-		<!-- (Keep your custom suits HTML exactly the same) -->
+
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Change All</label>
 			<label>Hearts (♥️)</label>
@@ -131,13 +127,14 @@
 			<div class="stepper"><button type="button" onclick="changeQty('mult-spades', -1)">-</button><input type="text" id="mult-spades" value="1" readonly><button type="button" onclick="changeQty('mult-spades', 1)">+</button></div>
 		</div>
 	</div>
+	</div>
 
 </div>
 
 <div id="mult_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Active Gambits:</label>
+		<label>Active Gambits / Features:</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
 			<label><input type="checkbox" id="use_gambit_Low" onchange="toggleGambitBtn('Low')" checked> Low</label>
 			<label><input type="checkbox" id="use_gambit_High" onchange="toggleGambitBtn('High')" checked> High</label>
@@ -148,17 +145,22 @@
 			<label><input type="checkbox" id="use_gambit_Clubs" onchange="toggleGambitBtn('Clubs')" checked> ♣️</label>
 			<label><input type="checkbox" id="use_gambit_Spades" onchange="toggleGambitBtn('Spades')" checked> ♠️</label>
 			<label><input type="checkbox" id="use_gambit_Special" onchange="toggleGambitBtn('Special')" checked> Joker</label>
+            		<label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
+            		<label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
+            		<label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
+            		<label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
 		</div>
 	</div>
 
-	<label>Multipliers: </label>
+	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
+	<label>Multipliers (General / Specific): </label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label><input type="checkbox" id="use_gen_value" onchange="toggleSpecifics('value')" checked> Value:</label>
+		<label><input type="checkbox" id="use_spec_value" onchange="toggleSpecifics('value')"> Value:</label>
 		<div class="stepper">
-			<button type="button" onclick="changeMultiplier('gen_value', -1)">-</button>
+			<button type="button" onclick="changeMultiplier('gen_value', -1); changeAllValueMult(-1)">-</button>
 			<input type="text" id="gen_value_mult_disp" readonly>
-			<button type="button" onclick="changeMultiplier('gen_value', 1)">+</button>
+			<button type="button" onclick="changeMultiplier('gen_value', 1); changeAllValueMult(1)">+</button>
 		</div>
         </div>
 
@@ -182,11 +184,11 @@
 	</div>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label><input type="checkbox" id="use_gen_color" onchange="toggleSpecifics('color')" checked> Color:</label>
+		<label><input type="checkbox" id="use_spec_color" onchange="toggleSpecifics('color')"> Color:</label>
 		<div class="stepper">
-			<button type="button" onclick="changeMultiplier('gen_color', -1)">-</button>
+			<button type="button" onclick="changeMultiplier('gen_color', -1); changeAllColorMult(-1)">-</button>
 			<input type="text" id="gen_color_mult_disp" readonly>
-			<button type="button" onclick="changeMultiplier('gen_color', 1)">+</button>
+			<button type="button" onclick="changeMultiplier('gen_color', 1); changeAllColorMult(1)">+</button>
 		</div>
 	</div>
         <div id="spec_color_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
@@ -209,11 +211,11 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <label><input type="checkbox" id="use_gen_suit" onchange="toggleSpecifics('suit')" checked> Suit:</label>
+            <label><input type="checkbox" id="use_spec_suit" onchange="toggleSpecifics('suit')"> Suit:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_suit', -1)">-</button>
+                <button type="button" onclick="changeMultiplier('gen_suit', -1); changeAllSuitMult(-1)">-</button>
                 <input type="text" id="gen_suit_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_suit', 1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_suit', 1); changeAllSuitMult(1)">+</button>
             </div>
         </div>
         <div id="spec_suit_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
@@ -248,18 +250,18 @@
 		</div>
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <label><input type="checkbox" id="use_gen_value_color" onchange="toggleSpecifics('value_color')" checked> Value & Color:</label>
+            <label><input type="checkbox" id="use_spec_value_color" onchange="toggleSpecifics('value_color')"> Value & Color:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_value_color', -1)">-</button>
+                <button type="button" onclick="changeMultiplier('gen_value_color', -1); changeAllValueColorMult(-1)">-</button>
                 <input type="text" id="gen_value_color_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_value_color', 1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_value_color', 1); changeAllValueColorMult(1)">+</button>
             </div>
         </div>
         <div id="spec_value_color_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Low Red: </label>
-			<label>Low Black: </label>
 			<label>High Red: </label>
+			<label>Low Black: </label>
 			<label>High Black: </label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
@@ -269,14 +271,14 @@
                  <button type="button" onclick="changeMultiplier('value_color_low_red', 1)">+</button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_color_low_black', -1)">-</button>
-                 <input type="text" id="value_color_low_black_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_color_low_black', 1)">+</button>
-            </div>
-            <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_color_high_red', -1)">-</button>
                  <input type="text" id="value_color_high_red_mult_disp" readonly>
                  <button type="button" onclick="changeMultiplier('value_color_high_red', 1)">+</button>
+            </div>
+            <div class="stepper">
+                 <button type="button" onclick="changeMultiplier('value_color_low_black', -1)">-</button>
+                 <input type="text" id="value_color_low_black_mult_disp" readonly>
+                 <button type="button" onclick="changeMultiplier('value_color_low_black', 1)">+</button>
             </div>
             <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_color_high_black', -1)">-</button>
@@ -287,22 +289,22 @@
 		</div>
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <label><input type="checkbox" id="use_gen_value_suit" onchange="toggleSpecifics('value_suit')" checked> Value & Suit:</label>
+            <label><input type="checkbox" id="use_spec_value_suit" onchange="toggleSpecifics('value_suit')"> Value & Suit:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_value_suit', -1)">-</button>
+                <button type="button" onclick="changeMultiplier('gen_value_suit', -1); changeAllValueSuitMult(-1)">-</button>
                 <input type="text" id="gen_value_suit_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_value_suit', 1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_value_suit', 1); changeAllValueSuitMult(1)">+</button>
             </div>
         </div>
         <div id="spec_value_suit_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Low ♥️: </label>
-			<label>Low ♦️: </label>
-			<label>Low ♣️: </label>
-			<label>Low ♠️: </label>
 			<label>High ♥️: </label>
+			<label>Low ♦️: </label>
 			<label>High ♦️: </label>
+			<label>Low ♣️: </label>
 			<label>High ♣️: </label>
+			<label>Low ♠️: </label>
 			<label>High ♠️: </label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
@@ -312,24 +314,14 @@
                  <button type="button" onclick="changeMultiplier('value_suit_low_hearts', 1)">+</button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', -1)">-</button>
-                 <input type="text" id="value_suit_low_diamonds_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', 1)">+</button>
-            </div>
-            <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', -1)">-</button>
-                 <input type="text" id="value_suit_low_clubs_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', 1)">+</button>
-            </div>
-            <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', -1)">-</button>
-                 <input type="text" id="value_suit_low_spades_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', 1)">+</button>
-            </div>
-            <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_suit_high_hearts', -1)">-</button>
                  <input type="text" id="value_suit_high_hearts_mult_disp" readonly>
                  <button type="button" onclick="changeMultiplier('value_suit_high_hearts', 1)">+</button>
+            </div>
+            <div class="stepper">
+                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', -1)">-</button>
+                 <input type="text" id="value_suit_low_diamonds_mult_disp" readonly>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', 1)">+</button>
             </div>
             <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', -1)">-</button>
@@ -337,9 +329,19 @@
                  <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', 1)">+</button>
             </div>
             <div class="stepper">
+                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', -1)">-</button>
+                 <input type="text" id="value_suit_low_clubs_mult_disp" readonly>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', 1)">+</button>
+            </div>
+            <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_suit_high_clubs', -1)">-</button>
                  <input type="text" id="value_suit_high_clubs_mult_disp" readonly>
                  <button type="button" onclick="changeMultiplier('value_suit_high_clubs', 1)">+</button>
+            </div>
+            <div class="stepper">
+                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', -1)">-</button>
+                 <input type="text" id="value_suit_low_spades_mult_disp" readonly>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', 1)">+</button>
             </div>
             <div class="stepper">
                  <button type="button" onclick="changeMultiplier('value_suit_high_spades', -1)">-</button>
@@ -357,11 +359,12 @@
                 <button type="button" onclick="changeMultiplier('joker', 1)">+</button>
             </div>
         </div>
+	</div>
 
 </div>
 
 <div id="stats_options" style="display: none; flex-direction: column;">
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label><input type="checkbox" onchange="endlessLIVES();" id="endless_lives" unchecked> Lives:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '-', 20)"><span class="button_content2">-</span></button>
@@ -369,7 +372,7 @@
 			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '+', 20)"><span class="button_content2">+</span></button>
 		</div>
 	</div>
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label>Blanks:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
@@ -388,7 +391,7 @@
 </div>
 
 <div id="misc_options" style="display: none; flex-direction: column;">
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label>Last Chance D4:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
@@ -397,10 +400,11 @@
 		</div>
 	</div>
 
-	<label>Streak Sacrifice</label>
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+	<label>Sacrifice Options</label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>(Life):</label>
+		<label>Streak Cost (Life):</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('sacrificelife', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="sacrificelife" readonly>
@@ -408,15 +412,42 @@
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>(Blanks):</label>
+		<label>Streak Cost (Blanks):</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="sacrificeblanks" readonly>
 			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
 		</div>
 	</div>
+	</div>
 
-	<label>Skip</label>
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Blank Options</label>
+
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Score Operation:</label>
+			<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 40px"><span class="button_content2">/</span></button>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Score Amount:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '-', 10)"><span class="button_content2">-</span></button>
+				<input type="text" id="blankscoreamount" readonly>
+				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '+', 10)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Streak Gained:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="blankstreakamount" readonly>
+				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+	</div>
+
+	<div style="display: flex; flex-direction: column; gap: 5px;">
+	<label>Skip Options</label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Life Cost:</label>
@@ -433,6 +464,7 @@
 			<input type="text" id="skipstreakamount" readonly>
 			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 		</div>
+	</div>
 	</div>
 </div>
 
@@ -501,7 +533,7 @@
 		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
 			<button id="set_button" style="width: stretch; flex: 1; height: 35px; display: block;" onclick="runGAMBIT();"><span class="button_content">Set</span></button>
 			<button id="clear_button" style="width: stretch; flex: 1; height: 35px; display: block;" onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
-			<button style="width: stretch; flex: 1; height: 35px" onclick="reset();"><span class="button_content">Reset</span></button>
+			<button id="reset_button" style="width: stretch; flex: 1; height: 35px" onclick="reset();"><span class="button_content">Reset</span></button>
 		</div>
 
 	<div id="gameplay_buttons" style="display: block">
@@ -526,14 +558,17 @@
 			</button>
 
 			<div style="display: flex; gap: 5px; width: 300px;">
-				<button class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="useBLANK()"><span class="button_content">Blank</span></button>
+
+				<button id="btn_action_Blank" class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="useBLANK()"><span class="button_content">Blank</span></button>
 
 				<div style="display: flex; flex-direction: column;">
-					<button class="special_button" style="width: stretch; flex: 1; height: 20px; border-bottom: 1.5px solid #b5b5b5; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Sacrifice (Life)</span></button>
-					<button class="special_button" style="width: stretch; flex: 1; height: 20px; border-top: 1.5px solid #b5b5b5; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Sacrifice (Blank)</span></button>
+ 
+					<button id="btn_action_SacrificeLife" class="special_button" style="width: stretch; flex: 1; height: 20px; border-bottom: 1.5px solid #b5b5b5; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Sacrifice (Life)</span></button>
+
+					<button id="btn_action_SacrificeBlank" class="special_button" style="width: stretch; flex: 1; height: 20px; border-top: 1.5px solid #b5b5b5; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Sacrifice (Blank)</span></button>
 				</div>
 
-				<button class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="skipROUND()"><span class="button_content">Skip</span></button>
+				<button id="btn_action_Skip" class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="skipROUND()"><span class="button_content">Skip</span></button>
 
 			</div>
 
@@ -553,8 +588,8 @@
 		</div>
 
 		<div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
-			<button style="width: stretch; flex: 1; height: 35px" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Cards</span></button>
-			<button style="width: stretch; flex: 1; height: 35px" onclick="toggleMAINMENU();"><span class="button_content">Settings</span></button>
+			<button id="card_history_button" style="width: stretch; flex: 1; height: 35px" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Cards</span></button>
+			<button id="settings_button" style="width: stretch; flex: 1; height: 35px" onclick="toggleMAINMENU();"><span class="button_content">Settings</span></button>
 		</div>
 
 	</div>
