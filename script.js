@@ -359,7 +359,7 @@ if (key === "joker") {
         multiplier = mults["joker"];
     } else {
         if (mults["useSpec_" + category]) {
-            multiplier = mults[key] || 1;
+            multiplier = mults[key] !== undefined ? mults[key] : 1; 
         } else {
             multiplier = mults["gen_" + category];
         }
@@ -558,6 +558,7 @@ function addORremoveCHEATS(variableId, value, sign, max) {
                 case 'currentscoretobeat': newValue = 1; break;
                 case 'currentlifepoints': newValue = 1; break;
                 case 'blankscoreamount': newValue = 1; break;
+                case 'skiplifeamount':
                 case 'skipstreakamount':
                 case 'blankstreakamount':
 		case 'lossstreakamount':
@@ -669,7 +670,7 @@ const presets = [
         config: {
             "endless": true,
             "finite_lives": true,
-                            "finite_blanks": true,
+            "finite_blanks": true,
             "currentscoretobeat": 100,
 
             "mult-decks": 1,
@@ -694,8 +695,14 @@ const presets = [
             "joker": 10,
 
             "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1,
+
             "sacrificelife": 3, "sacrificeblanks": 6,
-            "skiplifeamount": 1, "skipstreakamount": 1, 
+
+            "winlifeamount": 1, "winstreakamount": 1,
+
+            "losslifeamount": -1, "lossstreakamount": -1,
+ 
+            "skiplifeamount": -1, "skipstreakamount": 1, 
 
             "active_Low": true, "active_High": true, "active_Red": true, "active_Black": true,
             "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true,
@@ -721,7 +728,7 @@ function applyPreset() {
     // Apply specific Stepper values for Decks/Cards
   const quantities = ["mult-decks", "mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2"];
     quantities.forEach(id => {
-        if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? cfg[id] : 1;
+        if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(1, cfg[id]) : 1;
     });
 
     // Reset UI Toggles to Preset Configuration
@@ -730,9 +737,16 @@ function applyPreset() {
     toggleSpecificCards('ranks');
     toggleSpecificCards('suits');
 
-    Object.keys(mults).forEach(key => {
+Object.keys(mults).forEach(key => {
         if (cfg[key] !== undefined) {
-            mults[key] = cfg[key];
+            // Apply failsafe: If the value is a number, ensure it's at least 0
+            // If it's a boolean (like useSpec_), keep it as is
+            if (typeof cfg[key] === "number") {
+                mults[key] = Math.max(1, cfg[key]);
+            } else {
+                mults[key] = cfg[key];
+            }
+
             if (key.startsWith("useSpec_")) {
                 let id = key.replace("useSpec_", "use_spec_");
                 let cb = document.getElementById(id);
@@ -740,21 +754,34 @@ function applyPreset() {
                     cb.checked = mults[key];
                     toggleSpecifics(key.replace("useSpec_", ""));
                 }
+            } else {
+                // Also update the UI input fields for general/specific multipliers 
+                // so the user sees the corrected 0 instead of a negative number
+                let inputId = key.replace("gen_", "gen-mult-").replace("_", "-");
+                let inputEl = document.getElementById(inputId) || document.getElementById(key.replace("_", "-"));
+                if (inputEl) {
+                    inputEl.value = mults[key];
+                }
             }
         }
     });
 
-    currentlifepoints = cfg["lifepoints"];
-    currentblanks = cfg["blanks"];
-    currentstreak = cfg["streak"];
-    currentlastchance = cfg["lastchance"];
-    sacrificelife = cfg["sacrificelife"];
-    sacrificeblanks = cfg["sacrificeblanks"];
-  skiplifeamount = cfg["skiplifeamount"] !== undefined ? cfg["skiplifeamount"] : 1;
+currentlifepoints = cfg["lifepoints"] !== undefined ? Math.max(1, cfg["lifepoints"]) : 3;
+    currentblanks = cfg["blanks"] !== undefined ? Math.max(0, cfg["blanks"]) : 1;
+    currentstreak = cfg["streak"] !== undefined ? Math.max(0, cfg["streak"]) : 0;
+    currentlastchance = cfg["lastchance"] !== undefined ? Math.max(1, cfg["lastchance"]) : 1;
+    sacrificelife = cfg["sacrificelife"] !== undefined ? Math.max(0, cfg["sacrificelife"]) : 3;
+    sacrificeblanks = cfg["sacrificeblanks"] !== undefined ? Math.max(0, cfg["sacrificeblanks"]) : 6;
+    skiplifeamount = cfg["skiplifeamount"] !== undefined ? cfg["skiplifeamount"] : 1;
     skipstreakamount = cfg["skipstreakamount"] !== undefined ? cfg["skipstreakamount"] : 1;
 
-  blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
-  blankscoreamount = cfg["blankscoreamount"] !== undefined ? cfg["blankscoreamount"] : 2;
+    winlifeamount = cfg["winlifeamount"] !== undefined ? cfg["winlifeamount"] : 1;
+    winstreakamount = cfg["winstreakamount"] !== undefined ? cfg["winstreakamount"] : 1;
+    losslifeamount = cfg["losslifeamount"] !== undefined ? cfg["losslifeamount"] : -1;
+    lossstreakamount = cfg["lossstreakamount"] !== undefined ? cfg["lossstreakamount"] : -1;
+
+blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
+  blankscoreamount = cfg["blankscoreamount"] !== undefined ? Math.max(1, cfg["blankscoreamount"]) : 2;
   blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
     
     // Process Active Gambits UI
@@ -782,15 +809,15 @@ const gambitNames = [
         }
     });
 
-currentscoretobeat = cfg["currentscoretobeat"];
-    savedscore = cfg["currentscoretobeat"];
-    document.getElementById("currentscoretobeat").value = currentscoretobeat;
+    currentscoretobeat = cfg["currentscoretobeat"] !== undefined ? Math.max(1, cfg["currentscoretobeat"]) : 100;
+        savedscore = currentscoretobeat;
+          document.getElementById("currentscoretobeat").value = currentscoretobeat;
 
-    // Seed the UI first so the toggle functions don't read stale data from the previous preset
-    savedlifepoints = cfg["lifepoints"]; 
+// Seed the UI first so the toggle functions don't read stale data from the previous preset
+    savedlifepoints = currentlifepoints; 
     document.getElementById("currentlifepoints").value = savedlifepoints;
 
-    savedblanks = cfg["blanks"]; 
+    savedblanks = currentblanks; 
     document.getElementById("currentblanks").value = savedblanks;
 
     // Process Checkboxes for Infinity Logic
@@ -1109,7 +1136,7 @@ function generateCustomDeck() {
 
 		// Calculate Life Cost
 		if (lifepoints !== Infinity) {
-			lifepoints -= skiplifeamount;
+			lifepoints += skiplifeamount;
 			if (lifepoints < 0) lifepoints = 0;
 			document.getElementById("lifepoints").textContent = lifepoints;
 		}
