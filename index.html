@@ -22,11 +22,17 @@
     <button type="button" onclick="changePreset(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
 </div>
 
-<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 5px;">
-<button style="flex: 1" onclick="showELEMENTFLEX('card_options')"><span class="button_content">Cards</span></button>
-<button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Gambits</span></button>
-<button style="flex: 1" onclick="showELEMENTFLEX('stats_options')"><span class="button_content">Stats</span></button>
-<button style="flex: 1" onclick="showELEMENTFLEX('misc_options')"><span class="button_content">Misc.</span></button>
+<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px;">
+	<div style="display: flex; flex-direction: row; gap: 5px;">
+		<button style="flex: 1" onclick="showELEMENTFLEX('card_options')"><span class="button_content">Cards</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('gambit_options')"><span class="button_content">Gambits</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Mult.</span></button>
+	</div>
+	<div style="display: flex; flex-direction: row; gap: 5px;">
+		<button style="flex: 1" onclick="showELEMENTFLEX('stats_options')"><span class="button_content">Stats</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('win_loss_options')"><span class="button_content">W / L</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('actions_options')"><span class="button_content">Actions</span></button>
+	</div>
 </div>
 
 <div id="card_options" style="display: none; flex-direction: column;">
@@ -110,10 +116,10 @@
 
 </div>
 
-<div id="mult_options" style="display: none; flex-direction: column;">
+<div id="gambit_options" style="display: none; flex-direction: column;">
 
-<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Simple Gambits:</label>
+	<div style="display: flex; flex-direction: column; gap: 5px;">
+		<label>Gambits:</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
 			<label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
@@ -126,7 +132,6 @@
 			<label><input type="checkbox" id="use_gambit_Special" onchange="setCURRENTGAMBIT()" checked> Joker</label>
 		</div>
 
-		<label>Complex Gambits (Value & Color):</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low_Red" onchange="setCURRENTGAMBIT()" checked> Low Red</label>
 			<label><input type="checkbox" id="use_gambit_High_Red" onchange="setCURRENTGAMBIT()" checked> High Red</label>
@@ -134,7 +139,6 @@
 			<label><input type="checkbox" id="use_gambit_High_Black" onchange="setCURRENTGAMBIT()" checked> High Black</label>
 		</div>
 
-		<label>Complex Gambits (Value & Suit):</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low_Hearts" onchange="setCURRENTGAMBIT()" checked> Low ♥️</label>
 			<label><input type="checkbox" id="use_gambit_High_Hearts" onchange="setCURRENTGAMBIT()" checked> High ♥️</label>
@@ -154,6 +158,10 @@
             <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
 		</div>
 	</div>
+
+</div>
+
+<div id="mult_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
 	<label>Multipliers (General / Specific): </label>
@@ -411,7 +419,7 @@
 	</div>
 </div>
 
-<div id="misc_options" style="display: none; flex-direction: column;">
+<div id="win_loss_options" style="display: none; flex-direction: column;">
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Win Options</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
@@ -452,7 +460,7 @@
 		</div>
 	</div>
 
-	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
+	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between;">
 		<label>Last Chance D4:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
@@ -461,26 +469,9 @@
 		</div>
 	</div>
 
-	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-	<label>Sacrifice Options</label>
+</div>
 
-	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>Streak Cost (Life):</label>
-		<div class="stepper">
-			<button onclick="addORremoveCHEATS('sacrificelife', 1, '-', 20)"><span class="button_content2">-</span></button>
-			<input type="text" id="sacrificelife" readonly>
-			<button onclick="addORremoveCHEATS('sacrificelife', 1, '+', 20)"><span class="button_content2">+</span></button>
-		</div>
-	</div>
-	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>Streak Cost (Blanks):</label>
-		<div class="stepper">
-			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
-			<input type="text" id="sacrificeblanks" readonly>
-			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
-		</div>
-	</div>
-	</div>
+<div id="actions_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Blank Options</label>
@@ -505,6 +496,27 @@
 				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 			</div>
 		</div>
+	</div>
+
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+	<label>Sacrifice Options</label>
+
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<label>Streak Cost (Life):</label>
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('sacrificelife', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<input type="text" id="sacrificelife" readonly>
+			<button onclick="addORremoveCHEATS('sacrificelife', 1, '+', 20)"><span class="button_content2">+</span></button>
+		</div>
+	</div>
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<label>Streak Cost (Blanks):</label>
+		<div class="stepper">
+			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<input type="text" id="sacrificeblanks" readonly>
+			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
+		</div>
+	</div>
 	</div>
 
 	<div style="display: flex; flex-direction: column; gap: 5px;">
