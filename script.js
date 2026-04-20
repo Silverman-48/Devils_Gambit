@@ -698,7 +698,7 @@ const presets = [
 
             "sacrificelife": 3, "sacrificeblanks": 6,
 
-            "winlifeamount": 1, "winstreakamount": 1,
+            "winlifeamount": 0, "winstreakamount": 1,
 
             "losslifeamount": -1, "lossstreakamount": -1,
  
