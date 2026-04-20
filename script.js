@@ -1214,7 +1214,7 @@ function generateCustomDeck() {
 
 function showELEMENTFLEX(elementId) {
     // 1. List all your sections in one place
-    const sections = ['card_options', 'mult_options', 'stats_options', 'misc_options'];
+    const sections = ['card_options', 'mult_options', 'gambit_options', 'stats_options', 'misc_options', 'win_loss_options', 'actions_options'];
     
     const target = document.getElementById(elementId);
     if (!target) return; // Safety check
