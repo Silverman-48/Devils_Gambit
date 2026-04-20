@@ -37,11 +37,11 @@
 
 let mults = {
     // General Toggles & Values
-    useGen_value: true, gen_value: 1,
-    useGen_color: true, gen_color: 1,
-    useGen_suit: true, gen_suit: 3,
-  useGen_value_color: true, gen_value_color: 3, 
-    useGen_value_suit: true, gen_value_suit: 6,
+    useSpec_value: false, gen_value: 1,
+    useSpec_color: false, gen_color: 1,
+    useSpec_suit: false, gen_suit: 3,
+    useSpec_value_color: false, gen_value_color: 3, 
+    useSpec_value_suit: false, gen_value_suit: 6,
 
     // Specific Values (Keep your previous ones here)
     value_low: 1, value_high: 1,
@@ -52,6 +52,10 @@ let mults = {
     value_suit_high_hearts: 6, value_suit_high_diamonds: 6, value_suit_high_clubs: 6, value_suit_high_spades: 6,
     joker: 10
 };
+
+	let blankscoreamount = 2;
+	let blankscoreop = "/";
+	let blankstreakamount = 0;
 
 	let skiplifeamount = 1;
 	let skipstreakamount = 1;
@@ -264,12 +268,12 @@ function endlessLIVES() {
 	}
 
 function toggleSpecifics(cat) {
-    const isChecked = document.getElementById(`use_gen_${cat}`).checked;
-    mults[`useGen_${cat}`] = isChecked;
+    const isChecked = document.getElementById(`use_spec_${cat}`).checked;
+    mults[`useSpec_${cat}`] = isChecked;
     
     // Hide or Show the specific area
     const area = document.getElementById(`spec_${cat}_area`);
-    if (area) area.style.display = isChecked ? "none" : "flex";
+    if (area) area.style.display = isChecked ? "flex" : "none";
     
     updateTESTVALUES();
 }
@@ -305,18 +309,18 @@ function toggleSpecifics(cat) {
 		multiplier = mults[key];
 	}
 
-let category = "";
+    let category = "";
     if (key.includes("value_suit")) category = "valSuit";
     else if (key.includes("value_color")) category = "valColor";
     else if (key.includes("value")) category = "value";
     else if (key.includes("color")) category = "color";
     else if (key.includes("suit")) category = "suit";
 
-    // Use General if toggled, otherwise use the specific key
-    if (mults["useGen_" + category]) {
-        multiplier = mults["gen_" + category];
-    } else {
+    // If "Use Specifics" is checked, use the specific key. Otherwise, fallback to General.
+    if (mults["useSpec_" + category]) {
         multiplier = mults[key] || 1;
+    } else {
+        multiplier = mults["gen_" + category];
     }
 
 	if (gambit1 === "" && gambit2 === "") {
@@ -476,8 +480,10 @@ function addORremoveCHEATS(variableId, value, sign, max) {
             switch (variableId) {
                 case 'currentscoretobeat': newValue = 1; break;
                 case 'currentlifepoints': newValue = 1; break;
-		case 'skipstreakamount':
-                    if (newValue < -20) newValue = -20; // Allow negatives for skipped modifiers
+                case 'blankscoreamount': newValue = 1; break;
+                case 'skipstreakamount':
+                case 'blankstreakamount':
+                    if (newValue < -20) newValue = -20; // Allow negatives for skipped/blanked modifiers
                     break;
                 default: newValue = 0; break;
             }
@@ -502,6 +508,8 @@ function addORremoveCHEATS(variableId, value, sign, max) {
         case 'sacrificeblanks': sacrificeblanks = newValue; break;
         case 'skiplifeamount': skiplifeamount = newValue; break;
         case 'skipstreakamount': skipstreakamount = newValue; break;
+        case 'blankstreakamount': blankstreakamount = newValue; break;
+        case 'blankscoreamount': blankscoreamount = newValue; break;
     }
 }
 
@@ -522,6 +530,9 @@ function setMULTDISPLAYS() {
 	document.getElementById("currentscoretobeat").value = savedscore;
 	document.getElementById("skiplifeamount").value = skiplifeamount;
 	document.getElementById("skipstreakamount").value = skipstreakamount;
+	if(document.getElementById("blankstreakamount")) document.getElementById("blankstreakamount").value = blankstreakamount;
+	if(document.getElementById("blankscoreamount")) document.getElementById("blankscoreamount").value = blankscoreamount;
+	if(document.getElementById("blankscoreop_btn")) document.getElementById("blankscoreop_btn").innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
 }
 
 function changeMultiplier(type, delta) {
@@ -573,19 +584,17 @@ const presets = [
             "endless_lives": false, // NEW
             "currentscoretobeat": 100,
 
-            // NEW Custom Deck Setup
             "mult-decks": 1,
             "use_custom_ranks": false,
             "use_custom_suits": false,
             "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1, "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-rank-J1": 1, "mult-rank-J2": 1,
 
-            // Keep the rest of your original setup below...
-            "useGen_value": true,    "gen_value": 1,
-            "useGen_color": true,    "gen_color": 1,
-            "useGen_suit": true,     "gen_suit": 3,
-            "useGen_value_color": true, "gen_value_color": 3,
-            "useGen_value_suit": true,  "gen_value_suit": 6,
+     "useSpec_value": false,    "gen_value": 1,
+            "useSpec_color": false,    "gen_color": 1,
+            "useSpec_suit": false,     "gen_suit": 3,
+            "useSpec_value_color": false, "gen_value_color": 3,
+            "useSpec_value_suit": false,  "gen_value_suit": 6,
 
             "value_low": 1, "value_high": 1,
             "color_red": 1, "color_black": 1,
@@ -597,11 +606,14 @@ const presets = [
 
             "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1,
             "sacrificelife": 3, "sacrificeblanks": 6,
-     "skiplifeamount": 1, "skipstreakamount": 1, // NEW: Defaults for Skip Values
+     "skiplifeamount": 1, "skipstreakamount": 1, 
 
-            // NEW: Default Gambit Toggles
             "active_Low": true, "active_High": true, "active_Red": true, "active_Black": true,
-            "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true
+            "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true,
+
+     "active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true,
+
+     "blankstreakamount": 0, "blankscoreamount": 2, "blankscoreop": "/"
         }
     }
 ];
@@ -624,16 +636,15 @@ function applyPreset() {
     toggleSpecificCards('ranks');
     toggleSpecificCards('suits');
 
-    // Restore Multipliers
     Object.keys(mults).forEach(key => {
         if (cfg[key] !== undefined) {
             mults[key] = cfg[key];
-            if (key.startsWith("useGen_")) {
-                let id = key.replace("useGen_", "use_gen_");
+            if (key.startsWith("useSpec_")) {
+                let id = key.replace("useSpec_", "use_spec_");
                 let cb = document.getElementById(id);
                 if (cb) {
                     cb.checked = mults[key];
-                    toggleSpecifics(key.replace("useGen_", ""));
+                    toggleSpecifics(key.replace("useSpec_", ""));
                 }
             }
         }
@@ -647,6 +658,10 @@ function applyPreset() {
     sacrificeblanks = cfg["sacrificeblanks"];
   skiplifeamount = cfg["skiplifeamount"] !== undefined ? cfg["skiplifeamount"] : 1;
     skipstreakamount = cfg["skipstreakamount"] !== undefined ? cfg["skipstreakamount"] : 1;
+
+  blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
+  blankscoreamount = cfg["blankscoreamount"] !== undefined ? cfg["blankscoreamount"] : 2;
+  blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
     
     // Process Active Gambits UI
     const gambitNames = ['Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special'];
@@ -656,6 +671,16 @@ function applyPreset() {
         if (cb) {
             cb.checked = active;
             toggleGambitBtn(name);
+        }
+    });
+
+  const actionNames = ['Blank', 'Skip', 'SacrificeLife', 'SacrificeBlank'];
+    actionNames.forEach(name => {
+        let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
+        let cb = document.getElementById(`use_action_${name}`);
+        if (cb) {
+            cb.checked = active;
+            toggleActionBtn(name);
         }
     });
 
@@ -767,6 +792,57 @@ function changeQty(id, delta, min = 0) {
     input.value = val;
 }
 
+function changeAllValueMult(delta) {
+    const keys = [
+        'value_low', 'value_high'
+    ];
+
+    keys.forEach(key => {
+        changeMultiplier(key, delta);
+    });
+}
+
+function changeAllColorMult(delta) {
+    const keys = [
+        'color_red', 'color_black'
+    ];
+
+    keys.forEach(key => {
+        changeMultiplier(key, delta);
+    });
+}
+
+function changeAllSuitMult(delta) {
+    const keys = [
+        'suit_hearts', 'suit_diamonds', 'suit_clubs', 'suit_spades'
+    ];
+
+    keys.forEach(key => {
+        changeMultiplier(key, delta);
+    });
+}
+
+function changeAllValueColorMult(delta) {
+    const keys = [
+        'value_color_low_red', 'value_color_high_red', 'value_color_low_black', 'value_color_high_black'
+    ];
+
+    keys.forEach(key => {
+        changeMultiplier(key, delta);
+    });
+}
+
+function changeAllValueSuitMult(delta) {
+    const keys = [
+        'value_suit_low_hearts', 'value_suit_low_diamonds', 'value_suit_low_clubs', 'value_suit_low_spades', 
+        'value_suit_high_hearts', 'value_suit_high_diamonds', 'value_suit_high_clubs', 'value_suit_high_spades'
+    ];
+
+    keys.forEach(key => {
+        changeMultiplier(key, delta);
+    });
+}
+
 function changeAllRanks(delta) {
     // List all the IDs that should be affected by the "Main" stepper
     const rankIds = [
@@ -798,6 +874,16 @@ function changeAllSuits(delta) {
     });
 }
 
+function toggleBlankOp() {
+    if (blankscoreop === "/") {
+        blankscoreop = "*";
+    } else {
+        blankscoreop = "/";
+    }
+    const btn = document.getElementById("blankscoreop_btn");
+    if (btn) btn.innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
+}
+
 // Activate / Deactivate Gambits
 
 function toggleGambitBtn(name) {
@@ -809,6 +895,14 @@ function toggleGambitBtn(name) {
             btn.classList.remove('highlight');
             clearGAMBIT(); // Clears selection if they disable a gambit they currently clicked
         }
+    }
+}
+
+function toggleActionBtn(name) {
+    const cb = document.getElementById(`use_action_${name}`);
+    const btn = document.getElementById(`btn_action_${name}`);
+    if (btn && cb) {
+        btn.disabled = !cb.checked;
     }
 }
 
@@ -1322,7 +1416,17 @@ if (type === 'lifepoints') {
 		
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
-		currentscore = Math.floor(currentscore + (streak + acevalue) / 2);
+		let amount = blankscoreamount === 0 ? 1 : blankscoreamount; // Failsafe
+		if (blankscoreop === "/") {
+			currentscore = Math.floor(currentscore + (streak + acevalue) / amount);
+		} else {
+			currentscore = Math.floor(currentscore + (streak + acevalue) * amount);
+		}
+
+		// Apply the Streak modifier
+		streak += blankstreakamount;
+		if (streak < 0) streak = 0;
+		document.getElementById("streak").textContent = streak;
 
 		addORremove('blanks', 1, '-');
 
@@ -1626,7 +1730,8 @@ if (type === 'lifepoints') {
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
-		const gameButtons = document.querySelectorAll('button');
+		// CHANGE: Target only specific game buttons to avoid disabling menu steppers
+		const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
 		gameButtons.forEach(btn => btn.disabled = true);
 
 		if (wonGambit) {
@@ -1645,14 +1750,21 @@ if (type === 'lifepoints') {
 	}
 
 	function resumeGAME() {
-		const gameButtons = document.querySelectorAll('button');
+		// CHANGE: Target the same specific game buttons
+		const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
 		gameButtons.forEach(btn => {
-			btn.disabled = false; // Re-enable all by default
+			btn.disabled = false;
 			
 			// NEW: If it's a gambit button, verify its checkbox before leaving it enabled
 			if (btn.id && btn.id.startsWith('btn_gambit_')) {
 				let name = btn.id.replace('btn_gambit_', '');
 				let cb = document.getElementById(`use_gambit_${name}`);
+				if (cb) btn.disabled = !cb.checked;
+			}
+            
+			if (btn.id && btn.id.startsWith('btn_action_')) {
+				let name = btn.id.replace('btn_action_', '');
+				let cb = document.getElementById(`use_action_${name}`);
 				if (cb) btn.disabled = !cb.checked;
 			}
 		});
