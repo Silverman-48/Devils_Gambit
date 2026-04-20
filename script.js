@@ -56,13 +56,13 @@ let mults = {
 	let winstreakamount = 1;
 	let winlifeamount = 0;
 	let lossstreakamount = -1;
-	let losslifeamount = -1;
+	let losslifeamount = -2;
 
 	let blankscoreamount = 2;
 	let blankscoreop = "/";
 	let blankstreakamount = 0;
 
-	let skiplifeamount = 1;
+	let skiplifeamount = -1;
 	let skipstreakamount = 1;
 
 	let sacrificelife = 3;
@@ -99,6 +99,43 @@ let mults = {
 	let savedblanks = 1;
 
 	const GLOBAL_CAP = 20;
+
+const gambitNames = [
+    'Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special',
+    'Low_Red', 'High_Red', 'Low_Black', 'High_Black',
+    'Low_Hearts', 'High_Hearts', 'Low_Diamonds', 'High_Diamonds',
+    'Low_Clubs', 'High_Clubs', 'Low_Spades', 'High_Spades'
+];
+
+const actionNames = ['Blank', 'Skip', 'SacrificeLife', 'SacrificeBlank'];
+
+function toggleAll(type) {
+    const isChecked = document.getElementById(`toggle_all_${type}s`).checked;
+    const names = type === 'gambit' ? gambitNames : actionNames;
+    
+    names.forEach(name => {
+        const cb = document.getElementById(`use_${type}_${name}`);
+        if (cb) {
+            cb.checked = isChecked;
+            if (type === 'action') toggleActionBtn(name);
+        }
+    });
+    if (type === 'gambit') setCURRENTGAMBIT();
+}
+
+// Checks if the main checkbox should be ticked based on its children
+function checkMainToggle(type) {
+    const mainToggle = document.getElementById(`toggle_all_${type}s`);
+    const names = type === 'gambit' ? gambitNames : actionNames;
+    if (!mainToggle) return;
+    
+    let allChecked = true;
+    names.forEach(name => {
+        const cb = document.getElementById(`use_${type}_${name}`);
+        if (cb && !cb.checked) allChecked = false;
+    });
+    mainToggle.checked = allChecked;
+}
 
 function enforceCaps() {
     if (lifepoints !== Infinity && lifepoints > GLOBAL_CAP) lifepoints = GLOBAL_CAP;
@@ -468,12 +505,13 @@ if (key === "joker") {
         if (!isGambitAllowed && (gambit1 || gambit2)) {
             document.getElementById("empty_gambit").innerHTML += " <span style='color:#FF6666;'>(Disabled)</span>";
             setButton.disabled = true;
-        } else {
+} else {
             // Keep the "Set" button disabled if nothing is selected at all
             setButton.disabled = (gambit1 === "" && gambit2 === "");
         }
 
-	}
+    checkMainToggle('gambit'); // <-- Add this line
+}
 
 // Calculates Percentages of Gambit Success
 
@@ -737,31 +775,39 @@ function applyPreset() {
     toggleSpecificCards('ranks');
     toggleSpecificCards('suits');
 
-Object.keys(mults).forEach(key => {
-        if (cfg[key] !== undefined) {
-            // Apply failsafe: If the value is a number, ensure it's at least 0
-            // If it's a boolean (like useSpec_), keep it as is
-            if (typeof cfg[key] === "number") {
-                mults[key] = Math.max(1, cfg[key]);
-            } else {
-                mults[key] = cfg[key];
-            }
+const defaultMults = {
+        useSpec_value: false, gen_value: 1, useSpec_color: false, gen_color: 1,
+        useSpec_suit: false, gen_suit: 3, useSpec_value_color: false, gen_value_color: 3, 
+        useSpec_value_suit: false, gen_value_suit: 6, value_low: 1, value_high: 1,
+        color_red: 1, color_black: 1, suit_hearts: 3, suit_diamonds: 3, suit_clubs: 3, suit_spades: 3,
+        value_color_low_red: 3, value_color_low_black: 3, value_color_high_red: 3, value_color_high_black: 3,
+        value_suit_low_hearts: 6, value_suit_low_diamonds: 6, value_suit_low_clubs: 6, value_suit_low_spades: 6,
+        value_suit_high_hearts: 6, value_suit_high_diamonds: 6, value_suit_high_clubs: 6, value_suit_high_spades: 6,
+        joker: 10
+    };
 
-            if (key.startsWith("useSpec_")) {
-                let id = key.replace("useSpec_", "use_spec_");
-                let cb = document.getElementById(id);
-                if (cb) {
-                    cb.checked = mults[key];
-                    toggleSpecifics(key.replace("useSpec_", ""));
-                }
-            } else {
-                // Also update the UI input fields for general/specific multipliers 
-                // so the user sees the corrected 0 instead of a negative number
-                let inputId = key.replace("gen_", "gen-mult-").replace("_", "-");
-                let inputEl = document.getElementById(inputId) || document.getElementById(key.replace("_", "-"));
-                if (inputEl) {
-                    inputEl.value = mults[key];
-                }
+Object.keys(mults).forEach(key => {
+        // Fall back to default config if the value is stripped from the preset
+        let val = cfg[key] !== undefined ? cfg[key] : defaultMults[key];
+        
+        if (typeof val === "number") {
+            mults[key] = Math.max(1, val);
+        } else {
+            mults[key] = val;
+        }
+
+        if (key.startsWith("useSpec_")) {
+            let id = key.replace("useSpec_", "use_spec_");
+            let cb = document.getElementById(id);
+            if (cb) {
+                cb.checked = mults[key];
+                toggleSpecifics(key.replace("useSpec_", ""));
+            }
+        } else {
+            let inputId = key.replace("gen_", "gen-mult-").replace("_", "-");
+            let inputEl = document.getElementById(inputId) || document.getElementById(key.replace("_", "-"));
+            if (inputEl) {
+                inputEl.value = mults[key];
             }
         }
     });
@@ -772,25 +818,18 @@ currentlifepoints = cfg["lifepoints"] !== undefined ? Math.max(1, cfg["lifepoint
     currentlastchance = cfg["lastchance"] !== undefined ? Math.max(1, cfg["lastchance"]) : 1;
     sacrificelife = cfg["sacrificelife"] !== undefined ? Math.max(0, cfg["sacrificelife"]) : 3;
     sacrificeblanks = cfg["sacrificeblanks"] !== undefined ? Math.max(0, cfg["sacrificeblanks"]) : 6;
-    skiplifeamount = cfg["skiplifeamount"] !== undefined ? cfg["skiplifeamount"] : 1;
+    skiplifeamount = cfg["skiplifeamount"] !== undefined ? Math.min(0, cfg["skiplifeamount"]) : -1;
     skipstreakamount = cfg["skipstreakamount"] !== undefined ? cfg["skipstreakamount"] : 1;
 
-    winlifeamount = cfg["winlifeamount"] !== undefined ? cfg["winlifeamount"] : 1;
-    winstreakamount = cfg["winstreakamount"] !== undefined ? cfg["winstreakamount"] : 1;
-    losslifeamount = cfg["losslifeamount"] !== undefined ? cfg["losslifeamount"] : -1;
-    lossstreakamount = cfg["lossstreakamount"] !== undefined ? cfg["lossstreakamount"] : -1;
+    winlifeamount = cfg["winlifeamount"] !== undefined ? Math.max(0, cfg["winlifeamount"]) : 0;
+    winstreakamount = cfg["winstreakamount"] !== undefined ? Math.max(0, cfg["winstreakamount"]) : 1;
+    losslifeamount = cfg["losslifeamount"] !== undefined ? Math.min(0, cfg["losslifeamount"]) : -1;
+    lossstreakamount = cfg["lossstreakamount"] !== undefined ? Math.min(0, cfg["lossstreakamount"]) : -1;
 
-blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
+  blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
   blankscoreamount = cfg["blankscoreamount"] !== undefined ? Math.max(1, cfg["blankscoreamount"]) : 2;
   blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
-    
-    // Process Active Gambits UI
-const gambitNames = [
-        'Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special',
-        'Low_Red', 'High_Red', 'Low_Black', 'High_Black',
-        'Low_Hearts', 'High_Hearts', 'Low_Diamonds', 'High_Diamonds',
-        'Low_Clubs', 'High_Clubs', 'Low_Spades', 'High_Spades'
-    ];
+
     gambitNames.forEach(name => {
         let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
         let cb = document.getElementById(`use_gambit_${name}`);
@@ -799,7 +838,6 @@ const gambitNames = [
         }
     });
 
-  const actionNames = ['Blank', 'Skip', 'SacrificeLife', 'SacrificeBlank'];
     actionNames.forEach(name => {
         let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
         let cb = document.getElementById(`use_action_${name}`);
@@ -844,6 +882,9 @@ document.getElementById('currentlifepoints').value = currentlifepoints === Infin
     
     document.getElementById('currentscoretobeat').value = currentscoretobeat;
     document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
+checkMainToggle('gambit');
+    checkMainToggle('action');
+    
     setCURRENTGAMBIT();
 }
 
@@ -1027,6 +1068,7 @@ function toggleActionBtn(name) {
     if (btn && cb) {
         btn.disabled = !cb.checked;
     }
+    checkMainToggle('action'); // <-- Add this line
 }
 
 // Generate Deck
