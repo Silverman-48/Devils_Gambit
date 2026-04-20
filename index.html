@@ -123,13 +123,18 @@
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
 			<label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
+		</div>
+		
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Red" onchange="setCURRENTGAMBIT()" checked> Red</label>
 			<label><input type="checkbox" id="use_gambit_Black" onchange="setCURRENTGAMBIT()" checked> Black</label>
+		</div>
+		
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Hearts" onchange="setCURRENTGAMBIT()" checked> ♥️</label>
 			<label><input type="checkbox" id="use_gambit_Diamonds" onchange="setCURRENTGAMBIT()" checked> ♦️</label>
 			<label><input type="checkbox" id="use_gambit_Clubs" onchange="setCURRENTGAMBIT()" checked> ♣️</label>
 			<label><input type="checkbox" id="use_gambit_Spades" onchange="setCURRENTGAMBIT()" checked> ♠️</label>
-			<label><input type="checkbox" id="use_gambit_Special" onchange="setCURRENTGAMBIT()" checked> Joker</label>
 		</div>
 
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
@@ -139,15 +144,28 @@
 			<label><input type="checkbox" id="use_gambit_High_Black" onchange="setCURRENTGAMBIT()" checked> High Black</label>
 		</div>
 
-		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
 			<label><input type="checkbox" id="use_gambit_Low_Hearts" onchange="setCURRENTGAMBIT()" checked> Low ♥️</label>
 			<label><input type="checkbox" id="use_gambit_High_Hearts" onchange="setCURRENTGAMBIT()" checked> High ♥️</label>
+		</div>
+			
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
 			<label><input type="checkbox" id="use_gambit_Low_Diamonds" onchange="setCURRENTGAMBIT()" checked> Low ♦️</label>
 			<label><input type="checkbox" id="use_gambit_High_Diamonds" onchange="setCURRENTGAMBIT()" checked> High ♦️</label>
+		</div>
+
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;>
 			<label><input type="checkbox" id="use_gambit_Low_Clubs" onchange="setCURRENTGAMBIT()" checked> Low ♣️</label>
 			<label><input type="checkbox" id="use_gambit_High_Clubs" onchange="setCURRENTGAMBIT()" checked> High ♣️</label>
+		</div>
+		
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low_Spades" onchange="setCURRENTGAMBIT()" checked> Low ♠️</label>
 			<label><input type="checkbox" id="use_gambit_High_Spades" onchange="setCURRENTGAMBIT()" checked> High ♠️</label>
+		</div>
+		
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
+			<label><input type="checkbox" id="use_gambit_Special" onchange="setCURRENTGAMBIT()" checked> Joker</label>
 		</div>
 
 	</div>
@@ -416,14 +434,6 @@
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Win Options:</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Gain:</label>
-			<div class="stepper">
-				<button onclick="addORremoveCHEATS('winstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
-				<input type="text" id="winstreakamount" readonly>
-				<button onclick="addORremoveCHEATS('winstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
-			</div>
-		</div>
-		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Life Gain:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('winlifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
@@ -431,24 +441,32 @@
 				<button onclick="addORremoveCHEATS('winlifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 			</div>
 		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Streak Gain:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('winstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="winstreakamount" readonly>
+				<button onclick="addORremoveCHEATS('winstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
 	</div>
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Loss Options:</label>
-		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Loss:</label>
-			<div class="stepper">
-				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
-				<input type="text" id="lossstreakamount" readonly>
-				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '+', 0)"><span class="button_content2">+</span></button>
-			</div>
-		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Life Loss:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('losslifeamount', 1, '-', 0)"><span class="button_content2">-</span></button>
 				<input type="text" id="losslifeamount" readonly>
 				<button onclick="addORremoveCHEATS('losslifeamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Streak Loss:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+				<input type="text" id="lossstreakamount" readonly>
+				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '+', 0)"><span class="button_content2">+</span></button>
 			</div>
 		</div>
 	</div>
