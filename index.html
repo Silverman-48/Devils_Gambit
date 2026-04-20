@@ -119,7 +119,7 @@
 <div id="gambit_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px;">
-		<label>Gambits:</label>
+		<label>Toggle Gambits:</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
 			<label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
@@ -150,13 +150,6 @@
 			<label><input type="checkbox" id="use_gambit_High_Spades" onchange="setCURRENTGAMBIT()" checked> High ♠️</label>
 		</div>
 
-		<label>Actions:</label>
-		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
-            <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
-            <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
-            <label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
-            <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
-		</div>
 	</div>
 
 </div>
@@ -421,9 +414,9 @@
 
 <div id="win_loss_options" style="display: none; flex-direction: column;">
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Win Options</label>
+		<label>Win Options:</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Gained:</label>
+			<label>Streak Gain:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('winstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 				<input type="text" id="winstreakamount" readonly>
@@ -431,7 +424,7 @@
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Life Gained:</label>
+			<label>Life Gain:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('winlifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 				<input type="text" id="winlifeamount" readonly>
@@ -441,7 +434,7 @@
 	</div>
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Loss Options</label>
+		<label>Loss Options:</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Streak Loss:</label>
 			<div class="stepper">
@@ -474,14 +467,24 @@
 <div id="actions_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Blank Options</label>
+		<label>Toggle Actions:</label>
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
+            <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
+            <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label><br>
+            <label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
+            <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
+		</div>
+	</div>
+
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Blank Options:</label>
 
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Score Operation:</label>
+			<label>Score Modifier:</label>
 			<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 40px"><span class="button_content2">/</span></button>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Score Amount:</label>
+			<label>Modifier Amount:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '-', 10)"><span class="button_content2">-</span></button>
 				<input type="text" id="blankscoreamount" readonly>
@@ -489,7 +492,7 @@
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Gained:</label>
+			<label>Streak Gain:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 				<input type="text" id="blankstreakamount" readonly>
@@ -499,7 +502,7 @@
 	</div>
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-	<label>Sacrifice Options</label>
+	<label>Sacrifice Options:</label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Streak Cost (Life):</label>
@@ -520,7 +523,7 @@
 	</div>
 
 	<div style="display: flex; flex-direction: column; gap: 5px;">
-	<label>Skip Options</label>
+	<label>Skip Options:</label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Life Cost:</label>
@@ -531,7 +534,7 @@
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>Streak Gained:</label>
+		<label>Streak Gain:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
 			<input type="text" id="skipstreakamount" readonly>
