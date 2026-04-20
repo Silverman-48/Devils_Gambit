@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -119,7 +120,7 @@
 <div id="gambit_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px;">
-		<label>Toggle Gambits:</label>
+		<label><input type="checkbox" id="toggle_all_gambits" onchange="toggleAll('gambit')" checked> Toggle Gambits:</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
 			<label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
 			<label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
@@ -485,7 +486,7 @@
 <div id="actions_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Toggle Actions:</label>
+		<label><input type="checkbox" id="toggle_all_actions" onchange="toggleAll('action')" checked> Toggle Actions:</label>
 		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
             <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
             <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
@@ -554,11 +555,11 @@
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>Streak Gain:</label>
+		<label>Streak Gain / Loss:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="skipstreakamount" readonly>
-			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 		</div>
 	</div>
 	</div>
