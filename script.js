@@ -53,6 +53,11 @@ let mults = {
     joker: 10
 };
 
+	let winstreakamount = 1;
+	let winlifeamount = 0;
+	let lossstreakamount = -1;
+	let losslifeamount = -1;
+
 	let blankscoreamount = 2;
 	let blankscoreop = "/";
 	let blankstreakamount = 0;
@@ -90,7 +95,20 @@ let mults = {
 
 	let empty = "empty";
 
-let savedlifepoints = 3;
+	let savedlifepoints = 3;
+	let savedblanks = 1;
+
+	const GLOBAL_CAP = 20;
+
+function enforceCaps() {
+    if (lifepoints !== Infinity && lifepoints > GLOBAL_CAP) lifepoints = GLOBAL_CAP;
+    if (streak !== Infinity && streak > GLOBAL_CAP) streak = GLOBAL_CAP;
+    if (blanks !== Infinity && blanks > GLOBAL_CAP) blanks = GLOBAL_CAP;
+    
+    if(document.getElementById('lifepoints')) document.getElementById('lifepoints').textContent = (lifepoints === Infinity) ? "∞" : lifepoints;
+    if(document.getElementById('streak')) document.getElementById('streak').textContent = (streak === Infinity) ? "∞" : streak;
+    if(document.getElementById('blanks')) document.getElementById('blanks').textContent = (blanks === Infinity) ? "∞" : blanks;
+}
 
 function toggleSpecificCards(type) {
     const isChecked = document.getElementById(`use_custom_${type}`).checked;
@@ -98,22 +116,41 @@ function toggleSpecificCards(type) {
     if (area) area.style.display = isChecked ? "flex" : "none";
 }
 
-function endlessLIVES() {
-    const checkbox = document.getElementById("endless_lives");
+function toggleLIVES() {
+    const checkbox = document.getElementById("toggle_lives");
     const lifeInput = document.getElementById("currentlifepoints");
     const stepperButtons = lifeInput.parentElement.querySelectorAll('button');
 
     if (checkbox.checked) {
+        lifeInput.value = savedlifepoints;
+        currentlifepoints = savedlifepoints;
+        stepperButtons.forEach(btn => btn.disabled = false);
+    } else {
         if (lifeInput.value !== "∞") {
             savedlifepoints = parseInt(lifeInput.value) || 3; 
         }
         lifeInput.value = "∞";
         currentlifepoints = Infinity; 
         stepperButtons.forEach(btn => btn.disabled = true);
-    } else {
-        lifeInput.value = savedlifepoints;
-        currentlifepoints = savedlifepoints;
+    }
+}
+
+function toggleBLANKS() {
+    const checkbox = document.getElementById("toggle_blanks");
+    const blankInput = document.getElementById("currentblanks");
+    const stepperButtons = blankInput.parentElement.querySelectorAll('button');
+
+    if (checkbox.checked) {
+        blankInput.value = savedblanks;
+        currentblanks = savedblanks;
         stepperButtons.forEach(btn => btn.disabled = false);
+    } else {
+        if (blankInput.value !== "∞") {
+            savedblanks = parseInt(blankInput.value) || 1; 
+        }
+        blankInput.value = "∞";
+        currentblanks = Infinity; 
+        stepperButtons.forEach(btn => btn.disabled = true);
     }
 }
 
@@ -136,6 +173,8 @@ function endlessLIVES() {
 		document.getElementById("empty_gambit").innerHTML = "...";
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
+
+		document.getElementById("set_button").disabled = true;
 
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
@@ -310,17 +349,20 @@ function toggleSpecifics(cat) {
 	}
 
     let category = "";
-    if (key.includes("value_suit")) category = "valSuit";
-    else if (key.includes("value_color")) category = "valColor";
+    if (key.includes("value_suit")) category = "value_suit";
+    else if (key.includes("value_color")) category = "value_color";
     else if (key.includes("value")) category = "value";
     else if (key.includes("color")) category = "color";
     else if (key.includes("suit")) category = "suit";
 
-    // If "Use Specifics" is checked, use the specific key. Otherwise, fallback to General.
-    if (mults["useSpec_" + category]) {
-        multiplier = mults[key] || 1;
+if (key === "joker") {
+        multiplier = mults["joker"];
     } else {
-        multiplier = mults["gen_" + category];
+        if (mults["useSpec_" + category]) {
+            multiplier = mults[key] || 1;
+        } else {
+            multiplier = mults["gen_" + category];
+        }
     }
 
 	if (gambit1 === "" && gambit2 === "") {
@@ -396,6 +438,41 @@ function toggleSpecifics(cat) {
 
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
 		}
+
+// --- NEW VALIDATION LOGIC ---
+        let isGambitAllowed = true;
+        let gambitNameForCheck = "";
+
+        // Formulate the expected Checkbox ID based on the current combo
+        if (gambit1 && gambit2) {
+            const suitMapCheck = {'♥️':'Hearts', '♦️':'Diamonds', '♣️':'Clubs', '♠️':'Spades'};
+            let g2Name = suitMapCheck[gambit2] ? suitMapCheck[gambit2] : gambit2;
+            gambitNameForCheck = `use_gambit_${gambit1}_${g2Name}`;
+        } else if (gambit1 && !gambit2) {
+            gambitNameForCheck = `use_gambit_${gambit1}`;
+        } else if (!gambit1 && gambit2) {
+            const suitMapCheck = {'♥️':'Hearts', '♦️':'Diamonds', '♣️':'Clubs', '♠️':'Spades'};
+            let g2Name = suitMapCheck[gambit2] ? suitMapCheck[gambit2] : gambit2;
+            gambitNameForCheck = `use_gambit_${g2Name}`;
+        }
+
+        const setButton = document.getElementById("set_button");
+        if (gambitNameForCheck) {
+            const checkbox = document.getElementById(gambitNameForCheck);
+            if (checkbox && !checkbox.checked) {
+                isGambitAllowed = false;
+            }
+        }
+
+        // Apply UI lockouts
+        if (!isGambitAllowed && (gambit1 || gambit2)) {
+            document.getElementById("empty_gambit").innerHTML += " <span style='color:#FF6666;'>(Disabled)</span>";
+            setButton.disabled = true;
+        } else {
+            // Keep the "Set" button disabled if nothing is selected at all
+            setButton.disabled = (gambit1 === "" && gambit2 === "");
+        }
+
 	}
 
 // Calculates Percentages of Gambit Success
@@ -454,17 +531,17 @@ function calculateCHANCE() {
 
 // New Add / Remove Function
 
-	function addORremove(variable, value, sign) {
+     function addORremove(variable, value, sign) {
 		eval('var check = ' + variable);
 		
-        if (check === Infinity) return; // FIX: Prevent endless lives from breaking UI text
+                                      if (check === Infinity) return; 
 
 		if (check === 0 && sign === "-") {
 			return;
 		} else {
 			eval(variable + ' = ' + variable + sign + value);
-			eval('document.getElementById(variable).textContent = ' + variable);
-		}
+		}	
+		enforceCaps();
 	}
 
 function addORremoveCHEATS(variableId, value, sign, max) {
@@ -483,6 +560,8 @@ function addORremoveCHEATS(variableId, value, sign, max) {
                 case 'blankscoreamount': newValue = 1; break;
                 case 'skipstreakamount':
                 case 'blankstreakamount':
+		case 'lossstreakamount':
+		case 'losslifeamount':
                     if (newValue < -20) newValue = -20; // Allow negatives for skipped/blanked modifiers
                     break;
                 default: newValue = 0; break;
@@ -510,6 +589,10 @@ function addORremoveCHEATS(variableId, value, sign, max) {
         case 'skipstreakamount': skipstreakamount = newValue; break;
         case 'blankstreakamount': blankstreakamount = newValue; break;
         case 'blankscoreamount': blankscoreamount = newValue; break;
+	case 'winstreakamount': winstreakamount = newValue; break;
+	case 'winlifeamount': winlifeamount = newValue; break;
+	case 'lossstreakamount': lossstreakamount = newValue; break;
+	case 'losslifeamount': losslifeamount = newValue; break;
     }
 }
 
@@ -533,6 +616,10 @@ function setMULTDISPLAYS() {
 	if(document.getElementById("blankstreakamount")) document.getElementById("blankstreakamount").value = blankstreakamount;
 	if(document.getElementById("blankscoreamount")) document.getElementById("blankscoreamount").value = blankscoreamount;
 	if(document.getElementById("blankscoreop_btn")) document.getElementById("blankscoreop_btn").innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
+	if(document.getElementById("winstreakamount")) document.getElementById("winstreakamount").value = winstreakamount;
+	if(document.getElementById("winlifeamount")) document.getElementById("winlifeamount").value = winlifeamount;
+	if(document.getElementById("lossstreakamount")) document.getElementById("lossstreakamount").value = lossstreakamount;
+	if(document.getElementById("losslifeamount")) document.getElementById("losslifeamount").value = losslifeamount;
 }
 
 function changeMultiplier(type, delta) {
@@ -581,16 +668,18 @@ const presets = [
         name: "Default",
         config: {
             "endless": true,
-            "endless_lives": false, // NEW
+            "finite_lives": true,
+                            "finite_blanks": true,
             "currentscoretobeat": 100,
 
             "mult-decks": 1,
             "use_custom_ranks": false,
             "use_custom_suits": false,
-            "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1, "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
+            "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1,
+            "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-rank-J1": 1, "mult-rank-J2": 1,
 
-     "useSpec_value": false,    "gen_value": 1,
+            "useSpec_value": false,    "gen_value": 1,
             "useSpec_color": false,    "gen_color": 1,
             "useSpec_suit": false,     "gen_suit": 3,
             "useSpec_value_color": false, "gen_value_color": 3,
@@ -606,14 +695,19 @@ const presets = [
 
             "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1,
             "sacrificelife": 3, "sacrificeblanks": 6,
-     "skiplifeamount": 1, "skipstreakamount": 1, 
+            "skiplifeamount": 1, "skipstreakamount": 1, 
 
             "active_Low": true, "active_High": true, "active_Red": true, "active_Black": true,
             "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true,
 
-     "active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true,
+            "active_Low_Red": true, "active_Low_Black": true, "active_High_Red": true, "active_High_Black": true,
 
-     "blankstreakamount": 0, "blankscoreamount": 2, "blankscoreop": "/"
+            "active_Low_Hearts": true, "active_Low_Diamonds": true, "active_Low_Clubs": true, "active_Low_Spades": true,
+            "active_High_Hearts": true, "active_High_Diamonds": true, "active_High_Clubs": true, "active_High_Spades": true,
+
+            "active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true,
+
+            "blankstreakamount": 0, "blankscoreamount": 2, "blankscoreop": "/"
         }
     }
 ];
@@ -664,13 +758,17 @@ function applyPreset() {
   blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
     
     // Process Active Gambits UI
-    const gambitNames = ['Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special'];
+const gambitNames = [
+        'Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special',
+        'Low_Red', 'High_Red', 'Low_Black', 'High_Black',
+        'Low_Hearts', 'High_Hearts', 'Low_Diamonds', 'High_Diamonds',
+        'Low_Clubs', 'High_Clubs', 'Low_Spades', 'High_Spades'
+    ];
     gambitNames.forEach(name => {
         let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
         let cb = document.getElementById(`use_gambit_${name}`);
         if (cb) {
             cb.checked = active;
-            toggleGambitBtn(name);
         }
     });
 
@@ -684,23 +782,34 @@ function applyPreset() {
         }
     });
 
-    currentscoretobeat = cfg["currentscoretobeat"];
+currentscoretobeat = cfg["currentscoretobeat"];
     savedscore = cfg["currentscoretobeat"];
-
     document.getElementById("currentscoretobeat").value = currentscoretobeat;
-    
+
+    // Seed the UI first so the toggle functions don't read stale data from the previous preset
+    savedlifepoints = cfg["lifepoints"]; 
+    document.getElementById("currentlifepoints").value = savedlifepoints;
+
+    savedblanks = cfg["blanks"]; 
+    document.getElementById("currentblanks").value = savedblanks;
+
     // Process Checkboxes for Infinity Logic
     document.getElementById("endless_mode").checked = cfg["endless"] || false;
     endlessMODE();
     
-  document.getElementById("endless_lives").checked = cfg["endless_lives"] || false;
-    savedlifepoints = cfg["lifepoints"]; // <--- FIX: Force the fallback to match the preset
-    endlessLIVES();
+    document.getElementById("toggle_lives").checked = cfg["finite_lives"] !== undefined ? cfg["finite_lives"] : true;
+    toggleLIVES();
+
+    document.getElementById("toggle_blanks").checked = cfg["finite_blanks"] !== undefined ? cfg["finite_blanks"] : true;
+    toggleBLANKS();
 
     setMULTDISPLAYS();
 
-    document.getElementById('currentlifepoints').value = currentlifepoints === Infinity ? "∞" : currentlifepoints;
-    document.getElementById('currentblanks').value = currentblanks;
+document.getElementById('currentlifepoints').value = currentlifepoints === Infinity ? "∞" : currentlifepoints;
+    
+    // Change the currentblanks line to this:
+    document.getElementById('currentblanks').value = currentblanks === Infinity ? "∞" : currentblanks;
+    
     document.getElementById('currentstreak').value = currentstreak;
     document.getElementById('currentlastchance').value = currentlastchance;
     document.getElementById('sacrificelife').value = sacrificelife;
@@ -708,6 +817,7 @@ function applyPreset() {
     
     document.getElementById('currentscoretobeat').value = currentscoretobeat;
     document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
+    setCURRENTGAMBIT();
 }
 
 applyPreset();
@@ -884,20 +994,6 @@ function toggleBlankOp() {
     if (btn) btn.innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
 }
 
-// Activate / Deactivate Gambits
-
-function toggleGambitBtn(name) {
-    const cb = document.getElementById(`use_gambit_${name}`);
-    const btn = document.getElementById(`btn_gambit_${name}`);
-    if (btn && cb) {
-        btn.disabled = !cb.checked;
-        if (!cb.checked) {
-            btn.classList.remove('highlight');
-            clearGAMBIT(); // Clears selection if they disable a gambit they currently clicked
-        }
-    }
-}
-
 function toggleActionBtn(name) {
     const cb = document.getElementById(`use_action_${name}`);
     const btn = document.getElementById(`btn_action_${name}`);
@@ -1001,8 +1097,6 @@ function generateCustomDeck() {
     return shuffleDeck(finalDeck);
 }
 
-	cards = generateCustomDeck();
-
 //  Skips a Round
 
 	function skipROUND() {
@@ -1038,6 +1132,7 @@ function generateCustomDeck() {
 		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
+		enforceCaps();
 	}
 
 // Last Chance Setup
@@ -1184,14 +1279,15 @@ function showELEMENTFLEX(elementId) {
 		}
 
 let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
+		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks; // <-- Add this
 
-// Determine the spacing (double break if history already exists)
-let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
+		// Determine the spacing (double break if history already exists)
+		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
 
-// Build the entry
-let historyEntry = gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
-                   "<br>L:" + lifeDisplay + " B:" + blanks + " S:" + streak + " Score: " + currentscore + 
-                   "<br>Table: " + result2 + "<br>Hand: " + result + spacing;
+		// Build the entry (Update the B: value to use blanksDisplay)
+		let historyEntry = gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
+		                   "<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + " Score: " + currentscore + 
+                           "<br>Table: " + result2 + "<br>Hand: " + result + spacing;
 
 // Prepend to history
 document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
@@ -1293,7 +1389,7 @@ document.getElementById("card_history").innerHTML = historyEntry + document.getE
 		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
 		document.getElementById("score").innerHTML = currentscore;
 		document.getElementById("lifepoints").textContent = lifepoints === Infinity ? "∞" : lifepoints;
-		document.getElementById("blanks").innerHTML = blanks;
+		document.getElementById("blanks").textContent = blanks === Infinity ? "∞" : blanks;
 		document.getElementById("streak").innerHTML = streak;
 		document.getElementById("output").innerHTML = "0";
 
@@ -1329,6 +1425,8 @@ document.getElementById("card_history").innerHTML = historyEntry + document.getE
 
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
+		document.getElementById("set_button").disabled = true;
 
 		pickTABLECARD();
 		updateTESTVALUES();
@@ -1370,12 +1468,15 @@ function sacrificeSTREAK(type) {
         return;
     }
 
-    // 2. Handle the sacrifice
-    streak -= streaknumber;
-    document.getElementById("streak").textContent = streak;
-
-if (type === 'lifepoints') {
-        if (lifepoints !== Infinity) { // FIX: Don't change visually if Infinity
+    if (type === 'lifepoints') {
+        if (lifepoints !== Infinity) {
+            if (lifepoints >= GLOBAL_CAP) {
+		  enforceCaps();
+                  document.getElementById("currentgambit").textContent = "Max HP Reached";
+                  document.getElementById("empty_gambit").textContent = "...";
+                  document.getElementById("percentage").innerHTML = "";
+                  return;
+            }
             lifepoints++; 
             document.getElementById("lifepoints").textContent = lifepoints;
         }
@@ -1383,12 +1484,24 @@ if (type === 'lifepoints') {
         document.getElementById("empty_gambit").textContent = "(+1 Life)";
         document.getElementById("percentage").innerHTML = "";
     } else if (type === 'blanks') {
+        if (blanks >= GLOBAL_CAP) {
+	      enforceCaps();
+              document.getElementById("currentgambit").textContent = "Max Blanks Reached";
+              document.getElementById("empty_gambit").textContent = "...";
+              document.getElementById("percentage").innerHTML = "";
+              return;
+        }
         blanks++; // Update global variable
         document.getElementById("blanks").textContent = blanks;
         document.getElementById("currentgambit").textContent = "Streak Sacrificed";
         document.getElementById("empty_gambit").textContent = "(+1 Blank)";
 	document.getElementById("percentage").innerHTML = "";
     }
+
+    streak -= streaknumber;
+    document.getElementById("streak").textContent = streak;
+
+    enforceCaps();
 }
 
 // Blank Related Functions
@@ -1433,6 +1546,7 @@ if (type === 'lifepoints') {
 		selectCARD();
 
 		document.getElementById("percentage").innerHTML = "";
+		enforceCaps();
 	}
 
 // Selects the Player's Card
@@ -1600,8 +1714,6 @@ if (type === 'lifepoints') {
 		document.getElementById("table_suit_2").innerHTML = suit;
 	}
 
-	pickTABLECARD();
-
 // Checks If Gambit is Regular or Value, and Runs It
 
 	function runGAMBIT() {
@@ -1637,7 +1749,8 @@ if (type === 'lifepoints') {
 
 		if (color === 'Special') {
 			currentscore = currentscore + acevalue * multiplier;
-			addORremove('streak', 1, '+');
+			if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
+			if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
 			updateTESTVALUES();
 			waitforPLAYER(true);
 		} else {
@@ -1670,7 +1783,8 @@ if (type === 'lifepoints') {
 
 		if (variable === check || color === 'Special') {
 			currentscore = currentscore + (streak + acevalue) * multiplier;
-			addORremove('streak', 1, '+');
+			if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
+			if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
 			waitforPLAYER(true);
 		} else {
 			lostGAMBIT();
@@ -1696,7 +1810,8 @@ if (type === 'lifepoints') {
 
 			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
 				currentscore = currentscore + (streak + acevalue) * multiplier;
-				addORremove('streak', 1, '+');
+				if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
+				if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
 				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
@@ -1704,7 +1819,8 @@ if (type === 'lifepoints') {
 		} else {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
 				currentscore = currentscore + (streak + acevalue) * multiplier;
-				addORremove('streak', 1, '+');
+				if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
+				if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
 				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
@@ -1715,8 +1831,8 @@ if (type === 'lifepoints') {
 // Activates When the Gambit is Lost
 
 	function lostGAMBIT() {
-			addORremove('streak', 1, '-');
-			addORremove('lifepoints', 1, '-');
+			if (lossstreakamount !== 0) addORremove('streak', Math.abs(lossstreakamount), lossstreakamount < 0 ? '-' : '+');
+			if (losslifeamount !== 0) addORremove('lifepoints', Math.abs(losslifeamount), losslifeamount < 0 ? '-' : '+');
 			waitforPLAYER(false);
 	}
 
@@ -1750,18 +1866,11 @@ if (type === 'lifepoints') {
 	}
 
 	function resumeGAME() {
-		// CHANGE: Target the same specific game buttons
 		const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
 		gameButtons.forEach(btn => {
 			btn.disabled = false;
-			
-			// NEW: If it's a gambit button, verify its checkbox before leaving it enabled
-			if (btn.id && btn.id.startsWith('btn_gambit_')) {
-				let name = btn.id.replace('btn_gambit_', '');
-				let cb = document.getElementById(`use_gambit_${name}`);
-				if (cb) btn.disabled = !cb.checked;
-			}
             
+			// Actions still use normal toggling
 			if (btn.id && btn.id.startsWith('btn_action_')) {
 				let name = btn.id.replace('btn_action_', '');
 				let cb = document.getElementById(`use_action_${name}`);
@@ -1770,6 +1879,7 @@ if (type === 'lifepoints') {
 		});
 
 		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+		document.getElementById("set_button").disabled = true; // Ensure set is disabled until a gambit is selected
 
 		document.getElementById("hand_card").style.borderStyle = "dotted";
 		document.getElementById("hand_card").style.background = "none";
@@ -1780,3 +1890,5 @@ if (type === 'lifepoints') {
 
 		updateDISPLAYS();
 	}
+
+	reset();
