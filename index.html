@@ -22,27 +22,6 @@
     <button type="button" onclick="changePreset(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
 </div>
 
-<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
-
-	<div style="display: flex; flex-direction: row;">
-        <label style="flex: 1">Score To Beat:</label>
-        <label><input type="checkbox" onchange="endlessMODE();" id="endless_mode" unchecked> Endless Mode</label>
-	</div>
-
-	<div style="display: flex; flex-direction: column;">
-            <div class="stepper">
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 1, '-', 1000)">-1</button>
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 10, '-', 1000)">-10</button>
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 100, '-', 1000)">-100</button>
-		<input type="text" style="width: 60px" id="currentscoretobeat" value="1" readonly>
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 100, '+', 1000)">+100</button>
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 10, '+', 1000)">+10</button>
-		<button type="button" style="width: fit-content" onclick="addORremoveCHEATS('currentscoretobeat', 1, '+', 1000)">+1</button>
-            </div>
-	</div>
-
-</div>
-
 <div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 5px;">
 <button style="flex: 1" onclick="showELEMENTFLEX('card_options')"><span class="button_content">Cards</span></button>
 <button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Gambits</span></button>
@@ -133,22 +112,46 @@
 
 <div id="mult_options" style="display: none; flex-direction: column;">
 
-	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Active Gambits / Features:</label>
-		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-			<label><input type="checkbox" id="use_gambit_Low" onchange="toggleGambitBtn('Low')" checked> Low</label>
-			<label><input type="checkbox" id="use_gambit_High" onchange="toggleGambitBtn('High')" checked> High</label>
-			<label><input type="checkbox" id="use_gambit_Red" onchange="toggleGambitBtn('Red')" checked> Red</label>
-			<label><input type="checkbox" id="use_gambit_Black" onchange="toggleGambitBtn('Black')" checked> Black</label>
-			<label><input type="checkbox" id="use_gambit_Hearts" onchange="toggleGambitBtn('Hearts')" checked> ♥️</label>
-			<label><input type="checkbox" id="use_gambit_Diamonds" onchange="toggleGambitBtn('Diamonds')" checked> ♦️</label>
-			<label><input type="checkbox" id="use_gambit_Clubs" onchange="toggleGambitBtn('Clubs')" checked> ♣️</label>
-			<label><input type="checkbox" id="use_gambit_Spades" onchange="toggleGambitBtn('Spades')" checked> ♠️</label>
-			<label><input type="checkbox" id="use_gambit_Special" onchange="toggleGambitBtn('Special')" checked> Joker</label>
-            		<label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
-            		<label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
-            		<label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
-            		<label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
+<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Simple Gambits:</label>
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
+			<label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
+			<label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
+			<label><input type="checkbox" id="use_gambit_Red" onchange="setCURRENTGAMBIT()" checked> Red</label>
+			<label><input type="checkbox" id="use_gambit_Black" onchange="setCURRENTGAMBIT()" checked> Black</label>
+			<label><input type="checkbox" id="use_gambit_Hearts" onchange="setCURRENTGAMBIT()" checked> ♥️</label>
+			<label><input type="checkbox" id="use_gambit_Diamonds" onchange="setCURRENTGAMBIT()" checked> ♦️</label>
+			<label><input type="checkbox" id="use_gambit_Clubs" onchange="setCURRENTGAMBIT()" checked> ♣️</label>
+			<label><input type="checkbox" id="use_gambit_Spades" onchange="setCURRENTGAMBIT()" checked> ♠️</label>
+			<label><input type="checkbox" id="use_gambit_Special" onchange="setCURRENTGAMBIT()" checked> Joker</label>
+		</div>
+
+		<label>Complex Gambits (Value & Color):</label>
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
+			<label><input type="checkbox" id="use_gambit_Low_Red" onchange="setCURRENTGAMBIT()" checked> Low Red</label>
+			<label><input type="checkbox" id="use_gambit_High_Red" onchange="setCURRENTGAMBIT()" checked> High Red</label>
+			<label><input type="checkbox" id="use_gambit_Low_Black" onchange="setCURRENTGAMBIT()" checked> Low Black</label>
+			<label><input type="checkbox" id="use_gambit_High_Black" onchange="setCURRENTGAMBIT()" checked> High Black</label>
+		</div>
+
+		<label>Complex Gambits (Value & Suit):</label>
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left; margin-bottom: 10px;">
+			<label><input type="checkbox" id="use_gambit_Low_Hearts" onchange="setCURRENTGAMBIT()" checked> Low ♥️</label>
+			<label><input type="checkbox" id="use_gambit_High_Hearts" onchange="setCURRENTGAMBIT()" checked> High ♥️</label>
+			<label><input type="checkbox" id="use_gambit_Low_Diamonds" onchange="setCURRENTGAMBIT()" checked> Low ♦️</label>
+			<label><input type="checkbox" id="use_gambit_High_Diamonds" onchange="setCURRENTGAMBIT()" checked> High ♦️</label>
+			<label><input type="checkbox" id="use_gambit_Low_Clubs" onchange="setCURRENTGAMBIT()" checked> Low ♣️</label>
+			<label><input type="checkbox" id="use_gambit_High_Clubs" onchange="setCURRENTGAMBIT()" checked> High ♣️</label>
+			<label><input type="checkbox" id="use_gambit_Low_Spades" onchange="setCURRENTGAMBIT()" checked> Low ♠️</label>
+			<label><input type="checkbox" id="use_gambit_High_Spades" onchange="setCURRENTGAMBIT()" checked> High ♠️</label>
+		</div>
+
+		<label>Actions:</label>
+		<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: left;">
+            <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
+            <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
+            <label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
+            <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
 		</div>
 	</div>
 
@@ -364,8 +367,26 @@
 </div>
 
 <div id="stats_options" style="display: none; flex-direction: column;">
+<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between">
+
+	<div style="display: flex; flex-direction: row;">
+        <label style="flex: 1">Score To Beat:</label>
+        <label><input type="checkbox" onchange="endlessMODE();" id="endless_mode" unchecked> Endless Mode</label>
+	</div>
+
+            <div class="stepper">
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 1, '-', 1000)">-1</button>
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 10, '-', 1000)">-10</button>
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 100, '-', 1000)">-100</button>
+		<input type="text" style="width: 50px" id="currentscoretobeat" value="1" readonly>
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 100, '+', 1000)">+100</button>
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 10, '+', 1000)">+10</button>
+		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 1, '+', 1000)">+1</button>
+            </div>
+
+</div>
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
-		<label><input type="checkbox" onchange="endlessLIVES();" id="endless_lives" unchecked> Lives:</label>
+		<label><input type="checkbox" onchange="toggleLIVES();" id="toggle_lives" checked> Lives:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="currentlifepoints" readonly>
@@ -373,7 +394,7 @@
 		</div>
 	</div>
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
-		<label>Blanks:</label>
+		<label><input type="checkbox" onchange="toggleBLANKS();" id="toggle_blanks" checked> Blanks:</label>
 		<div class="stepper">
 			<button onclick="addORremoveCHEATS('currentblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="currentblanks" readonly>
@@ -391,6 +412,46 @@
 </div>
 
 <div id="misc_options" style="display: none; flex-direction: column;">
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Win Options</label>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Streak Gained:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('winstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="winstreakamount" readonly>
+				<button onclick="addORremoveCHEATS('winstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Life Gained:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('winlifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="winlifeamount" readonly>
+				<button onclick="addORremoveCHEATS('winlifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+	</div>
+
+	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Loss Options</label>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Streak Loss:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+				<input type="text" id="lossstreakamount" readonly>
+				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Life Loss:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('losslifeamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+				<input type="text" id="losslifeamount" readonly>
+				<button onclick="addORremoveCHEATS('losslifeamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+	</div>
+
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label>Last Chance D4:</label>
 		<div class="stepper">
