@@ -22,12 +22,14 @@
 	let colorarray = ['Red', 'Black', 'Special'];
 	let valuearray = ['Low', 'High'];
 
-	let variable = "None";
+let variable = "None";
 	let element = "None";
 	let multiplier = 1;
+    let multiplierOp = "*";
 	let valueswitch = -1;
 
 	let value = "";
+    let currentPoints = 0;
 	let rank = "";
 	let suit = "";
 	let color = "";
@@ -36,36 +38,39 @@
 	let valuemodifiertable = 0;
 	let valuemodifierhand = 0;
 
-let mults = {
-    // General Toggles & Values
-    useSpec_value: false, gen_value: 1,
-    useSpec_color: false, gen_color: 1,
-    useSpec_suit: false, gen_suit: 3,
-    useSpec_value_color: false, gen_value_color: 3, 
-    useSpec_value_suit: false, gen_value_suit: 6,
+    let cardPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
+	let winloss = "";
 
-    // Specific Values (Keep your previous ones here)
-    value_low: 1, value_high: 1,
-    color_red: 1, color_black: 1,
-    suit_hearts: 3, suit_diamonds: 3, suit_clubs: 3, suit_spades: 3,
-    value_color_low_red: 3, value_color_low_black: 3, value_color_high_red: 3, value_color_high_black: 3,
-    value_suit_low_hearts: 6, value_suit_low_diamonds: 6, value_suit_low_clubs: 6, value_suit_low_spades: 6,
-    value_suit_high_hearts: 6, value_suit_high_diamonds: 6, value_suit_high_clubs: 6, value_suit_high_spades: 6,
-    joker: 10
+let mults = {
+    useSpec_value: false, gen_value: 1, gen_value_op: "*",
+    useSpec_color: false, gen_color: 1, gen_color_op: "*",
+    useSpec_suit: false, gen_suit: 3, gen_suit_op: "*",
+    useSpec_value_color: false, gen_value_color: 3, gen_value_color_op: "*", 
+    useSpec_value_suit: false, gen_value_suit: 6, gen_value_suit_op: "*",
+
+    value_low: 1, value_low_op: "*", value_high: 1, value_high_op: "*",
+    color_red: 1, color_red_op: "*", color_black: 1, color_black_op: "*",
+    suit_hearts: 3, suit_hearts_op: "*", suit_diamonds: 3, suit_diamonds_op: "*", suit_clubs: 3, suit_clubs_op: "*", suit_spades: 3, suit_spades_op: "*",
+    value_color_low_red: 3, value_color_low_red_op: "*", value_color_low_black: 3, value_color_low_black_op: "*", value_color_high_red: 3, value_color_high_red_op: "*", value_color_high_black: 3, value_color_high_black_op: "*",
+    value_suit_low_hearts: 6, value_suit_low_hearts_op: "*", value_suit_low_diamonds: 6, value_suit_low_diamonds_op: "*", value_suit_low_clubs: 6, value_suit_low_clubs_op: "*", value_suit_low_spades: 6, value_suit_low_spades_op: "*",
+    value_suit_high_hearts: 6, value_suit_high_hearts_op: "*", value_suit_high_diamonds: 6, value_suit_high_diamonds_op: "*", value_suit_high_clubs: 6, value_suit_high_clubs_op: "*", value_suit_high_spades: 6, value_suit_high_spades_op: "*",
+    joker: 10, joker_op: "*"
 };
 
-	let winstreakamount = 1;
-	let winlifeamount = 0;
-	let lossstreakamount = -1;
-	let losslifeamount = -2;
+	let winstreakamount = 1; let winstreakop = "+";
+	let winlifeamount = 0;   let winlifeop = "+";
+	let lossstreakamount = 1; let lossstreakop = "-";
+	let losslifeamount = 2;   let losslifeop = "-";
 
 	let blankscoreamount = 2;
 	let blankscoreop = "/";
-	let blanklifeamount = 0;
-	let blankstreakamount = 0;
+	let blanklifeamount = 0;  let blanklifeop = "+";
+	let blankstreakamount = 0; let blankstreakop = "+";
 
-	let skiplifeamount = -1;
-	let skipstreakamount = 1;
+	let skipscoreamount = 0;
+	let skipscoreop = "/";
+	let skiplifeamount = 1;   let skiplifeop = "-";
+	let skipstreakamount = 1; let skipstreakop = "+";
 
 	let sacrificelife = 3;
 	let sacrificeblanks = 6;
@@ -110,6 +115,372 @@ const gambitNames = [
 ];
 
 const actionNames = ['Blank', 'Skip', 'SacrificeLife', 'SacrificeBlank'];
+
+// Handle Deck Presets
+
+let currentPresetIndex = 0;
+
+const presets = [
+    {
+        name: "Default",
+        config: {
+            "endless": true,
+            "finite_lives": true,
+            "finite_blanks": true,
+            "currentscoretobeat": 100,
+
+            "mult-decks": 1,
+            "use_custom_ranks": false,
+            "use_custom_suits": false,
+            "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1,
+            "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
+            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-rank-J1": 1, "mult-rank-J2": 1, "mult-jokers": 1,
+
+    // Gen toggles and modifiers
+    useSpec_value: false, gen_value: 1, gen_value_op: "*",
+    useSpec_color: false, gen_color: 1, gen_color_op: "*",
+    useSpec_suit: false, gen_suit: 3, gen_suit_op: "*",
+    useSpec_value_color: false, gen_value_color: 3, gen_value_color_op: "*", 
+    useSpec_value_suit: false, gen_value_suit: 6, gen_value_suit_op: "*",
+
+    // Specific modifiers
+    value_low: 1, value_low_op: "*", 
+    value_high: 1, value_high_op: "*",
+    
+    color_red: 1, color_red_op: "*", 
+    color_black: 1, color_black_op: "*",
+    
+    suit_hearts: 3, suit_hearts_op: "*", 
+    suit_diamonds: 3, suit_diamonds_op: "*", 
+    suit_clubs: 3, suit_clubs_op: "*", 
+    suit_spades: 3, suit_spades_op: "*",
+    
+    value_color_low_red: 3, value_color_low_red_op: "*", 
+    value_color_low_black: 3, value_color_low_black_op: "*", 
+    value_color_high_red: 3, value_color_high_red_op: "*", 
+    value_color_high_black: 3, value_color_high_black_op: "*",
+    
+    value_suit_low_hearts: 6, value_suit_low_hearts_op: "*", 
+    value_suit_low_diamonds: 6, value_suit_low_diamonds_op: "*", 
+    value_suit_low_clubs: 6, value_suit_low_clubs_op: "*", 
+    value_suit_low_spades: 6, value_suit_low_spades_op: "*",
+    value_suit_high_hearts: 6, value_suit_high_hearts_op: "*", 
+    value_suit_high_diamonds: 6, value_suit_high_diamonds_op: "*", 
+    value_suit_high_clubs: 6, value_suit_high_clubs_op: "*", 
+    value_suit_high_spades: 6, value_suit_high_spades_op: "*",
+    
+    joker: 10, joker_op: "*",
+
+    // Points
+    "points-A": 20, "points-2": 2, "points-3": 3, "points-4": 4, 
+    "points-5": 5, "points-6": 6, "points-7": 7, "points-8": 8, 
+    "points-9": 9, "points-10": 10, "points-J": 10, "points-Q": 10, 
+    "points-K": 10, "points-J1": 20, "points-J2": 20, 
+
+            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1, "lastchancedice": 4,
+
+            "sacrificelife": 3, "sacrificeblanks": 6,
+
+            "winlifeamount": 0, "winlifeop": "+",
+            "winstreakamount": 1, "winstreakop": "+",
+
+            "losslifeamount": 1, "losslifeop": "-",
+            "lossstreakamount": 1, "lossstreakop": "-",
+
+            "skiplifeamount": 1, "skiplifeop": "-",
+            "skipstreakamount": 1, "skipstreakop": "+", 
+            "skipscoreamount": 0, "skipscoreop": "*",
+
+            "blanklifeamount": 0, "blanklifeop": "+",
+            "blankstreakamount": 0, "blankstreakop": "+",
+            "blankscoreamount": 2, "blankscoreop": "/",
+
+            "active_Low": true, "active_High": true, "active_Red": true, "active_Black": true,
+            "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true,
+
+            "active_Low_Red": true, "active_Low_Black": true, "active_High_Red": true, "active_High_Black": true,
+
+            "active_Low_Hearts": true, "active_Low_Diamonds": true, "active_Low_Clubs": true, "active_Low_Spades": true,
+            "active_High_Hearts": true, "active_High_Diamonds": true, "active_High_Clubs": true, "active_High_Spades": true,
+
+            "active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true
+        }
+    },
+    {
+        name: "Russian Roulette",
+        config: {
+            "endless": false,
+            "finite_lives": true,
+            "finite_blanks": true,
+            "currentscoretobeat": 1000,
+
+            "mult-decks": 2,
+            "use_custom_ranks": true,
+            "mult-rank-A": 0, "mult-rank-2": 2, "mult-rank-3": 0, "mult-rank-4": 0, "mult-rank-5": 0, "mult-rank-6": 0, "mult-rank-7": 0,
+            "mult-rank-8": 0, "mult-rank-9": 0, "mult-rank-10": 0, "mult-rank-J": 0, "mult-rank-Q": 0, "mult-rank-K": 0,
+            "mult-hearts": 0, "mult-diamonds": 0, "mult-clubs": 0, "mult-spades": 0, "mult-rank-J1": 10, "mult-rank-J2": 10, "mult-jokers": 1,
+
+            "useSpec_value": false,    "gen_value": 0,
+            "useSpec_color": false,    "gen_color": 0,
+            "useSpec_suit": false,     "gen_suit": 0,
+            "useSpec_value_color": false, "gen_value_color": 0,
+            "useSpec_value_suit": false,  "gen_value_suit": 0,
+
+            "joker": 5,
+
+            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0, "lastchancedice": 4,
+
+            "winlifeamount": 0, "winlifeop": "+",
+            "winstreakamount": 0, "winstreakop": "+",
+
+            "losslifeamount": 1, "losslifeop": "-",
+            "lossstreakamount": 1, "lossstreakop": "-",
+
+            "skiplifeamount": 0, "skiplifeop": "+",
+            "skipstreakamount": 0, "skipstreakop": "+", 
+            "skipscoreamount": 0, "skipscoreop": "*",
+
+            "blanklifeamount": 0, "blanklifeop": "+",
+            "blankstreakamount": 0, "blankstreakop": "+",
+            "blankscoreamount": 0, "blankscoreop": "*",
+
+            "active_Low": false, "active_High": false, "active_Red": false, "active_Black": false,
+            "active_Hearts": false, "active_Diamonds": false, "active_Clubs": false, "active_Spades": false, "active_Special": true,
+
+            "active_Low_Red": false, "active_Low_Black": false, "active_High_Red": false, "active_High_Black": false,
+
+            "active_Low_Hearts": false, "active_Low_Diamonds": false, "active_Low_Clubs": false, "active_Low_Spades": false,
+            "active_High_Hearts": false, "active_High_Diamonds": false, "active_High_Clubs": false, "active_High_Spades": false,
+
+            "active_Blank": false, "active_Skip": true, "active_SacrificeLife": false, "active_SacrificeBlank": false
+        }
+    }
+];
+
+function applyPreset() {
+    const preset = presets[currentPresetIndex];
+    const cfg = preset.config;
+
+    document.getElementById('preset-name').textContent = `${preset.name}`;
+
+    // Apply specific Stepper values for Decks/Cards
+const quantities = ["mult-decks", "mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2", "mult-jokers"];
+    quantities.forEach(id => {
+        if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(0, cfg[id]) : 1;
+    });
+
+    // Reset UI Toggles to Preset Configuration
+    document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
+    document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
+    toggleSpecificCards('ranks');
+    toggleSpecificCards('suits');
+
+const defaultMults = {
+    // Gen toggles and modifiers
+    useSpec_value: false, gen_value: 1, gen_value_op: "*",
+    useSpec_color: false, gen_color: 1, gen_color_op: "*",
+    useSpec_suit: false, gen_suit: 3, gen_suit_op: "*",
+    useSpec_value_color: false, gen_value_color: 3, gen_value_color_op: "*", 
+    useSpec_value_suit: false, gen_value_suit: 6, gen_value_suit_op: "*",
+
+    // Specific modifiers
+    value_low: 1, value_low_op: "*", 
+    value_high: 1, value_high_op: "*",
+    
+    color_red: 1, color_red_op: "*", 
+    color_black: 1, color_black_op: "*",
+    
+    suit_hearts: 3, suit_hearts_op: "*", 
+    suit_diamonds: 3, suit_diamonds_op: "*", 
+    suit_clubs: 3, suit_clubs_op: "*", 
+    suit_spades: 3, suit_spades_op: "*",
+    
+    value_color_low_red: 3, value_color_low_red_op: "*", 
+    value_color_low_black: 3, value_color_low_black_op: "*", 
+    value_color_high_red: 3, value_color_high_red_op: "*", 
+    value_color_high_black: 3, value_color_high_black_op: "*",
+    
+    value_suit_low_hearts: 6, value_suit_low_hearts_op: "*", 
+    value_suit_low_diamonds: 6, value_suit_low_diamonds_op: "*", 
+    value_suit_low_clubs: 6, value_suit_low_clubs_op: "*", 
+    value_suit_low_spades: 6, value_suit_low_spades_op: "*",
+    value_suit_high_hearts: 6, value_suit_high_hearts_op: "*", 
+    value_suit_high_diamonds: 6, value_suit_high_diamonds_op: "*", 
+    value_suit_high_clubs: 6, value_suit_high_clubs_op: "*", 
+    value_suit_high_spades: 6, value_suit_high_spades_op: "*",
+    
+    joker: 10, joker_op: "*",
+
+    // Points
+    "points-A": 20, "points-2": 2, "points-3": 3, "points-4": 4, 
+    "points-5": 5, "points-6": 6, "points-7": 7, "points-8": 8, 
+    "points-9": 9, "points-10": 10, "points-J": 10, "points-Q": 10, 
+    "points-K": 10, "points-J1": 20, "points-J2": 20
+};
+
+Object.keys(mults).forEach(key => {
+        let val = cfg[key] !== undefined ? cfg[key] : defaultMults[key];
+        
+        if (typeof val === "number") {
+            let opKey = key + "_op";
+            let opVal = cfg[opKey] !== undefined ? cfg[opKey] : defaultMults[opKey];
+            let min = (opVal === "/") ? 1 : 0;
+            mults[key] = Math.max(min, val);
+        } else {
+            mults[key] = val;
+        }
+
+        if (key.startsWith("useSpec_")) {
+            let id = key.replace("useSpec_", "use_spec_");
+            let cb = document.getElementById(id);
+            if (cb) {
+                cb.checked = mults[key];
+                toggleSpecifics(key.replace("useSpec_", ""));
+            }
+	} else if (key.endsWith("_op")) {
+            let btnId = key.replace("_op", "_op_btn");
+            let btnEl = document.getElementById(btnId);
+            // Added the || "*" failsafe here so it never shows undefined
+            if(btnEl) btnEl.innerHTML = `<span class="button_content2">${mults[key] || "*"}</span>`;
+        } else {
+            let inputId = key.replace("gen_", "gen-mult-").replace("_", "-");
+            let inputEl = document.getElementById(inputId) || document.getElementById(key.replace("_", "-"));
+            if (inputEl) {
+                inputEl.value = mults[key];
+            }
+        }
+    });
+
+// Populate Points
+    const defaultPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
+    const pointIds = ["points-A", "points-2", "points-3", "points-4", "points-5", "points-6", "points-7", "points-8", "points-9", "points-10", "points-J", "points-Q", "points-K", "points-J1", "points-J2"];
+    pointIds.forEach(id => {
+        let rank = id.split('-')[1];
+        
+        // Grab the value from the config, or fall back to the default
+        let rawValue = cfg[id] !== undefined ? cfg[id] : defaultPoints[rank];
+        
+        // Clamp the value between 0 and 20 before saving it
+        cardPoints[rank] = Math.min(20, Math.max(0, rawValue));
+        
+        if(document.getElementById(id)) document.getElementById(id).value = cardPoints[rank];
+    });
+
+    currentlifepoints = cfg["lifepoints"] !== undefined ? Math.max(1, cfg["lifepoints"]) : 3;
+    currentblanks = cfg["blanks"] !== undefined ? Math.max(0, cfg["blanks"]) : 1;
+    currentstreak = cfg["streak"] !== undefined ? Math.max(0, cfg["streak"]) : 0;
+
+    currentlastchance = cfg["lastchance"] !== undefined ? Math.max(0, cfg["lastchance"]) : 1;
+    lastchancedice = cfg["lastchancedice"] !== undefined ? Math.max(2, cfg["lastchancedice"]) : 4;
+    if(document.getElementById('last_chance_label')) {
+        document.getElementById('last_chance_label').textContent = 'Last Chance D' + lastchancedice + ':';
+    }
+
+    sacrificelife = cfg["sacrificelife"] !== undefined ? Math.max(0, cfg["sacrificelife"]) : 3;
+    sacrificeblanks = cfg["sacrificeblanks"] !== undefined ? Math.max(0, cfg["sacrificeblanks"]) : 6;
+
+    winlifeamount = cfg["winlifeamount"] !== undefined ? cfg["winlifeamount"] : 0;
+    winlifeop = cfg["winlifeop"] !== undefined ? cfg["winlifeop"] : "+";
+
+    winstreakamount = cfg["winstreakamount"] !== undefined ? cfg["winstreakamount"] : 1;
+    winstreakop = cfg["winstreakop"] !== undefined ? cfg["winstreakop"] : "+";
+
+    losslifeamount = cfg["losslifeamount"] !== undefined ? cfg["losslifeamount"] : 1;
+    losslifeop = cfg["losslifeop"] !== undefined ? cfg["losslifeop"] : "-";
+
+    lossstreakamount = cfg["lossstreakamount"] !== undefined ? cfg["lossstreakamount"] : 1;
+    lossstreakop = cfg["lossstreakop"] !== undefined ? cfg["lossstreakop"] : "-";
+
+    skiplifeamount = cfg["skiplifeamount"] !== undefined ? cfg["skiplifeamount"] : 1;
+    skiplifeop = cfg["skiplifeop"] !== undefined ? cfg["skiplifeop"] : "-";
+
+    skipstreakamount = cfg["skipstreakamount"] !== undefined ? cfg["skipstreakamount"] : 1;
+    skipstreakop = cfg["skipstreakop"] !== undefined ? cfg["skipstreakop"] : "+";
+
+    skipscoreamount = cfg["skipscoreamount"] !== undefined ? Math.max(0, cfg["skipscoreamount"]) : 0;
+    skipscoreop = cfg["skipscoreop"] !== undefined ? cfg["skipscoreop"] : "/";
+
+    if (skipscoreop === '/' && skipscoreamount <= "1") {
+        skipscoreamount = 1;
+    }
+
+    blanklifeamount = cfg["blanklifeamount"] !== undefined ? cfg["blanklifeamount"] : 0;
+    blanklifeop = cfg["blanklifeop"] !== undefined ? cfg["blanklifeop"] : "+";
+
+    blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
+    blankstreakop = cfg["blankstreakop"] !== undefined ? cfg["blankstreakop"] : "+";
+
+    blankscoreamount = cfg["blankscoreamount"] !== undefined ? Math.max(0, cfg["blankscoreamount"]) : 2;
+    blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
+
+    if (blankscoreop === '/' && blankscoreamount <= 1) {
+        blankscoreamount = 1;
+    }
+
+    gambitNames.forEach(name => {
+        let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
+        let cb = document.getElementById(`use_gambit_${name}`);
+        if (cb) {
+            cb.checked = active;
+        }
+    });
+
+    actionNames.forEach(name => {
+        let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
+        let cb = document.getElementById(`use_action_${name}`);
+        if (cb) {
+            cb.checked = active;
+            toggleActionBtn(name);
+        }
+    });
+
+    currentscoretobeat = cfg["currentscoretobeat"] !== undefined ? Math.max(1, cfg["currentscoretobeat"]) : 100;
+        savedscore = currentscoretobeat;
+          document.getElementById("currentscoretobeat").value = currentscoretobeat;
+
+    // Seed the UI first so the toggle functions don't read stale data from the previous preset
+    savedlifepoints = currentlifepoints; 
+    document.getElementById("currentlifepoints").value = savedlifepoints;
+
+    savedblanks = currentblanks; 
+    document.getElementById("currentblanks").value = savedblanks;
+
+    // Process Checkboxes for Infinity Logic
+    document.getElementById("endless_mode").checked = cfg["endless"] || false;
+    endlessMODE();
+    
+    document.getElementById("toggle_lives").checked = cfg["finite_lives"] !== undefined ? cfg["finite_lives"] : true;
+    toggleLIVES();
+
+    document.getElementById("toggle_blanks").checked = cfg["finite_blanks"] !== undefined ? cfg["finite_blanks"] : true;
+    toggleBLANKS();
+
+    setMULTDISPLAYS();
+
+    document.getElementById('currentlifepoints').value = currentlifepoints === Infinity ? "∞" : currentlifepoints;
+    
+    // Change the currentblanks line to this:
+    document.getElementById('currentblanks').value = currentblanks === Infinity ? "∞" : currentblanks;
+    
+    document.getElementById('currentstreak').value = currentstreak;
+    document.getElementById('currentlastchance').value = currentlastchance;
+    document.getElementById('sacrificelife').value = sacrificelife;
+    document.getElementById('sacrificeblanks').value = sacrificeblanks;
+    
+    document.getElementById('currentscoretobeat').value = currentscoretobeat;
+    document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
+    checkMainToggle('gambit');
+    checkMainToggle('action');
+    
+    setCURRENTGAMBIT();
+}
+
+function changePreset(delta) {
+    currentPresetIndex += delta;
+    if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
+    if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
+    applyPreset();
+}
 
 function toggleAll(type) {
     const isChecked = document.getElementById(`toggle_all_${type}s`).checked;
@@ -396,11 +767,14 @@ function toggleSpecifics(cat) {
 
 if (key === "joker") {
         multiplier = mults["joker"];
+        multiplierOp = mults["joker_op"] || "*";
     } else {
         if (mults["useSpec_" + category]) {
             multiplier = mults[key] !== undefined ? mults[key] : 1; 
+            multiplierOp = mults[key + "_op"] !== undefined ? mults[key + "_op"] : "*";
         } else {
             multiplier = mults["gen_" + category];
+            multiplierOp = mults["gen_" + category + "_op"] !== undefined ? mults["gen_" + category + "_op"] : "*";
         }
     }
 
@@ -566,7 +940,7 @@ function calculateCHANCE() {
 		document.getElementById("valueswitch").innerHTML = valueswitch;
 		document.getElementById("variable").innerHTML = variable;
 		document.getElementById("element").innerHTML = element;
-		document.getElementById("multiplier").innerHTML = multiplier;
+		document.getElementById("multiplier").innerHTML = multiplierOp + multiplier;
 	}
 
 // New Add / Remove Function
@@ -584,42 +958,32 @@ function calculateCHANCE() {
 		enforceCaps();
 	}
 
-function addORremoveCHEATS(variableId, value, sign, max) {
+function addORremoveOPTIONS(variableId, value, sign, minmax) {
+
     const inputElement = document.getElementById(variableId);
     if (!inputElement) return;
+
+    if (variableId === 'blankscoreamount' && blankscoreop === '/' && inputElement.value <= "1") {
+        inputElement.value = 1;
+        return;
+    } else if (variableId === 'skipscoreamount' && skipscoreop === '/' && inputElement.value <= "1") {
+        inputElement.value = 1;
+        return;
+    }
 
     let currentValue = parseInt(inputElement.value) || 0;
     let newValue;
 
     if (sign === "-") {
         newValue = currentValue - value;
-        if (newValue <= 0) {
-            switch (variableId) {
-                case 'currentscoretobeat': newValue = 1; break;
-                case 'currentlifepoints': newValue = 1; break;
-                case 'blankscoreamount': newValue = 1; break;
-                case 'skiplifeamount':
-                case 'skipstreakamount':
- case 'blanklifeamount':
-                case 'blankstreakamount':
-		case 'lossstreakamount':
-		case 'losslifeamount':
-                    if (newValue < -20) newValue = -20;
-                    break;
-                case 'lastchancedice': 
-                    newValue = 2; // Floor it to D2
-                    break;
-                default: newValue = 0; break;
-            }
-        } else if (variableId === 'lastchancedice' && newValue < 2) {
-            newValue = 2; // Safety check for negative scaling
-    }
+        if (minmax !== undefined && newValue < minmax) {
+            newValue = minmax;
+        }
     } else if (sign === "+") {
         newValue = currentValue + value;
-    }
-
-    if (max !== undefined && newValue > max) {
-        newValue = max;
+        if (minmax !== undefined && newValue > minmax) {
+            newValue = minmax;
+        }
     }
 
     inputElement.value = newValue;
@@ -629,13 +993,8 @@ function addORremoveCHEATS(variableId, value, sign, max) {
         case 'currentlifepoints': currentlifepoints = newValue; break;
         case 'currentblanks': currentblanks = newValue; break;
         case 'currentstreak': currentstreak = newValue; break;
-case 'currentlastchance': currentlastchance = newValue; break;
-        case 'lastchancedice': 
-            lastchancedice = newValue; 
-            if(document.getElementById('last_chance_label')) {
-                document.getElementById('last_chance_label').textContent = 'Last Chance D' + newValue + ':';
-            }
-            break;
+        case 'currentlastchance': currentlastchance = newValue; break;
+        case 'lastchancedice': lastchancedice = newValue; break;
         case 'sacrificelife': sacrificelife = newValue; break;
         case 'sacrificeblanks': sacrificeblanks = newValue; break;
         case 'skiplifeamount': skiplifeamount = newValue; break;
@@ -663,27 +1022,57 @@ function setMULTDISPLAYS() {
 	document.getElementById("currentstreak").value = currentstreak;
 	document.getElementById("currentlastchance").value = currentlastchance;
 	if(document.getElementById("lastchancedice")) document.getElementById("lastchancedice").value = lastchancedice;
+        if(document.getElementById('last_chance_label')) document.getElementById('last_chance_label').textContent = 'Last Chance D' + lastchancedice + ':';
 	document.getElementById("sacrificelife").value = sacrificelife;
 	document.getElementById("sacrificeblanks").value = sacrificeblanks;
 	document.getElementById("currentscoretobeat").value = savedscore;
-	document.getElementById("skiplifeamount").value = skiplifeamount;
-	document.getElementById("skipstreakamount").value = skipstreakamount;
-	if(document.getElementById("blanklifeamount")) document.getElementById("blanklifeamount").value = blanklifeamount;
-	if(document.getElementById("blankstreakamount")) document.getElementById("blankstreakamount").value = blankstreakamount;
+	if(document.getElementById("skiplifeamount")) { document.getElementById("skiplifeamount").value = skiplifeamount; document.getElementById("skiplifeop_btn").innerHTML = `<span class="button_content2">${skiplifeop}</span>`; }
+	if(document.getElementById("skipstreakamount")) { document.getElementById("skipstreakamount").value = skipstreakamount; document.getElementById("skipstreakop_btn").innerHTML = `<span class="button_content2">${skipstreakop}</span>`; }
+	if(document.getElementById("skipscoreamount")) document.getElementById("skipscoreamount").value = skipscoreamount;
+	if(document.getElementById("skipscoreop_btn")) document.getElementById("skipscoreop_btn").innerHTML = `<span class="button_content2">${skipscoreop}</span>`;
+	if(document.getElementById("blanklifeamount")) { document.getElementById("blanklifeamount").value = blanklifeamount; document.getElementById("blanklifeop_btn").innerHTML = `<span class="button_content2">${blanklifeop}</span>`; }
+	if(document.getElementById("blankstreakamount")) { document.getElementById("blankstreakamount").value = blankstreakamount; document.getElementById("blankstreakop_btn").innerHTML = `<span class="button_content2">${blankstreakop}</span>`; }
 	if(document.getElementById("blankscoreamount")) document.getElementById("blankscoreamount").value = blankscoreamount;
 	if(document.getElementById("blankscoreop_btn")) document.getElementById("blankscoreop_btn").innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
-	if(document.getElementById("winstreakamount")) document.getElementById("winstreakamount").value = winstreakamount;
-	if(document.getElementById("winlifeamount")) document.getElementById("winlifeamount").value = winlifeamount;
-	if(document.getElementById("lossstreakamount")) document.getElementById("lossstreakamount").value = lossstreakamount;
-	if(document.getElementById("losslifeamount")) document.getElementById("losslifeamount").value = losslifeamount;
+	if(document.getElementById("winstreakamount")) { document.getElementById("winstreakamount").value = winstreakamount; document.getElementById("winstreakop_btn").innerHTML = `<span class="button_content2">${winstreakop}</span>`; }
+	if(document.getElementById("winlifeamount")) { document.getElementById("winlifeamount").value = winlifeamount; document.getElementById("winlifeop_btn").innerHTML = `<span class="button_content2">${winlifeop}</span>`; }
+	if(document.getElementById("lossstreakamount")) { document.getElementById("lossstreakamount").value = lossstreakamount; document.getElementById("lossstreakop_btn").innerHTML = `<span class="button_content2">${lossstreakop}</span>`; }
+	if(document.getElementById("losslifeamount")) { document.getElementById("losslifeamount").value = losslifeamount; document.getElementById("losslifeop_btn").innerHTML = `<span class="button_content2">${losslifeop}</span>`; }
+}
+
+function toggleMultOp(key) {
+    mults[key + "_op"] = mults[key + "_op"] === "/" ? "*" : "/";
+    if (mults[key + "_op"] === "/" && mults[key] <= 1) {
+        mults[key] = 1;
+        let disp = document.getElementById(key + "_mult_disp");
+        if (disp) disp.value = 1;
+    }
+    let btn = document.getElementById(key + "_op_btn");
+    if (btn) btn.innerHTML = `<span class="button_content2">${mults[key + "_op"]}</span>`;
+    updateTESTVALUES();
 }
 
 function changeMultiplier(type, delta) {
 	if (mults[type] !== undefined) {
-		mults[type] = Math.min(20, Math.max(0, mults[type] + delta));
+        let min = (mults[type + "_op"] === "/") ? 1 : 0;
+		mults[type] = Math.min(20, Math.max(min, mults[type] + delta));
 		const displayElement = document.getElementById(type + "_mult_disp");
 		if (displayElement) displayElement.value = mults[type];
+        updateTESTVALUES();
 	}
+}
+
+function changePoint(rank, delta) {
+    let current = cardPoints[rank] || 0;
+    // Math.max keeps it from going below 0, Math.min keeps it from going above 20
+    current = Math.min(20, Math.max(0, current + delta));
+    cardPoints[rank] = current;
+    document.getElementById("points-" + rank).value = current;
+}
+
+function changeAllPoints(delta) {
+    const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "J1", "J2"];
+    ranks.forEach(r => changePoint(r, delta));
 }
 
 // Activate Endless Mode
@@ -713,253 +1102,6 @@ function endlessMODE() {
         // 3. Re-enable the buttons
         stepperButtons.forEach(btn => btn.disabled = false);
     }
-}
-
-// Handle Deck Presets
-
-let currentPresetIndex = 0;
-
-const presets = [
-    {
-        name: "Default",
-        config: {
-            "endless": true,
-            "finite_lives": true,
-            "finite_blanks": true,
-            "currentscoretobeat": 100,
-
-            "mult-decks": 1,
-            "use_custom_ranks": false,
-            "use_custom_suits": false,
-            "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1,
-            "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
-            "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-rank-J1": 1, "mult-rank-J2": 1,
-
-            "useSpec_value": false,    "gen_value": 1,
-            "useSpec_color": false,    "gen_color": 1,
-            "useSpec_suit": false,     "gen_suit": 3,
-            "useSpec_value_color": false, "gen_value_color": 3,
-            "useSpec_value_suit": false,  "gen_value_suit": 6,
-
-            "value_low": 1, "value_high": 1,
-            "color_red": 1, "color_black": 1,
-            "suit_hearts": 3, "suit_diamonds": 3, "suit_clubs": 3, "suit_spades": 3,
-            "value_color_low_red": 3, "value_color_low_black": 3, "value_color_high_red": 3, "value_color_high_black": 3,
-            "value_suit_low_hearts": 6, "value_suit_low_diamonds": 6, "value_suit_low_clubs": 6, "value_suit_low_spades": 6,
-            "value_suit_high_hearts": 6, "value_suit_high_diamonds": 6, "value_suit_high_clubs": 6, "value_suit_high_spades": 6,
-            "joker": 10,
-
-            "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1, "lastchancedice": 4,
-
-            "sacrificelife": 3, "sacrificeblanks": 6,
-
-            "winlifeamount": 0, "winstreakamount": 1,
-
-            "losslifeamount": -1, "lossstreakamount": -1,
- 
-            "skiplifeamount": -1, "skipstreakamount": 1, 
-
-            "active_Low": true, "active_High": true, "active_Red": true, "active_Black": true,
-            "active_Hearts": true, "active_Diamonds": true, "active_Clubs": true, "active_Spades": true, "active_Special": true,
-
-            "active_Low_Red": true, "active_Low_Black": true, "active_High_Red": true, "active_High_Black": true,
-
-            "active_Low_Hearts": true, "active_Low_Diamonds": true, "active_Low_Clubs": true, "active_Low_Spades": true,
-            "active_High_Hearts": true, "active_High_Diamonds": true, "active_High_Clubs": true, "active_High_Spades": true,
-
-            "active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true,
-
-            "blanklifeamount": 0, "blankstreakamount": 0, "blankscoreamount": 2, "blankscoreop": "/"
-        }
-    },
-    {
-        name: "Russian Roulette",
-        config: {
-            "endless": false,
-            "finite_lives": true,
-            "finite_blanks": true,
-            "currentscoretobeat": 1000,
-
-            "mult-decks": 2,
-            "use_custom_ranks": true,
-            "mult-rank-A": 0, "mult-rank-2": 2, "mult-rank-3": 0, "mult-rank-4": 0, "mult-rank-5": 0, "mult-rank-6": 0, "mult-rank-7": 0,
-            "mult-rank-8": 0, "mult-rank-9": 0, "mult-rank-10": 0, "mult-rank-J": 0, "mult-rank-Q": 0, "mult-rank-K": 0,
-            "mult-hearts": 0, "mult-diamonds": 0, "mult-clubs": 0, "mult-spades": 0, "mult-rank-J1": 10, "mult-rank-J2": 10,
-
-            "useSpec_value": false,    "gen_value": 0,
-            "useSpec_color": false,    "gen_color": 0,
-            "useSpec_suit": false,     "gen_suit": 0,
-            "useSpec_value_color": false, "gen_value_color": 0,
-            "useSpec_value_suit": false,  "gen_value_suit": 0,
-
-			"joker": 5,
-
-            "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0, "lastchancedice": 4,
-
-            "winlifeamount": 0, "winstreakamount": 0,
-
-            "losslifeamount": -1, "lossstreakamount": -1,
- 
-            "skiplifeamount": 0, "skipstreakamount": 0, 
-
-            "active_Low": false, "active_High": false, "active_Red": false, "active_Black": false,
-            "active_Hearts": false, "active_Diamonds": false, "active_Clubs": false, "active_Spades": false, "active_Special": true,
-
-            "active_Low_Red": false, "active_Low_Black": false, "active_High_Red": false, "active_High_Black": false,
-
-            "active_Low_Hearts": false, "active_Low_Diamonds": false, "active_Low_Clubs": false, "active_Low_Spades": false,
-            "active_High_Hearts": false, "active_High_Diamonds": false, "active_High_Clubs": false, "active_High_Spades": false,
-
-            "active_Blank": false, "active_Skip": true, "active_SacrificeLife": false, "active_SacrificeBlank": false,
-
-            "blanklifeamount": 0, "blankstreakamount": 0, "blankscoreamount": 1, "blankscoreop": "/"
-        }
-    }
-];
-
-function applyPreset() {
-    const preset = presets[currentPresetIndex];
-    const cfg = preset.config;
-
-    document.getElementById('preset-name').textContent = `${preset.name}`;
-
-    // Apply specific Stepper values for Decks/Cards
-  const quantities = ["mult-decks", "mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2"];
-    quantities.forEach(id => {
-        if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(0, cfg[id]) : 1;
-    });
-
-    // Reset UI Toggles to Preset Configuration
-    document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
-    document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
-    toggleSpecificCards('ranks');
-    toggleSpecificCards('suits');
-
-const defaultMults = {
-        useSpec_value: false, gen_value: 1, useSpec_color: false, gen_color: 1,
-        useSpec_suit: false, gen_suit: 3, useSpec_value_color: false, gen_value_color: 3, 
-        useSpec_value_suit: false, gen_value_suit: 6, value_low: 1, value_high: 1,
-        color_red: 1, color_black: 1, suit_hearts: 3, suit_diamonds: 3, suit_clubs: 3, suit_spades: 3,
-        value_color_low_red: 3, value_color_low_black: 3, value_color_high_red: 3, value_color_high_black: 3,
-        value_suit_low_hearts: 6, value_suit_low_diamonds: 6, value_suit_low_clubs: 6, value_suit_low_spades: 6,
-        value_suit_high_hearts: 6, value_suit_high_diamonds: 6, value_suit_high_clubs: 6, value_suit_high_spades: 6,
-        joker: 10
-    };
-
-Object.keys(mults).forEach(key => {
-        // Fall back to default config if the value is stripped from the preset
-        let val = cfg[key] !== undefined ? cfg[key] : defaultMults[key];
-        
-        if (typeof val === "number") {
-            mults[key] = Math.max(0, val);
-        } else {
-            mults[key] = val;
-        }
-
-        if (key.startsWith("useSpec_")) {
-            let id = key.replace("useSpec_", "use_spec_");
-            let cb = document.getElementById(id);
-            if (cb) {
-                cb.checked = mults[key];
-                toggleSpecifics(key.replace("useSpec_", ""));
-            }
-        } else {
-            let inputId = key.replace("gen_", "gen-mult-").replace("_", "-");
-            let inputEl = document.getElementById(inputId) || document.getElementById(key.replace("_", "-"));
-            if (inputEl) {
-                inputEl.value = mults[key];
-            }
-        }
-    });
-
-    currentlifepoints = cfg["lifepoints"] !== undefined ? Math.max(1, cfg["lifepoints"]) : 3;
-    currentblanks = cfg["blanks"] !== undefined ? Math.max(0, cfg["blanks"]) : 1;
-    currentstreak = cfg["streak"] !== undefined ? Math.max(0, cfg["streak"]) : 0;
-currentlastchance = cfg["lastchance"] !== undefined ? Math.max(0, cfg["lastchance"]) : 1;
-    lastchancedice = cfg["lastchancedice"] !== undefined ? Math.max(2, cfg["lastchancedice"]) : 4;
-    if(document.getElementById('last_chance_label')) {
-        document.getElementById('last_chance_label').textContent = 'Last Chance D' + lastchancedice + ':';
-    }
-    sacrificelife = cfg["sacrificelife"] !== undefined ? Math.max(0, cfg["sacrificelife"]) : 3;
-    sacrificeblanks = cfg["sacrificeblanks"] !== undefined ? Math.max(0, cfg["sacrificeblanks"]) : 6;
-    skiplifeamount = cfg["skiplifeamount"] !== undefined ? Math.min(0, cfg["skiplifeamount"]) : -1;
-    skipstreakamount = cfg["skipstreakamount"] !== undefined ? cfg["skipstreakamount"] : 1;
-
-    winlifeamount = cfg["winlifeamount"] !== undefined ? Math.max(0, cfg["winlifeamount"]) : 0;
-    winstreakamount = cfg["winstreakamount"] !== undefined ? Math.max(0, cfg["winstreakamount"]) : 1;
-    losslifeamount = cfg["losslifeamount"] !== undefined ? Math.min(0, cfg["losslifeamount"]) : -1;
-    lossstreakamount = cfg["lossstreakamount"] !== undefined ? Math.min(0, cfg["lossstreakamount"]) : -1;
-
-  blanklifeamount = cfg["blanklifeamount"] !== undefined ? cfg["blanklifeamount"] : 0;
-  blankstreakamount = cfg["blankstreakamount"] !== undefined ? cfg["blankstreakamount"] : 0;
-  blankscoreamount = cfg["blankscoreamount"] !== undefined ? Math.max(1, cfg["blankscoreamount"]) : 2;
-  blankscoreop = cfg["blankscoreop"] !== undefined ? cfg["blankscoreop"] : "/";
-
-    gambitNames.forEach(name => {
-        let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
-        let cb = document.getElementById(`use_gambit_${name}`);
-        if (cb) {
-            cb.checked = active;
-        }
-    });
-
-    actionNames.forEach(name => {
-        let active = cfg[`active_${name}`] !== undefined ? cfg[`active_${name}`] : true;
-        let cb = document.getElementById(`use_action_${name}`);
-        if (cb) {
-            cb.checked = active;
-            toggleActionBtn(name);
-        }
-    });
-
-    currentscoretobeat = cfg["currentscoretobeat"] !== undefined ? Math.max(1, cfg["currentscoretobeat"]) : 100;
-        savedscore = currentscoretobeat;
-          document.getElementById("currentscoretobeat").value = currentscoretobeat;
-
-// Seed the UI first so the toggle functions don't read stale data from the previous preset
-    savedlifepoints = currentlifepoints; 
-    document.getElementById("currentlifepoints").value = savedlifepoints;
-
-    savedblanks = currentblanks; 
-    document.getElementById("currentblanks").value = savedblanks;
-
-    // Process Checkboxes for Infinity Logic
-    document.getElementById("endless_mode").checked = cfg["endless"] || false;
-    endlessMODE();
-    
-    document.getElementById("toggle_lives").checked = cfg["finite_lives"] !== undefined ? cfg["finite_lives"] : true;
-    toggleLIVES();
-
-    document.getElementById("toggle_blanks").checked = cfg["finite_blanks"] !== undefined ? cfg["finite_blanks"] : true;
-    toggleBLANKS();
-
-    setMULTDISPLAYS();
-
-document.getElementById('currentlifepoints').value = currentlifepoints === Infinity ? "∞" : currentlifepoints;
-    
-    // Change the currentblanks line to this:
-    document.getElementById('currentblanks').value = currentblanks === Infinity ? "∞" : currentblanks;
-    
-    document.getElementById('currentstreak').value = currentstreak;
-    document.getElementById('currentlastchance').value = currentlastchance;
-    document.getElementById('sacrificelife').value = sacrificelife;
-    document.getElementById('sacrificeblanks').value = sacrificeblanks;
-    
-    document.getElementById('currentscoretobeat').value = currentscoretobeat;
-    document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
-checkMainToggle('gambit');
-    checkMainToggle('action');
-    
-    setCURRENTGAMBIT();
-}
-
-applyPreset();
-
-function changePreset(delta) {
-    currentPresetIndex += delta;
-    if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
-    if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
-    applyPreset();
 }
 
 // Deck of Cards Maker
@@ -1106,7 +1248,7 @@ function changeAllRanks(delta) {
 function changeAllSuits(delta) {
     // List all the IDs that should be affected by the "Main" stepper
     const rankIds = [
-        'mult-hearts', 'mult-diamonds', 'mult-clubs', 'mult-spades'
+        'mult-hearts', 'mult-diamonds', 'mult-clubs', 'mult-spades', 'mult-jokers'
     ];
 
     // Run the existing changeQty function for every ID in the list
@@ -1117,14 +1259,41 @@ function changeAllSuits(delta) {
     });
 }
 
+function toggleGainLossOp(type) {
+    if (type === 'winlife') { winlifeop = winlifeop === '+' ? '-' : '+'; document.getElementById("winlifeop_btn").innerHTML = `<span class="button_content2">${winlifeop}</span>`; }
+    else if (type === 'winstreak') { winstreakop = winstreakop === '+' ? '-' : '+'; document.getElementById("winstreakop_btn").innerHTML = `<span class="button_content2">${winstreakop}</span>`; }
+    else if (type === 'losslife') { losslifeop = losslifeop === '+' ? '-' : '+'; document.getElementById("losslifeop_btn").innerHTML = `<span class="button_content2">${losslifeop}</span>`; }
+    else if (type === 'lossstreak') { lossstreakop = lossstreakop === '+' ? '-' : '+'; document.getElementById("lossstreakop_btn").innerHTML = `<span class="button_content2">${lossstreakop}</span>`; }
+    else if (type === 'blanklife') { blanklifeop = blanklifeop === '+' ? '-' : '+'; document.getElementById("blanklifeop_btn").innerHTML = `<span class="button_content2">${blanklifeop}</span>`; }
+    else if (type === 'blankstreak') { blankstreakop = blankstreakop === '+' ? '-' : '+'; document.getElementById("blankstreakop_btn").innerHTML = `<span class="button_content2">${blankstreakop}</span>`; }
+    else if (type === 'skiplife') { skiplifeop = skiplifeop === '+' ? '-' : '+'; document.getElementById("skiplifeop_btn").innerHTML = `<span class="button_content2">${skiplifeop}</span>`; }
+    else if (type === 'skipstreak') { skipstreakop = skipstreakop === '+' ? '-' : '+'; document.getElementById("skipstreakop_btn").innerHTML = `<span class="button_content2">${skipstreakop}</span>`; }
+}
+
 function toggleBlankOp() {
     if (blankscoreop === "/") {
         blankscoreop = "*";
     } else {
         blankscoreop = "/";
+        if (document.getElementById("blankscoreamount").value === "0") {
+            document.getElementById("blankscoreamount").value = "1";
+        }
     }
     const btn = document.getElementById("blankscoreop_btn");
     if (btn) btn.innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
+}
+
+function toggleSkipOp() {
+    if (skipscoreop === "/") {
+        skipscoreop = "*";
+    } else {
+        skipscoreop = "/";
+        if (document.getElementById("skipscoreamount").value === "0") {
+            document.getElementById("skipscoreamount").value = "1";
+        }
+    }
+    const btn = document.getElementById("skipscoreop_btn");
+    if (btn) btn.innerHTML = `<span class="button_content2">${skipscoreop}</span>`;
 }
 
 function toggleActionBtn(name) {
@@ -1160,16 +1329,16 @@ function generateCustomDeck() {
         for (let i = 0; i < mult; i++) selectedRanks.push(r);
     });
 
-    // 3. Compile Base Deck Combinations
+// 3. Compile Base Deck Combinations
     const baseCombinations = [];
     selectedSuits.forEach(({ suit, color }) => {
         selectedRanks.forEach(({ rank, value }) => {
-            baseCombinations.push({ rank, value, suit, color });
+            baseCombinations.push({ rank, value, points: cardPoints[rank], suit, color });
         });
     });
 
     // 4. Factor in Total Decks and Jokers
-  const finalDeck = [];
+    const finalDeck = [];
     for (let i = 0; i < decks; i++) {
         finalDeck.push(...baseCombinations); 
     }
@@ -1178,14 +1347,17 @@ function generateCustomDeck() {
     const j1Mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById('mult-rank-J1').value) || 0, 0), 10) : 1;
     const j2Mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById('mult-rank-J2').value) || 0, 0), 10) : 1;
 
+    // Pull multiplier for suit-level jokers (default to 1 if custom suits is unchecked)
+    const suitJokerMult = useCustomSuits ? Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 0, 0), 10) : 1;
+
     // Push Joker 1 (Index 0 in standardExtras array)
     if (standardExtras.length > 0) {
-        for (let i = 0; i < j1Mult * decks; i++) finalDeck.push(standardExtras[0]);
+        for (let i = 0; i < (j1Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[0], points: cardPoints['J1']});
     }
     
     // Push Joker 2 (Index 1 in standardExtras array)
     if (standardExtras.length > 1) {
-        for (let i = 0; i < j2Mult * decks; i++) finalDeck.push(standardExtras[1]);
+        for (let i = 0; i < (j2Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[1], points: cardPoints['J2']});
     }
 
     // 5. Update the Global Card Counters via Direct Filtering (100% Accurate)
@@ -1243,13 +1415,19 @@ function generateCustomDeck() {
 
 		// Calculate Life Cost
 		if (lifepoints !== Infinity) {
-			lifepoints += skiplifeamount;
+			lifepoints += (skiplifeop === '-' ? -skiplifeamount : skiplifeamount);
 			if (lifepoints < 0) lifepoints = 0;
 			document.getElementById("lifepoints").textContent = lifepoints;
 		}
 
+		if (skipscoreop === "/") {
+			currentscore = Math.floor(currentscore + (streak + acevalue) / skipscoreamount);
+		} else {
+			currentscore = Math.floor(currentscore + (streak + acevalue) * skipscoreamount);
+		}
+
 		// Calculate Streak Effect
-		streak += skipstreakamount;
+		streak += (skipstreakop === '-' ? -skipstreakamount : skipstreakamount);
 		if (streak < 0) streak = 0;
 		document.getElementById("streak").textContent = streak;
 
@@ -1271,14 +1449,14 @@ function generateCustomDeck() {
 
 // Last Chance Setup
 
-function lastCHANCE(variable) {
+function lastCHANCE(playerChoice) {
 		if (lastchance === 0) return;
 
 		lastchance = lastchance - 1;
 
 		const randomNumber = Math.floor(Math.random() * lastchancedice) + 1;
 		document.getElementById("output").textContent = randomNumber;
-		const diceroll = Number(variable);
+		const diceroll = Number(playerChoice);
 
 		if (randomNumber === diceroll) {
 
@@ -1321,7 +1499,7 @@ function lastCHANCE(variable) {
 
 function showELEMENTFLEX(elementId) {
     // 1. List all your sections in one place
-    const sections = ['card_options', 'mult_options', 'gambit_options', 'stats_options', 'misc_options', 'win_loss_options', 'actions_options'];
+    const sections = ['card_options', 'mult_options', 'gambit_options', 'stats_options', 'misc_options', 'win_loss_options', 'actions_options', 'points_options'];
     
     const target = document.getElementById(elementId);
     if (!target) return; // Safety check
@@ -1412,19 +1590,45 @@ function showELEMENTFLEX(elementId) {
 			gambithistoryvariable = variable;
 		}
 
-let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
-		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks; // <-- Add this
+		let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
+		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks;
 
-		// Determine the spacing (double break if history already exists)
 		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
 
-		// Build the entry (Update the B: value to use blanksDisplay)
-		let historyEntry = gambithistoryvalue + gambithistoryvariable + " (x" + multiplier + ")" + 
-		                   "<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + " Score: " + currentscore + 
-                           "<br>Table: " + result2 + "<br>Hand: " + result + spacing;
+let multipliersymbol = " x ";
 
-// Prepend to history
-document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
+		if (variable === "Special") {acevalue = currentPoints; gambithistoryvariable = "Joker"}
+
+		if (winloss === "Fail") acevalue = 0;
+
+		if (gambithistoryvariable === 'Blank') {
+			winloss = "";
+			multiplier = blankscoreamount;
+			if (blankscoreop === "*") {
+				multipliersymbol = " x ";
+			} else {
+				multipliersymbol = " / ";
+			}
+		} else if (gambithistoryvariable === 'Skip') {
+			winloss = "";
+			multiplier = skipscoreamount;
+			if (skipscoreop === "*") {
+				multipliersymbol = " x ";
+			} else {
+				multipliersymbol = " / ";
+			}
+		} else {
+            winloss = "(" + winloss + ")";
+            multipliersymbol = multiplierOp === "*" ? " x " : " / ";
+        }
+
+		let historyEntry = gambithistoryvalue + gambithistoryvariable + "<br>" + winloss + " (" + acevalue + multipliersymbol + multiplier + ")" + 
+				"<br>T: " + result2 + " H: " + result + 
+				"<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + "<br>Score: " + currentscore + spacing;
+
+		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
+
+		winloss = "";
 
 		if (currentscore >= currentscoretobeat) {
 			clearGAMBIT();
@@ -1529,6 +1733,13 @@ document.getElementById("card_history").innerHTML = historyEntry + document.getE
 		acevalue = 0;
 		playerwin = false;
 
+		let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
+		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks;
+
+		let historyEntry = "Game Start<br>" + " L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak;
+
+		document.getElementById("card_history").innerHTML = historyEntry;
+
 		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
 		document.getElementById("score").innerHTML = currentscore;
 		document.getElementById("lifepoints").textContent = lifepoints === Infinity ? "∞" : lifepoints;
@@ -1537,7 +1748,6 @@ document.getElementById("card_history").innerHTML = historyEntry + document.getE
 		document.getElementById("output").innerHTML = "0";
 
 		document.getElementById("tablecard").textContent = "None";
-		document.getElementById("card_history").innerHTML = "";
 		document.getElementById("remaining").innerHTML = cards.length;
 
 		document.getElementById("redcards").innerHTML = redcardscounter;
@@ -1578,12 +1788,12 @@ document.getElementById("card_history").innerHTML = historyEntry + document.getE
 // Life Point Related Functions
 
 function sacrificeSTREAK(type) {
-    if (playerwin === true) return;
-    if (lifepoints === 0) return;
-    if (cards.length === 0) {
-        emptyDECK();
-        return;
-    }
+	if (playerwin === true) return;
+	if (lifepoints === 0) return;
+	if (cards.length === 0) {
+		emptyDECK();
+		return;
+	}
 
 	const buttons_1 = document.querySelectorAll('.special_button_1');
 	buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -1601,50 +1811,71 @@ function sacrificeSTREAK(type) {
 
 	updateTESTVALUES();
 
-    var streaknumber = (type === "lifepoints") ? sacrificelife : sacrificeblanks;
+	var streaknumber = (type === "lifepoints") ? sacrificelife : sacrificeblanks;
 
-    // 1. Check if user has enough streak first
-    if (streak < streaknumber) {
-        document.getElementById("currentgambit").textContent = "Not Enough Streak";
-        document.getElementById("empty_gambit").textContent = "(" + streak + "/" + streaknumber + ")";
-	document.getElementById("percentage").innerHTML = "";
-        return;
-    }
+	// 1. Check if user has enough streak first
+	if (streak < streaknumber) {
+		document.getElementById("currentgambit").textContent = "Not Enough Streak";
+		document.getElementById("empty_gambit").textContent = "(" + streak + "/" + streaknumber + ")";
+		document.getElementById("percentage").innerHTML = "";
+		return;
+	}
 
-    if (type === 'lifepoints') {
-        if (lifepoints !== Infinity) {
-            if (lifepoints >= GLOBAL_CAP) {
-		  enforceCaps();
-                  document.getElementById("currentgambit").textContent = "Max HP Reached";
-                  document.getElementById("empty_gambit").textContent = "...";
-                  document.getElementById("percentage").innerHTML = "";
-                  return;
-            }
-            lifepoints++; 
-            document.getElementById("lifepoints").textContent = lifepoints;
-        }
-        document.getElementById("currentgambit").textContent = "Streak Sacrificed";
-        document.getElementById("empty_gambit").textContent = "(+1 Life)";
-        document.getElementById("percentage").innerHTML = "";
-    } else if (type === 'blanks') {
-        if (blanks >= GLOBAL_CAP) {
-	      enforceCaps();
-              document.getElementById("currentgambit").textContent = "Max Blanks Reached";
-              document.getElementById("empty_gambit").textContent = "...";
-              document.getElementById("percentage").innerHTML = "";
-              return;
-        }
-        blanks++; // Update global variable
-        document.getElementById("blanks").textContent = blanks;
-        document.getElementById("currentgambit").textContent = "Streak Sacrificed";
-        document.getElementById("empty_gambit").textContent = "(+1 Blank)";
-	document.getElementById("percentage").innerHTML = "";
-    }
+	if (type === 'lifepoints') {
+		if (lifepoints !== Infinity) {
+			if (lifepoints >= GLOBAL_CAP) {
+				enforceCaps();
+				document.getElementById("currentgambit").textContent = "Max HP Reached";
+				document.getElementById("empty_gambit").textContent = "...";
+				document.getElementById("percentage").innerHTML = "";
+				return;
+			}
+			lifepoints++; 
+			document.getElementById("lifepoints").textContent = lifepoints;
+		}
+		document.getElementById("currentgambit").textContent = "Streak Sacrificed";
+		document.getElementById("empty_gambit").textContent = "(+1 Life)";
+		document.getElementById("percentage").innerHTML = "";
 
-    streak -= streaknumber;
-    document.getElementById("streak").textContent = streak;
+		let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
+		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks;
 
-    enforceCaps();
+		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
+
+		let historyEntry = "Sacrifice (Life)<br>" + " L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
+
+		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
+
+	} else if (type === 'blanks') {
+		if (blanks !== Infinity) {
+			if (blanks >= GLOBAL_CAP) {
+				enforceCaps();
+				document.getElementById("currentgambit").textContent = "Max Blanks Reached";
+				document.getElementById("empty_gambit").textContent = "...";
+				document.getElementById("percentage").innerHTML = "";
+				return;
+			}
+			blanks++; 
+			document.getElementById("blanks").textContent = blanks;
+		}
+		document.getElementById("currentgambit").textContent = "Streak Sacrificed";
+		document.getElementById("empty_gambit").textContent = "(+1 Blank)";
+		document.getElementById("percentage").innerHTML = "";
+
+		let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
+		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks;
+
+		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
+
+		let historyEntry = "Sacrifice (Blanks)<br>" + " L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
+
+		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
+	}
+
+	streak -= streaknumber;
+	document.getElementById("streak").textContent = streak;
+
+	enforceCaps();
 }
 
 // Blank Related Functions
@@ -1672,19 +1903,18 @@ function sacrificeSTREAK(type) {
 		
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
 
-		let amount = blankscoreamount === 0 ? 1 : blankscoreamount; // Failsafe
 		if (blankscoreop === "/") {
-			currentscore = Math.floor(currentscore + (streak + acevalue) / amount);
+			currentscore = Math.floor(currentscore + (streak + acevalue) / blankscoreamount);
 		} else {
-			currentscore = Math.floor(currentscore + (streak + acevalue) * amount);
+			currentscore = Math.floor(currentscore + (streak + acevalue) * blankscoreamount);
 		}
 
-		lifepoints += blanklifeamount;
+		lifepoints += (blanklifeop === '-' ? -blanklifeamount : blanklifeamount);
 		if (lifepoints < 0) lifepoints = 0;
 		document.getElementById("lifepoints").textContent = lifepoints;
 
 		// Apply the Streak modifier
-		streak += blankstreakamount;
+		streak += (blankstreakop === '-' ? -blankstreakamount : blankstreakamount);
 		if (streak < 0) streak = 0;
 		document.getElementById("streak").textContent = streak;
 
@@ -1709,8 +1939,9 @@ function sacrificeSTREAK(type) {
 		document.getElementById("hand_card").style.background = "white";
 
 		const index = Math.floor(Math.random() * cards.length);
-		card = cards.splice(index, 1)[0];
+card = cards.splice(index, 1)[0];
 		value = card.value;
+        currentPoints = card.points;
 		rank = card.rank;
 		suit = card.suit;
 		color = card.color;
@@ -1789,8 +2020,9 @@ function sacrificeSTREAK(type) {
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
-		const card = cards.splice(index, 1)[0];
+const card = cards.splice(index, 1)[0];
 		const value = card.value;
+        const points = card.points;
 		const rank = card.rank;
 		const suit = card.suit;
 		const color = card.color;
@@ -1798,7 +2030,7 @@ function sacrificeSTREAK(type) {
 
 		document.getElementById("tablecard").textContent = result2;
 		document.getElementById("remaining").textContent = cards.length;
-		acevalue = card.value;
+		acevalue = points;
 
 		if (value <= 7) {
 		
@@ -1894,10 +2126,15 @@ function sacrificeSTREAK(type) {
 
 		selectCARD();
 
-		if (color === 'Special') {
-			currentscore = currentscore + value * multiplier;
-			if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
-			if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
+if (color === 'Special') {
+            let pts = currentPoints;
+            if (multiplierOp === "/") {
+                currentscore = Math.floor(currentscore + pts / multiplier);
+            } else {
+                currentscore = Math.floor(currentscore + pts * multiplier);
+            }
+			if (winstreakamount !== 0) addORremove('streak', winstreakamount, winstreakop);
+			if (winlifeamount !== 0) addORremove('lifepoints', winlifeamount, winlifeop);
 			updateTESTVALUES();
 			waitforPLAYER(true);
 		} else {
@@ -1932,10 +2169,15 @@ function sacrificeSTREAK(type) {
 
 		eval('var check = ' + element);
 
-		if (variable === check || color === 'Special') {
-			currentscore = currentscore + (streak + acevalue) * multiplier;
-			if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
-			if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
+if (variable === check || color === 'Special') {
+            let pts = (streak + acevalue);
+            if (multiplierOp === "/") {
+                currentscore = Math.floor(currentscore + pts / multiplier);
+            } else {
+                currentscore = Math.floor(currentscore + pts * multiplier);
+            }
+			if (winstreakamount !== 0) addORremove('streak', winstreakamount, winstreakop);
+			if (winlifeamount !== 0) addORremove('lifepoints', winlifeamount, winlifeop);
 			waitforPLAYER(true);
 		} else {
 			lostGAMBIT();
@@ -1957,21 +2199,31 @@ function sacrificeSTREAK(type) {
 		eval('var check = ' + element);
 
 		if (rank === 'A') {
-			SPEvalue = acevalue;
+			let SPEvalue = acevalue;
 
-			if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
-				currentscore = currentscore + (streak + acevalue) * multiplier;
-				if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
-				if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
+if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
+                let pts = (streak + acevalue);
+                if (multiplierOp === "/") {
+                    currentscore = Math.floor(currentscore + pts / multiplier);
+                } else {
+                    currentscore = Math.floor(currentscore + pts * multiplier);
+                }
+				if (winstreakamount !== 0) addORremove('streak', winstreakamount, winstreakop);
+				if (winlifeamount !== 0) addORremove('lifepoints', winlifeamount, winlifeop);
 				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
 			}
 		} else {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
-				currentscore = currentscore + (streak + acevalue) * multiplier;
-				if (winstreakamount !== 0) addORremove('streak', Math.abs(winstreakamount), winstreakamount < 0 ? '-' : '+');
-				if (winlifeamount !== 0) addORremove('lifepoints', Math.abs(winlifeamount), winlifeamount < 0 ? '-' : '+');
+                let pts = (streak + acevalue);
+                if (multiplierOp === "/") {
+                    currentscore = Math.floor(currentscore + pts / multiplier);
+                } else {
+                    currentscore = Math.floor(currentscore + pts * multiplier);
+                }
+				if (winstreakamount !== 0) addORremove('streak', winstreakamount, winstreakop);
+				if (winlifeamount !== 0) addORremove('lifepoints', winlifeamount, winlifeop);
 				waitforPLAYER(true);
 			} else {
 				lostGAMBIT();
@@ -1982,8 +2234,8 @@ function sacrificeSTREAK(type) {
 // Activates When the Gambit is Lost
 
 	function lostGAMBIT() {
-			if (lossstreakamount !== 0) addORremove('streak', Math.abs(lossstreakamount), lossstreakamount < 0 ? '-' : '+');
-			if (losslifeamount !== 0) addORremove('lifepoints', Math.abs(losslifeamount), losslifeamount < 0 ? '-' : '+');
+			if (lossstreakamount !== 0) addORremove('streak', lossstreakamount, lossstreakop);
+			if (losslifeamount !== 0) addORremove('lifepoints', losslifeamount, losslifeop);
 			waitforPLAYER(false);
 	}
 
@@ -2006,12 +2258,14 @@ function sacrificeSTREAK(type) {
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Success";
+			winloss = "Success"
 			setTimeout(resumeGAME, 1500);
 		} else {
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Fail";
+			winloss = "Fail"
 			setTimeout(resumeGAME, 1500);
 		}
 	}
@@ -2030,7 +2284,7 @@ function sacrificeSTREAK(type) {
 		});
 
 		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
-		document.getElementById("set_button").disabled = true; // Ensure set is disabled until a gambit is selected
+		document.getElementById("set_button").disabled = true;
 
 		document.getElementById("hand_card").style.borderStyle = "dotted";
 		document.getElementById("hand_card").style.background = "none";
@@ -2042,4 +2296,6 @@ function sacrificeSTREAK(type) {
 		updateDISPLAYS();
 	}
 
+
+	applyPreset();
 	reset();
