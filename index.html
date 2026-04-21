@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -26,8 +25,11 @@
 <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px;">
 	<div style="display: flex; flex-direction: row; gap: 5px;">
 		<button style="flex: 1" onclick="showELEMENTFLEX('card_options')"><span class="button_content">Cards</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('points_options')"><span class="button_content">Points</span></button>
+	</div>
+	<div style="display: flex; flex-direction: row; gap: 5px;">
 		<button style="flex: 1" onclick="showELEMENTFLEX('gambit_options')"><span class="button_content">Gambits</span></button>
-		<button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Mult.</span></button>
+		<button style="flex: 1" onclick="showELEMENTFLEX('mult_options')"><span class="button_content">Modifiers</span></button>
 	</div>
 	<div style="display: flex; flex-direction: row; gap: 5px;">
 		<button style="flex: 1" onclick="showELEMENTFLEX('stats_options')"><span class="button_content">Stats</span></button>
@@ -41,9 +43,9 @@
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label>Number Of Decks:</label>
 		<div class="stepper">
-			<button type="button" onclick="changeQty('mult-decks', -1, 1)">-</button>
+			<button type="button" onclick="changeQty('mult-decks', -1, 1)"> « </button>
 			<input type="text" id="mult-decks" value="1" readonly>
-			<button type="button" onclick="changeQty('mult-decks', 1, 1)">+</button>
+			<button type="button" onclick="changeQty('mult-decks', 1, 1)"> » </button>
 		</div>
 	</div>
 
@@ -63,26 +65,26 @@
 		<div style="display: flex; flex-direction: column;">
 
 <div class="stepper">
-    <button type="button" onclick="changeAllRanks(-1)">-</button>
+    <button type="button" onclick="changeAllRanks(-1)"> « </button>
     <input type="text" value="" readonly>
-    <button type="button" onclick="changeAllRanks(1)">+</button>
+    <button type="button" onclick="changeAllRanks(1)"> » </button>
 </div>
 
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-A', -1)">-</button><input type="text" id="mult-rank-A" value="1" readonly><button type="button" onclick="changeQty('mult-rank-A', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-2', -1)">-</button><input type="text" id="mult-rank-2" value="1" readonly><button type="button" onclick="changeQty('mult-rank-2', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-3', -1)">-</button><input type="text" id="mult-rank-3" value="1" readonly><button type="button" onclick="changeQty('mult-rank-3', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-4', -1)">-</button><input type="text" id="mult-rank-4" value="1" readonly><button type="button" onclick="changeQty('mult-rank-4', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-5', -1)">-</button><input type="text" id="mult-rank-5" value="1" readonly><button type="button" onclick="changeQty('mult-rank-5', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-6', -1)">-</button><input type="text" id="mult-rank-6" value="1" readonly><button type="button" onclick="changeQty('mult-rank-6', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-7', -1)">-</button><input type="text" id="mult-rank-7" value="1" readonly><button type="button" onclick="changeQty('mult-rank-7', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-8', -1)">-</button><input type="text" id="mult-rank-8" value="1" readonly><button type="button" onclick="changeQty('mult-rank-8', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-9', -1)">-</button><input type="text" id="mult-rank-9" value="1" readonly><button type="button" onclick="changeQty('mult-rank-9', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-10', -1)">-</button><input type="text" id="mult-rank-10" value="1" readonly><button type="button" onclick="changeQty('mult-rank-10', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J', -1)">-</button><input type="text" id="mult-rank-J" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-Q', -1)">-</button><input type="text" id="mult-rank-Q" value="1" readonly><button type="button" onclick="changeQty('mult-rank-Q', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-K', -1)">-</button><input type="text" id="mult-rank-K" value="1" readonly><button type="button" onclick="changeQty('mult-rank-K', 1)">+</button></div>
-            		<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J1', -1)">-</button><input type="text" id="mult-rank-J1" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J1', 1)">+</button></div>
-            		<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J2', -1)">-</button><input type="text" id="mult-rank-J2" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J2', 1)">+</button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-A', -1)"> « </button><input type="text" id="mult-rank-A" value="1" readonly><button type="button" onclick="changeQty('mult-rank-A', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-2', -1)"> « </button><input type="text" id="mult-rank-2" value="1" readonly><button type="button" onclick="changeQty('mult-rank-2', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-3', -1)"> « </button><input type="text" id="mult-rank-3" value="1" readonly><button type="button" onclick="changeQty('mult-rank-3', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-4', -1)"> « </button><input type="text" id="mult-rank-4" value="1" readonly><button type="button" onclick="changeQty('mult-rank-4', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-5', -1)"> « </button><input type="text" id="mult-rank-5" value="1" readonly><button type="button" onclick="changeQty('mult-rank-5', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-6', -1)"> « </button><input type="text" id="mult-rank-6" value="1" readonly><button type="button" onclick="changeQty('mult-rank-6', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-7', -1)"> « </button><input type="text" id="mult-rank-7" value="1" readonly><button type="button" onclick="changeQty('mult-rank-7', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-8', -1)"> « </button><input type="text" id="mult-rank-8" value="1" readonly><button type="button" onclick="changeQty('mult-rank-8', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-9', -1)"> « </button><input type="text" id="mult-rank-9" value="1" readonly><button type="button" onclick="changeQty('mult-rank-9', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-10', -1)"> « </button><input type="text" id="mult-rank-10" value="1" readonly><button type="button" onclick="changeQty('mult-rank-10', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J', -1)"> « </button><input type="text" id="mult-rank-J" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-Q', -1)"> « </button><input type="text" id="mult-rank-Q" value="1" readonly><button type="button" onclick="changeQty('mult-rank-Q', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-rank-K', -1)"> « </button><input type="text" id="mult-rank-K" value="1" readonly><button type="button" onclick="changeQty('mult-rank-K', 1)"> » </button></div>
+            		<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J1', -1)"> « </button><input type="text" id="mult-rank-J1" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J1', 1)"> » </button></div>
+            		<div class="stepper"><button type="button" onclick="changeQty('mult-rank-J2', -1)"> « </button><input type="text" id="mult-rank-J2" value="1" readonly><button type="button" onclick="changeQty('mult-rank-J2', 1)"> » </button></div>
 		</div>
 	</div>
 	</div>
@@ -98,19 +100,21 @@
 			<label>Diamonds (♦️)</label>
 			<label>Clubs (♣️)</label>
 			<label>Spades (♠️)</label>
+			<label>Jokers (🃏)</label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
 
 <div class="stepper">
-    <button type="button" onclick="changeAllSuits(-1)">-</button>
+    <button type="button" onclick="changeAllSuits(-1)"> « </button>
     <input type="text" value="" readonly>
-    <button type="button" onclick="changeAllSuits(1)">+</button>
+    <button type="button" onclick="changeAllSuits(1)"> » </button>
 </div>
 
-			<div class="stepper"><button type="button" onclick="changeQty('mult-hearts', -1)">-</button><input type="text" id="mult-hearts" value="1" readonly><button type="button" onclick="changeQty('mult-hearts', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-diamonds', -1)">-</button><input type="text" id="mult-diamonds" value="1" readonly><button type="button" onclick="changeQty('mult-diamonds', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-clubs', -1)">-</button><input type="text" id="mult-clubs" value="1" readonly><button type="button" onclick="changeQty('mult-clubs', 1)">+</button></div>
-			<div class="stepper"><button type="button" onclick="changeQty('mult-spades', -1)">-</button><input type="text" id="mult-spades" value="1" readonly><button type="button" onclick="changeQty('mult-spades', 1)">+</button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-hearts', -1)"> « </button><input type="text" id="mult-hearts" value="1" readonly><button type="button" onclick="changeQty('mult-hearts', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-diamonds', -1)"> « </button><input type="text" id="mult-diamonds" value="1" readonly><button type="button" onclick="changeQty('mult-diamonds', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-clubs', -1)"> « </button><input type="text" id="mult-clubs" value="1" readonly><button type="button" onclick="changeQty('mult-clubs', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-spades', -1)"> « </button><input type="text" id="mult-spades" value="1" readonly><button type="button" onclick="changeQty('mult-spades', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changeQty('mult-jokers', -1)"> « </button><input type="text" id="mult-jokers" value="1" readonly><button type="button" onclick="changeQty('mult-jokers', 1)"> » </button></div>
 		</div>
 	</div>
 	</div>
@@ -176,72 +180,81 @@
 <div id="mult_options" style="display: none; flex-direction: column;">
 
 	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
-	<label>Multipliers (General / Specific): </label>
+	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Gambit Modifiers: </label>
+        </div>
 
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label><input type="checkbox" id="use_spec_value" onchange="toggleSpecifics('value')"> Value:</label>
 		<div class="stepper">
-			<button type="button" onclick="changeMultiplier('gen_value', -1); changeAllValueMult(-1)">-</button>
+            <button type="button" onclick="toggleMultOp('gen_value')" id="gen_value_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+			<button type="button" onclick="changeMultiplier('gen_value', -1); changeAllValueMult(-1)"> « </button>
 			<input type="text" id="gen_value_mult_disp" readonly>
-			<button type="button" onclick="changeMultiplier('gen_value', 1); changeAllValueMult(1)">+</button>
+			<button type="button" onclick="changeMultiplier('gen_value', 1); changeAllValueMult(1)"> » </button>
 		</div>
         </div>
 
-	<div id="spec_value_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+	<div id="spec_value_area" style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Low: </label>
 			<label>High: </label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
 			<div class="stepper">
-				<button type="button" onclick="changeMultiplier('value_low', -1)">-</button>
+                <button type="button" onclick="toggleMultOp('value_low')" id="value_low_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+				<button type="button" onclick="changeMultiplier('value_low', -1)"> « </button>
 				<input type="text" id="value_low_mult_disp" readonly>
-				<button type="button" onclick="changeMultiplier('value_low', 1)">+</button>
+				<button type="button" onclick="changeMultiplier('value_low', 1)"> » </button>
 			</div>
 			<div class="stepper">
-				<button type="button" onclick="changeMultiplier('value_high', -1)">-</button>
+                <button type="button" onclick="toggleMultOp('value_high')" id="value_high_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+				<button type="button" onclick="changeMultiplier('value_high', -1)"> « </button>
 				<input type="text" id="value_high_mult_disp" readonly>
-				<button type="button" onclick="changeMultiplier('value_high', 1)">+</button>
+				<button type="button" onclick="changeMultiplier('value_high', 1)"> » </button>
 			</div>
 		</div>
 	</div>
 
-	<div style="display: flex; justify-content: space-between; align-items: center;">
+	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label><input type="checkbox" id="use_spec_color" onchange="toggleSpecifics('color')"> Color:</label>
 		<div class="stepper">
-			<button type="button" onclick="changeMultiplier('gen_color', -1); changeAllColorMult(-1)">-</button>
+            <button type="button" onclick="toggleMultOp('gen_color')" id="gen_color_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+			<button type="button" onclick="changeMultiplier('gen_color', -1); changeAllColorMult(-1)"> « </button>
 			<input type="text" id="gen_color_mult_disp" readonly>
-			<button type="button" onclick="changeMultiplier('gen_color', 1); changeAllColorMult(1)">+</button>
+			<button type="button" onclick="changeMultiplier('gen_color', 1); changeAllColorMult(1)"> » </button>
 		</div>
 	</div>
-        <div id="spec_color_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+        <div id="spec_color_area" style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Red: </label>
 			<label>Black: </label>
 		</div>
 		<div style="display: flex; flex-direction: column;">
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('color_red', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('color_red')" id="color_red_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('color_red', -1)"> « </button>
                  <input type="text" id="color_red_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('color_red', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('color_red', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('color_black', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('color_black')" id="color_black_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('color_black', -1)"> « </button>
                  <input type="text" id="color_black_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('color_black', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('color_black', 1)"> » </button>
             </div>
 		</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
             <label><input type="checkbox" id="use_spec_suit" onchange="toggleSpecifics('suit')"> Suit:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_suit', -1); changeAllSuitMult(-1)">-</button>
+                <button type="button" onclick="toggleMultOp('gen_suit')" id="gen_suit_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                <button type="button" onclick="changeMultiplier('gen_suit', -1); changeAllSuitMult(-1)"> « </button>
                 <input type="text" id="gen_suit_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_suit', 1); changeAllSuitMult(1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_suit', 1); changeAllSuitMult(1)"> » </button>
             </div>
         </div>
-        <div id="spec_suit_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+        <div id="spec_suit_area" style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>♥️: </label>
 			<label>♦️: </label>
@@ -250,37 +263,42 @@
 		</div>
 		<div style="display: flex; flex-direction: column;">
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('suit_hearts', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('suit_hearts')" id="suit_hearts_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('suit_hearts', -1)"> « </button>
                  <input type="text" id="suit_hearts_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('suit_hearts', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('suit_hearts', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('suit_diamonds', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('suit_diamonds')" id="suit_diamonds_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('suit_diamonds', -1)"> « </button>
                  <input type="text" id="suit_diamonds_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('suit_diamonds', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('suit_diamonds', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('suit_clubs', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('suit_clubs')" id="suit_clubs_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('suit_clubs', -1)"> « </button>
                  <input type="text" id="suit_clubs_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('suit_clubs', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('suit_clubs', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('suit_spades', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('suit_spades')" id="suit_spades_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('suit_spades', -1)"> « </button>
                  <input type="text" id="suit_spades_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('suit_spades', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('suit_spades', 1)"> » </button>
             </div>
         </div>
 		</div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
             <label><input type="checkbox" id="use_spec_value_color" onchange="toggleSpecifics('value_color')"> Value & Color:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_value_color', -1); changeAllValueColorMult(-1)">-</button>
+                <button type="button" onclick="toggleMultOp('gen_value_color')" id="gen_value_color_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                <button type="button" onclick="changeMultiplier('gen_value_color', -1); changeAllValueColorMult(-1)"> « </button>
                 <input type="text" id="gen_value_color_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_value_color', 1); changeAllValueColorMult(1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_value_color', 1); changeAllValueColorMult(1)"> » </button>
             </div>
         </div>
-        <div id="spec_value_color_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+        <div id="spec_value_color_area" style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Low Red: </label>
 			<label>High Red: </label>
@@ -289,37 +307,42 @@
 		</div>
 		<div style="display: flex; flex-direction: column;">
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_color_low_red', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_color_low_red')" id="value_color_low_red_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_color_low_red', -1)"> « </button>
                  <input type="text" id="value_color_low_red_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_color_low_red', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_color_low_red', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_color_high_red', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_color_high_red')" id="value_color_high_red_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_color_high_red', -1)"> « </button>
                  <input type="text" id="value_color_high_red_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_color_high_red', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_color_high_red', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_color_low_black', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_color_low_black')" id="value_color_low_black_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_color_low_black', -1)"> « </button>
                  <input type="text" id="value_color_low_black_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_color_low_black', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_color_low_black', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_color_high_black', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_color_high_black')" id="value_color_high_black_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_color_high_black', -1)"> « </button>
                  <input type="text" id="value_color_high_black_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_color_high_black', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_color_high_black', 1)"> » </button>
             </div>
         </div>
 		</div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
             <label><input type="checkbox" id="use_spec_value_suit" onchange="toggleSpecifics('value_suit')"> Value & Suit:</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('gen_value_suit', -1); changeAllValueSuitMult(-1)">-</button>
+                <button type="button" onclick="toggleMultOp('gen_value_suit')" id="gen_value_suit_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                <button type="button" onclick="changeMultiplier('gen_value_suit', -1); changeAllValueSuitMult(-1)"> « </button>
                 <input type="text" id="gen_value_suit_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('gen_value_suit', 1); changeAllValueSuitMult(1)">+</button>
+                <button type="button" onclick="changeMultiplier('gen_value_suit', 1); changeAllValueSuitMult(1)"> » </button>
             </div>
         </div>
-        <div id="spec_value_suit_area" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+        <div id="spec_value_suit_area" style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Low ♥️: </label>
 			<label>High ♥️: </label>
@@ -332,44 +355,52 @@
 		</div>
 		<div style="display: flex; flex-direction: column;">
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_hearts', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_low_hearts')" id="value_suit_low_hearts_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_hearts', -1)"> « </button>
                  <input type="text" id="value_suit_low_hearts_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_hearts', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_hearts', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_high_hearts', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_high_hearts')" id="value_suit_high_hearts_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_hearts', -1)"> « </button>
                  <input type="text" id="value_suit_high_hearts_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_high_hearts', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_hearts', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_low_diamonds')" id="value_suit_low_diamonds_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', -1)"> « </button>
                  <input type="text" id="value_suit_low_diamonds_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_diamonds', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_high_diamonds')" id="value_suit_high_diamonds_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', -1)"> « </button>
                  <input type="text" id="value_suit_high_diamonds_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_diamonds', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_low_clubs')" id="value_suit_low_clubs_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', -1)"> « </button>
                  <input type="text" id="value_suit_low_clubs_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_clubs', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_high_clubs', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_high_clubs')" id="value_suit_high_clubs_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_clubs', -1)"> « </button>
                  <input type="text" id="value_suit_high_clubs_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_high_clubs', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_clubs', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_low_spades')" id="value_suit_low_spades_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', -1)"> « </button>
                  <input type="text" id="value_suit_low_spades_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_low_spades', 1)"> » </button>
             </div>
             <div class="stepper">
-                 <button type="button" onclick="changeMultiplier('value_suit_high_spades', -1)">-</button>
+                 <button type="button" onclick="toggleMultOp('value_suit_high_spades')" id="value_suit_high_spades_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_spades', -1)"> « </button>
                  <input type="text" id="value_suit_high_spades_mult_disp" readonly>
-                 <button type="button" onclick="changeMultiplier('value_suit_high_spades', 1)">+</button>
+                 <button type="button" onclick="changeMultiplier('value_suit_high_spades', 1)"> » </button>
             </div>
         </div>
 		</div>
@@ -377,13 +408,52 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <label>Joker</label>
             <div class="stepper">
-                <button type="button" onclick="changeMultiplier('joker', -1)">-</button>
+                <button type="button" onclick="toggleMultOp('joker')" id="joker_op_btn" style="height: 30px; width: 30px"><span class="button_content2">*</span></button>
+                <button type="button" onclick="changeMultiplier('joker', -1)"> « </button>
                 <input type="text" id="joker_mult_disp" readonly>
-                <button type="button" onclick="changeMultiplier('joker', 1)">+</button>
+                <button type="button" onclick="changeMultiplier('joker', 1)"> » </button>
             </div>
         </div>
 	</div>
 
+</div>
+
+<div id="points_options" style="display: none; flex-direction: column;">
+	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
+
+	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
+		<label>Card Points: </label>
+        </div>
+
+	<div style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
+			<label>Change All</label>
+			<label>Ace (A)</label><label>Two (2)</label><label>Three (3)</label>
+			<label>Four (4)</label><label>Five (5)</label><label>Six (6)</label>
+			<label>Seven (7)</label><label>Eight (8)</label><label>Nine (9)</label>
+			<label>Ten (10)</label><label>Jack (J)</label><label>Queen (Q)</label><label>King (K)</label>
+            <label>Joker 1</label><label>Joker 2</label>
+		</div>
+		<div style="display: flex; flex-direction: column;">
+            <div class="stepper"><button type="button" onclick="changeAllPoints(-1)"> « </button><input type="text" value="" readonly><button type="button" onclick="changeAllPoints(1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('A', -1)"> « </button><input type="text" id="points-A" readonly><button type="button" onclick="changePoint('A', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('2', -1)"> « </button><input type="text" id="points-2" readonly><button type="button" onclick="changePoint('2', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('3', -1)"> « </button><input type="text" id="points-3" readonly><button type="button" onclick="changePoint('3', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('4', -1)"> « </button><input type="text" id="points-4" readonly><button type="button" onclick="changePoint('4', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('5', -1)"> « </button><input type="text" id="points-5" readonly><button type="button" onclick="changePoint('5', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('6', -1)"> « </button><input type="text" id="points-6" readonly><button type="button" onclick="changePoint('6', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('7', -1)"> « </button><input type="text" id="points-7" readonly><button type="button" onclick="changePoint('7', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('8', -1)"> « </button><input type="text" id="points-8" readonly><button type="button" onclick="changePoint('8', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('9', -1)"> « </button><input type="text" id="points-9" readonly><button type="button" onclick="changePoint('9', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('10', -1)"> « </button><input type="text" id="points-10" readonly><button type="button" onclick="changePoint('10', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('J', -1)"> « </button><input type="text" id="points-J" readonly><button type="button" onclick="changePoint('J', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('Q', -1)"> « </button><input type="text" id="points-Q" readonly><button type="button" onclick="changePoint('Q', 1)"> » </button></div>
+			<div class="stepper"><button type="button" onclick="changePoint('K', -1)"> « </button><input type="text" id="points-K" readonly><button type="button" onclick="changePoint('K', 1)"> » </button></div>
+            <div class="stepper"><button type="button" onclick="changePoint('J1', -1)"> « </button><input type="text" id="points-J1" readonly><button type="button" onclick="changePoint('J1', 1)"> » </button></div>
+            <div class="stepper"><button type="button" onclick="changePoint('J2', -1)"> « </button><input type="text" id="points-J2" readonly><button type="button" onclick="changePoint('J2', 1)"> » </button></div>
+		</div>
+	</div>
+	</div>
 </div>
 
 <div id="stats_options" style="display: none; flex-direction: column;">
@@ -394,39 +464,47 @@
         <label><input type="checkbox" onchange="endlessMODE();" id="endless_mode" unchecked> Endless Mode</label>
 	</div>
 
-            <div class="stepper">
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 1, '-', 1000)">-1</button>
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 10, '-', 1000)">-10</button>
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 100, '-', 1000)">-100</button>
-		<input type="text" style="width: 50px" id="currentscoretobeat" value="1" readonly>
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 100, '+', 1000)">+100</button>
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 10, '+', 1000)">+10</button>
-		<button type="button" style="width: stretch" onclick="addORremoveCHEATS('currentscoretobeat', 1, '+', 1000)">+1</button>
+            <div class="stepper" style="flex-direction: column">
+           	 <div class="stepper" style="width: stretch">
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 1, '-', 1)">-1</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 10, '-', 1)">-10</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 100, '-', 1)">-100</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 1000, '-', 1)">-1000</button>
+          	 </div>
+
+			<input type="text" style="width: stretch" id="currentscoretobeat" value="1" readonly>
+
+           	 <div class="stepper" style="width: stretch">
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 1, '+', 10000)">+1</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 10, '+', 10000)">+10</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 100, '+', 10000)">+100</button>
+			<button type="button" style="width: stretch" onclick="addORremoveOPTIONS('currentscoretobeat', 1000, '+', 10000)">+1000</button>
+         	 </div>
             </div>
 
 </div>
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label><input type="checkbox" onchange="toggleLIVES();" id="toggle_lives" checked> Lives:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('currentlifepoints', 1, '-', 1)"><span class="button_content2"> « </span></button>
 			<input type="text" id="currentlifepoints" readonly>
-			<button onclick="addORremoveCHEATS('currentlifepoints', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('currentlifepoints', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	<div style="display: flex; flex-direction: row; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
 		<label><input type="checkbox" onchange="toggleBLANKS();" id="toggle_blanks" checked> Blanks:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('currentblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('currentblanks', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="currentblanks" readonly>
-			<button onclick="addORremoveCHEATS('currentblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('currentblanks', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Streak:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('currentstreak', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('currentstreak', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="currentstreak" readonly>
-			<button onclick="addORremoveCHEATS('currentstreak', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('currentstreak', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 </div>
@@ -435,19 +513,21 @@
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Win Options:</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Life Gain:</label>
+			<label>Life Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('winlifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('winlife')" id="winlifeop_btn" style="height: 30px; width: 30px"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('winlifeamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="winlifeamount" readonly>
-				<button onclick="addORremoveCHEATS('winlifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('winlifeamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Gain:</label>
+			<label>Streak Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('winstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('winstreak')" id="winstreakop_btn" style="height: 30px; width: 30px"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('winstreakamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="winstreakamount" readonly>
-				<button onclick="addORremoveCHEATS('winstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('winstreakamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 	</div>
@@ -455,19 +535,21 @@
 	<div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<label>Loss Options:</label>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Life Loss:</label>
+			<label>Life Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('losslifeamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('losslife')" id="losslifeop_btn" style="height: 30px; width: 30px"><span class="button_content2">-</span></button>
+				<button onclick="addORremoveOPTIONS('losslifeamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="losslifeamount" readonly>
-				<button onclick="addORremoveCHEATS('losslifeamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('losslifeamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Loss:</label>
+			<label>Streak Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('lossstreak')" id="lossstreakop_btn" style="height: 30px; width: 30px"><span class="button_content2">-</span></button>
+				<button onclick="addORremoveOPTIONS('lossstreakamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="lossstreakamount" readonly>
-				<button onclick="addORremoveCHEATS('lossstreakamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('lossstreakamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 	</div>
@@ -477,17 +559,17 @@
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Number Of Tries:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<button onclick="addORremoveOPTIONS('currentlastchance', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="currentlastchance" readonly>
-				<button onclick="addORremoveCHEATS('currentlastchance', 1, '+', 20)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('currentlastchance', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Dice Type (D2-8):</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('lastchancedice', 1, '-', 8)"><span class="button_content2">-</span></button>
+				<button onclick="addORremoveOPTIONS('lastchancedice', 1, '-', 2)"><span class="button_content2"> « </span></button>
 				<input type="text" id="lastchancedice" value="4" readonly>
-				<button onclick="addORremoveCHEATS('lastchancedice', 1, '+', 8)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('lastchancedice', 1, '+', 8)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 	</div>
@@ -514,26 +596,28 @@
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Life Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('blanklifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('blanklife')" id="blanklifeop_btn" style="height: 30px; width: 30px"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('blanklifeamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="blanklifeamount" readonly>
-				<button onclick="addORremoveCHEATS('blanklifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('blanklifeamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Streak Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleGainLossOp('blankstreak')" id="blankstreakop_btn" style="height: 30px; width: 30px"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('blankstreakamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="blankstreakamount" readonly>
-				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('blankstreakamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
 			<label>Score Modifier:</label>
 			<div class="stepper">
-				<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 40px"><span class="button_content2">/</span></button>
-				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '-', 10)"><span class="button_content2">-</span></button>
+				<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 30px"><span class="button_content2">/</span></button>
+				<button onclick="addORremoveOPTIONS('blankscoreamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 				<input type="text" id="blankscoreamount" readonly>
-				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '+', 10)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveOPTIONS('blankscoreamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 			</div>
 		</div>
 	</div>
@@ -544,17 +628,17 @@
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Streak Cost (Life):</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('sacrificelife', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('sacrificelife', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="sacrificelife" readonly>
-			<button onclick="addORremoveCHEATS('sacrificelife', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('sacrificelife', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Streak Cost (Blanks):</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('sacrificeblanks', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="sacrificeblanks" readonly>
-			<button onclick="addORremoveCHEATS('sacrificeblanks', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('sacrificeblanks', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	</div>
@@ -565,17 +649,28 @@
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Life Gain / Loss:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button type="button" onclick="toggleGainLossOp('skiplife')" id="skiplifeop_btn" style="height: 30px; width: 30px"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveOPTIONS('skiplifeamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="skiplifeamount" readonly>
-			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('skiplifeamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<label>Streak Gain / Loss:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+			<button type="button" onclick="toggleGainLossOp('skipstreak')" id="skipstreakop_btn" style="height: 30px; width: 30px"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('skipstreakamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
 			<input type="text" id="skipstreakamount" readonly>
-			<button onclick="addORremoveCHEATS('skipstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveOPTIONS('skipstreakamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
+		</div>
+	</div>
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<label>Score Modifier:</label>
+		<div class="stepper">
+			<button type="button" onclick="toggleSkipOp()" id="skipscoreop_btn" style="height: 30px; width: 30px"><span class="button_content2">/</span></button>
+			<button onclick="addORremoveOPTIONS('skipscoreamount', 1, '-', 0)"><span class="button_content2"> « </span></button>
+			<input type="text" id="skipscoreamount" readonly>
+			<button onclick="addORremoveOPTIONS('skipscoreamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
 		</div>
 	</div>
 	</div>
