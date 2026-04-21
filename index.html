@@ -423,10 +423,10 @@
 	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
 
 	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid white; padding-bottom: 10px;">
-		<label>Card Points: </label>
-        </div>
+		<label><input type="checkbox" id="use_custom_points" onchange="toggleSpecificCards('points')"> Custom Card Points</label>
+    </div>
 
-	<div style="display: flex; justify-content: space-between; align-items: center; flex-direction: row">
+	<div id="custom_points_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row">
 		<div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
 			<label>Change All</label>
 			<label>Ace (A)</label><label>Two (2)</label><label>Three (3)</label>
