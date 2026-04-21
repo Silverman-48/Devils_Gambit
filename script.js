@@ -792,6 +792,8 @@ const presets = [
             "useSpec_value_color": false, "gen_value_color": 0,
             "useSpec_value_suit": false,  "gen_value_suit": 0,
 
+			"joker": 5,
+
             "lifepoints": 1, "blanks": 0, "streak": 0, "lastchance": 0, "lastchancedice": 4,
 
             "winlifeamount": 0, "winstreakamount": 0,
