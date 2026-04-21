@@ -472,12 +472,23 @@
 		</div>
 	</div>
 
-	<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between;">
-		<label>Last Chance D4:</label>
-		<div class="stepper">
-			<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
-			<input type="text" id="currentlastchance" readonly>
-			<button onclick="addORremoveCHEATS('currentlastchance', 1, '+', 20)"><span class="button_content2">+</span></button>
+	<div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
+		<label>Last Chance Dice:</label>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Number Of Tries:</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('currentlastchance', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="currentlastchance" readonly>
+				<button onclick="addORremoveCHEATS('currentlastchance', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Dice Type (D2-8):</label>
+			<div class="stepper">
+				<button onclick="addORremoveCHEATS('lastchancedice', 1, '-', 8)"><span class="button_content2">-</span></button>
+				<input type="text" id="lastchancedice" value="4" readonly>
+				<button onclick="addORremoveCHEATS('lastchancedice', 1, '+', 8)"><span class="button_content2">+</span></button>
+			</div>
 		</div>
 	</div>
 
@@ -501,23 +512,28 @@
 		<label>Blank Options:</label>
 
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Score Modifier:</label>
-			<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 40px"><span class="button_content2">/</span></button>
-		</div>
-		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Modifier Amount:</label>
+			<label>Life Gain / Loss:</label>
 			<div class="stepper">
-				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '-', 10)"><span class="button_content2">-</span></button>
-				<input type="text" id="blankscoreamount" readonly>
-				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '+', 10)"><span class="button_content2">+</span></button>
+				<button onclick="addORremoveCHEATS('blanklifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
+				<input type="text" id="blanklifeamount" readonly>
+				<button onclick="addORremoveCHEATS('blanklifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 			</div>
 		</div>
 		<div style="display: flex; justify-content: space-between; align-items: center;">
-			<label>Streak Gain:</label>
+			<label>Streak Gain / Loss:</label>
 			<div class="stepper">
 				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 				<input type="text" id="blankstreakamount" readonly>
 				<button onclick="addORremoveCHEATS('blankstreakamount', 1, '+', 20)"><span class="button_content2">+</span></button>
+			</div>
+		</div>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<label>Score Modifier:</label>
+			<div class="stepper">
+				<button type="button" onclick="toggleBlankOp()" id="blankscoreop_btn" style="height: 30px; width: 40px"><span class="button_content2">/</span></button>
+				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '-', 10)"><span class="button_content2">-</span></button>
+				<input type="text" id="blankscoreamount" readonly>
+				<button onclick="addORremoveCHEATS('blankscoreamount', 1, '+', 10)"><span class="button_content2">+</span></button>
 			</div>
 		</div>
 	</div>
@@ -547,11 +563,11 @@
 	<label>Skip Options:</label>
 
 	<div style="display: flex; justify-content: space-between; align-items: center;">
-		<label>Life Loss:</label>
+		<label>Life Gain / Loss:</label>
 		<div class="stepper">
-			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '-', 0)"><span class="button_content2">-</span></button>
+			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '-', 20)"><span class="button_content2">-</span></button>
 			<input type="text" id="skiplifeamount" readonly>
-			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '+', 0)"><span class="button_content2">+</span></button>
+			<button onclick="addORremoveCHEATS('skiplifeamount', 1, '+', 20)"><span class="button_content2">+</span></button>
 		</div>
 	</div>
 	<div style="display: flex; justify-content: space-between; align-items: center;">
@@ -674,13 +690,18 @@
 	</div>
 
 		<div id="last_chance" class="button_divisions" style="display: none">
-			<span class="info">Last Chance D4:</span>
+			<span class="info" id="last_chance_label">Last Chance D4:</span>
 			<br>
-			<button class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
-			<button class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
-			<button class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
-			<button class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
-			<br>
+			<div style="display: flex; flex-direction: row; gap: 5px; justify-content: center;">
+				<button id="lc_btn_1" class="special_button" onclick="lastCHANCE('1');"><span class="button_content">1</span></button>
+				<button id="lc_btn_2" class="special_button" onclick="lastCHANCE('2');"><span class="button_content">2</span></button>
+				<button id="lc_btn_3" class="special_button" onclick="lastCHANCE('3');"><span class="button_content">3</span></button>
+				<button id="lc_btn_4" class="special_button" onclick="lastCHANCE('4');"><span class="button_content">4</span></button>
+				<button id="lc_btn_5" class="special_button" style="display: none;" onclick="lastCHANCE('5');"><span class="button_content">5</span></button>
+				<button id="lc_btn_6" class="special_button" style="display: none;" onclick="lastCHANCE('6');"><span class="button_content">6</span></button>
+				<button id="lc_btn_7" class="special_button" style="display: none;" onclick="lastCHANCE('7');"><span class="button_content">7</span></button>
+				<button id="lc_btn_8" class="special_button" style="display: none;" onclick="lastCHANCE('8');"><span class="button_content">8</span></button>
+			</div>
 			<span class="info">Output: <span id="output">0</span></span>
 		</div>
 
