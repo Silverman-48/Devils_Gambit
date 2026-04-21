@@ -37,6 +37,7 @@ let variable = "None";
 	let result2 = "";
 	let valuemodifiertable = 0;
 	let valuemodifierhand = 0;
+	let usedstreak = 0;
 
     let cardPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
 	let winloss = "";
@@ -269,11 +270,13 @@ const quantities = ["mult-decks", "mult-rank-A", "mult-rank-2", "mult-rank-3", "
         if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(0, cfg[id]) : 1;
     });
 
-    // Reset UI Toggles to Preset Configuration
+// Reset UI Toggles to Preset Configuration
     document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
     document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
+    document.getElementById("use_custom_points").checked = cfg["use_custom_points"] || false;
     toggleSpecificCards('ranks');
     toggleSpecificCards('suits');
+    toggleSpecificCards('points');
 
 const defaultMults = {
     // Gen toggles and modifiers
@@ -1311,6 +1314,12 @@ function generateCustomDeck() {
     const decks = parseInt(document.getElementById('mult-decks').value) || 1;
     const useCustomSuits = document.getElementById('use_custom_suits').checked;
     const useCustomRanks = document.getElementById('use_custom_ranks').checked;
+    const useCustomPoints = document.getElementById('use_custom_points').checked; // <--- Add this
+    
+    // Fallback constants if custom points are disabled
+    const defaultPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
+
+    // 1. Compile Suits
 
     // 1. Compile Suits
     const selectedSuits = [];
@@ -1333,7 +1342,8 @@ function generateCustomDeck() {
     const baseCombinations = [];
     selectedSuits.forEach(({ suit, color }) => {
         selectedRanks.forEach(({ rank, value }) => {
-            baseCombinations.push({ rank, value, points: cardPoints[rank], suit, color });
+            // Update the line below:
+            baseCombinations.push({ rank, value, points: useCustomPoints ? cardPoints[rank] : defaultPoints[rank], suit, color });
         });
     });
 
@@ -1351,13 +1361,11 @@ function generateCustomDeck() {
     const suitJokerMult = useCustomSuits ? Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 0, 0), 10) : 1;
 
     // Push Joker 1 (Index 0 in standardExtras array)
-    if (standardExtras.length > 0) {
-        for (let i = 0; i < (j1Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[0], points: cardPoints['J1']});
+if (standardExtras.length > 0) {
+        for (let i = 0; i < (j1Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[0], points: useCustomPoints ? cardPoints['J1'] : 20});
     }
-    
-    // Push Joker 2 (Index 1 in standardExtras array)
     if (standardExtras.length > 1) {
-        for (let i = 0; i < (j2Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[1], points: cardPoints['J2']});
+        for (let i = 0; i < (j2Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[1], points: useCustomPoints ? cardPoints['J2'] : 20});
     }
 
     // 5. Update the Global Card Counters via Direct Filtering (100% Accurate)
@@ -1419,6 +1427,8 @@ function generateCustomDeck() {
 			if (lifepoints < 0) lifepoints = 0;
 			document.getElementById("lifepoints").textContent = lifepoints;
 		}
+
+		usedstreak = streak;
 
 		if (skipscoreop === "/") {
 			currentscore = Math.floor(currentscore + (streak + acevalue) / skipscoreamount);
@@ -1569,7 +1579,7 @@ function showELEMENTFLEX(elementId) {
 
 // Update the Score, Card History and Score Displays
 
-	function updateDISPLAYS() {
+function updateDISPLAYS() {
 		document.getElementById("score").textContent = currentscore;
 		let gambithistoryvalue = "";
 		let gambithistoryvariable = "";
@@ -1592,37 +1602,45 @@ function showELEMENTFLEX(elementId) {
 
 		let lifeDisplay = (lifepoints === Infinity) ? "∞" : lifepoints;
 		let blanksDisplay = (blanks === Infinity) ? "∞" : blanks;
-
 		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
 
-let multipliersymbol = " x ";
+		// 1. Set up initial variables
+		let multipliersymbol = " x ";
+		if (variable === "Special") {
+			acevalue = currentPoints; 
+			gambithistoryvariable = "Joker";
+		}
 
-		if (variable === "Special") {acevalue = currentPoints; gambithistoryvariable = "Joker"}
-
-		if (winloss === "Fail") acevalue = 0;
-
+		// 2. Determine Multiplier and Win/Loss labels FIRST
 		if (gambithistoryvariable === 'Blank') {
-			winloss = "";
+			winloss = ""; // No (Success) or (Fail) text for Blanks
 			multiplier = blankscoreamount;
-			if (blankscoreop === "*") {
-				multipliersymbol = " x ";
-			} else {
-				multipliersymbol = " / ";
-			}
+			multipliersymbol = (blankscoreop === "*") ? " x " : " / ";
 		} else if (gambithistoryvariable === 'Skip') {
-			winloss = "";
+			winloss = ""; // No (Success) or (Fail) text for Skips
 			multiplier = skipscoreamount;
-			if (skipscoreop === "*") {
-				multipliersymbol = " x ";
-			} else {
-				multipliersymbol = " / ";
-			}
+			multipliersymbol = (skipscoreop === "*") ? " x " : " / ";
 		} else {
-            winloss = "(" + winloss + ")";
-            multipliersymbol = multiplierOp === "*" ? " x " : " / ";
-        }
+			// This is a standard Gambit (Success or Fail)
+			multipliersymbol = (multiplierOp === "*") ? " x " : " / ";
+			// Store the raw status to check for "Fail" later, then wrap it for display
+			var status = winloss; 
+			winloss = " (" + winloss + ")";
+		}
 
-		let historyEntry = gambithistoryvalue + gambithistoryvariable + "<br>" + winloss + " (" + acevalue + multipliersymbol + multiplier + ")" + 
+		// 3. NOW build the score calculation string using the finalized variables
+		let scorecalc = "";
+		if (status === "Fail") {
+			acevalue = 0;
+			usedstreak = 0;
+			scorecalc = ""; // Keep empty on failure as requested
+		} else {
+			// Only show the math for Success, Blank, or Skip
+			scorecalc = "<br>((" + acevalue + " + " + usedstreak + ")" + multipliersymbol + multiplier + ")";
+		}
+
+		// 4. Combine into history entry
+		let historyEntry = gambithistoryvalue + gambithistoryvariable + winloss + scorecalc + 
 				"<br>T: " + result2 + " H: " + result + 
 				"<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + "<br>Score: " + currentscore + spacing;
 
@@ -1821,6 +1839,9 @@ function sacrificeSTREAK(type) {
 		return;
 	}
 
+	streak -= streaknumber;
+	document.getElementById("streak").textContent = streak;
+
 	if (type === 'lifepoints') {
 		if (lifepoints !== Infinity) {
 			if (lifepoints >= GLOBAL_CAP) {
@@ -1842,7 +1863,7 @@ function sacrificeSTREAK(type) {
 
 		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
 
-		let historyEntry = "Sacrifice (Life)<br>" + " L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
+		let historyEntry = "Streak Sacrifice (-" + streaknumber + ")<br>" + "(+1 Life)" + "<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
 
 		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
 
@@ -1867,13 +1888,10 @@ function sacrificeSTREAK(type) {
 
 		let spacing = (document.getElementById("card_history").innerHTML !== "") ? "<br><br>" : "<br>";
 
-		let historyEntry = "Sacrifice (Blanks)<br>" + " L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
+		let historyEntry = "Streak Sacrifice (-" + streaknumber + ")<br>" + "(+1 Blank)" + "<br>L:" + lifeDisplay + " B:" + blanksDisplay + " S:" + streak + spacing;
 
 		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
 	}
-
-	streak -= streaknumber;
-	document.getElementById("streak").textContent = streak;
 
 	enforceCaps();
 }
@@ -1902,6 +1920,8 @@ function sacrificeSTREAK(type) {
 		waitforPLAYER(true);
 		
 		document.getElementById("currentgambit").innerHTML = "Blank Used";
+
+		usedstreak = streak;
 
 		if (blankscoreop === "/") {
 			currentscore = Math.floor(currentscore + (streak + acevalue) / blankscoreamount);
@@ -2127,6 +2147,7 @@ const card = cards.splice(index, 1)[0];
 		selectCARD();
 
 if (color === 'Special') {
+     usedstreak = 0;
             let pts = currentPoints;
             if (multiplierOp === "/") {
                 currentscore = Math.floor(currentscore + pts / multiplier);
@@ -2170,6 +2191,7 @@ if (color === 'Special') {
 		eval('var check = ' + element);
 
 if (variable === check || color === 'Special') {
+            usedstreak = streak;
             let pts = (streak + acevalue);
             if (multiplierOp === "/") {
                 currentscore = Math.floor(currentscore + pts / multiplier);
@@ -2202,6 +2224,7 @@ if (variable === check || color === 'Special') {
 			let SPEvalue = acevalue;
 
 if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
+                usedstreak = streak;
                 let pts = (streak + acevalue);
                 if (multiplierOp === "/") {
                     currentscore = Math.floor(currentscore + pts / multiplier);
@@ -2216,6 +2239,7 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 			}
 		} else {
 			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
+       usedstreak = streak;
                 let pts = (streak + acevalue);
                 if (multiplierOp === "/") {
                     currentscore = Math.floor(currentscore + pts / multiplier);
