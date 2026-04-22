@@ -38,274 +38,63 @@
             <button type="button" onclick="cycleSection(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
         </div>
 
+            
         <div id="card_options" style="display: none; flex-direction: column;">
+            <div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
+                <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
+                    <label><input type="checkbox" id="use_custom_deck" unchecked> Toggle Custom Deck</label>
+                    <div class="stepper">
+                        <button type="button" onclick="showELEMENT('custom_deck_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
+                    </div>
+                </div>
 
-            <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
-<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%;">
-    <label><input type="checkbox" id="use_custom_ranks" unchecked> Custom Ranks</label>
-    <div class="stepper">
-        <button type="button" onclick="showELEMENT('custom_ranks_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
-    </div>
-</div>
-
-                <div id="custom_ranks_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row">
-                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
-                        <label>Change All</label>
-                        <label>Ace (A)</label><label>Two (2)</label><label>Three (3)</label>
-                        <label>Four (4)</label><label>Five (5)</label><label>Six (6)</label>
-                        <label>Seven (7)</label><label>Eight (8)</label><label>Nine (9)</label>
-                        <label>Ten (10)</label><label>Jack (J)</label><label>Queen (Q)</label><label>King (K)</label>
-                        <label>Joker 1</label><label>Joker 2</label>
+                <div id="custom_deck_area" style="display: none; flex-direction: column; width: 100%; margin-top: 5px">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
+                        <button type="button" onclick="cycleDeckSuit(-1)" style="height: 30px; width: 40px"><span class="button_content"> « </span></button>
+                        <div style="text-align: center;">
+                            <strong style="text-align: center" id="deck_suit_display">Hearts (♥️)</strong>
+                        </div>
+                        <button type="button" onclick="cycleDeckSuit(1)" style="height: 30px; width: 40px"><span class="button_content"> » </span></button>
                     </div>
 
-                    <div style="display: flex; flex-direction: column;">
-                        <div class="stepper">
-                            <button type="button" onclick="changeAllRanks(-1)"> « </button>
-                            <input type="text" value="" readonly>
-                            <button type="button" onclick="changeAllRanks(1)"> » </button>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; gap: 5px">
+
+			<div style="display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 10px">
+			<span style="text-align: left">Card</span>
+                        <span style="flex: 1; text-align: left"><strong>ALL</strong></span>
+			</div>
+
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-right: 5px">
+			<span style="text-align: center;">Quantity</span>
+                        <div class="stepper" style="justify-content: center;">
+                            <button type="button" onclick="changeSuitAll('qty', -1)"> « </button>
+                            <span style="width: 30px; display: inline-block; text-align: center;"></span>
+                            <button type="button" onclick="changeSuitAll('qty', 1)"> » </button>
                         </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-A', -1)"> « </button>
-                            <input type="text" id="mult-rank-A" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-A', 1)"> » </button>
+			</div>
+
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+			<span style="text-align: center">Points</span>
+                        <div class="stepper" style="justify-content: flex-end;">
+                            <button type="button" onclick="changeSuitAll('pts', -1)"> « </button>
+                            <span style="width: 30px; display: inline-block; text-align: center;"></span>
+                            <button type="button" onclick="changeSuitAll('pts', 1)"> » </button>
                         </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-2', -1)"> « </button>
-                            <input type="text" id="mult-rank-2" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-2', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-3', -1)"> « </button>
-                            <input type="text" id="mult-rank-3" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-3', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-4', -1)"> « </button>
-                            <input type="text" id="mult-rank-4" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-4', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-5', -1)"> « </button>
-                            <input type="text" id="mult-rank-5" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-5', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-6', -1)"> « </button>
-                            <input type="text" id="mult-rank-6" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-6', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-7', -1)"> « </button>
-                            <input type="text" id="mult-rank-7" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-7', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-8', -1)"> « </button>
-                            <input type="text" id="mult-rank-8" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-8', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-9', -1)"> « </button>
-                            <input type="text" id="mult-rank-9" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-9', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-10', -1)"> « </button>
-                            <input type="text" id="mult-rank-10" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-10', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-J', -1)"> « </button>
-                            <input type="text" id="mult-rank-J" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-J', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-Q', -1)"> « </button>
-                            <input type="text" id="mult-rank-Q" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-Q', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-K', -1)"> « </button>
-                            <input type="text" id="mult-rank-K" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-K', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-J1', -1)"> « </button>
-                            <input type="text" id="mult-rank-J1" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-J1', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-rank-J2', -1)"> « </button>
-                            <input type="text" id="mult-rank-J2" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-rank-J2', 1)"> » </button>
-                        </div>
+			</div>
+
                     </div>
+                    
+                    <div id="deck_cards_container" style="display: flex; flex-direction: column; gap: 5px;">
+                        </div>
                 </div>
             </div>
-
-            <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between;">
-<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%;">
-    <label><input type="checkbox" id="use_custom_suits" unchecked> Custom Suits</label>
-    <div class="stepper">
-        <button type="button" onclick="showELEMENT('custom_suits_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
-    </div>
-</div>
-            
-                <div id="custom_suits_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row; margin-top: 5px">
-                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
-                        <label>Change All</label>
-                        <label>Hearts (♥️)</label>
-                        <label>Diamonds (♦️)</label>
-                        <label>Clubs (♣️)</label>
-                        <label>Spades (♠️)</label>
-                        <label>Jokers (🃏)</label>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column;">
-                        <div class="stepper">
-                            <button type="button" onclick="changeAllSuits(-1)"> « </button>
-                            <input type="text" value="" readonly>
-                            <button type="button" onclick="changeAllSuits(1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-hearts', -1)"> « </button>
-                            <input type="text" id="mult-hearts" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-hearts', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-diamonds', -1)"> « </button>
-                            <input type="text" id="mult-diamonds" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-diamonds', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-clubs', -1)"> « </button>
-                            <input type="text" id="mult-clubs" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-clubs', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-spades', -1)"> « </button>
-                            <input type="text" id="mult-spades" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-spades', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changeQty('mult-jokers', -1)"> « </button>
-                            <input type="text" id="mult-jokers" value="1" readonly>
-                            <button type="button" onclick="changeQty('mult-jokers', 1)"> » </button>
-                        </div>
-                    </div>
-                </div>
-             </div>
-
-                <div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
-<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%;">
-    <label><input type="checkbox" id="use_custom_points"> Custom Card Points</label>
-    <div class="stepper">
-        <button type="button" onclick="showELEMENT('custom_points_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
-    </div>
-</div>
-
-                <div id="custom_points_area" style="display: none; justify-content: space-between; align-items: center; flex-direction: row">
-                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1">
-                        <label>Change All</label>
-                        <label>Ace (A)</label><label>Two (2)</label><label>Three (3)</label>
-                        <label>Four (4)</label><label>Five (5)</label><label>Six (6)</label>
-                        <label>Seven (7)</label><label>Eight (8)</label><label>Nine (9)</label>
-                        <label>Ten (10)</label><label>Jack (J)</label><label>Queen (Q)</label><label>King (K)</label>
-                        <label>Joker 1</label><label>Joker 2</label>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column;">
-                        <div class="stepper">
-                            <button type="button" onclick="changeAllPoints(-1)"> « </button>
-                            <input type="text" value="" readonly>
-                            <button type="button" onclick="changeAllPoints(1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('A', -1)"> « </button>
-                            <input type="text" id="points-A" readonly>
-                            <button type="button" onclick="changePoint('A', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('2', -1)"> « </button>
-                            <input type="text" id="points-2" readonly>
-                            <button type="button" onclick="changePoint('2', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('3', -1)"> « </button>
-                            <input type="text" id="points-3" readonly>
-                            <button type="button" onclick="changePoint('3', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('4', -1)"> « </button>
-                            <input type="text" id="points-4" readonly>
-                            <button type="button" onclick="changePoint('4', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('5', -1)"> « </button>
-                            <input type="text" id="points-5" readonly>
-                            <button type="button" onclick="changePoint('5', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('6', -1)"> « </button>
-                            <input type="text" id="points-6" readonly>
-                            <button type="button" onclick="changePoint('6', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('7', -1)"> « </button>
-                            <input type="text" id="points-7" readonly>
-                            <button type="button" onclick="changePoint('7', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('8', -1)"> « </button>
-                            <input type="text" id="points-8" readonly>
-                            <button type="button" onclick="changePoint('8', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('9', -1)"> « </button>
-                            <input type="text" id="points-9" readonly>
-                            <button type="button" onclick="changePoint('9', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('10', -1)"> « </button>
-                            <input type="text" id="points-10" readonly>
-                            <button type="button" onclick="changePoint('10', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('J', -1)"> « </button>
-                            <input type="text" id="points-J" readonly>
-                            <button type="button" onclick="changePoint('J', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('Q', -1)"> « </button>
-                            <input type="text" id="points-Q" readonly>
-                            <button type="button" onclick="changePoint('Q', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('K', -1)"> « </button>
-                            <input type="text" id="points-K" readonly>
-                            <button type="button" onclick="changePoint('K', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('J1', -1)"> « </button>
-                            <input type="text" id="points-J1" readonly>
-                            <button type="button" onclick="changePoint('J1', 1)"> » </button>
-                        </div>
-                        <div class="stepper">
-                            <button type="button" onclick="changePoint('J2', -1)"> « </button>
-                            <input type="text" id="points-J2" readonly>
-                            <button type="button" onclick="changePoint('J2', 1)"> » </button>
-                        </div>
-                    </div>
-                </div>
-             </div>
-
         </div>
 
         <div id="gambit_mult_options" style="display: none; flex-direction: column;">
 
             <div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px;">
 		<div style="display: flex; flex-direction: row; justify-content: space-between">
-                <label><input type="checkbox" id="use_custom_gambits"> Custom Types: </label>
+                <label><input type="checkbox" id="toggle_all_gambits" onchange="toggleAll('gambit')" checked> Toggle All Gambits</label>
                 <div class="stepper">
                     <button type="button" onclick="showELEMENT('gambit_options', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
                 </div>
@@ -313,7 +102,6 @@
 
             <div id="gambit_options" style="display: none; flex-direction: column; margin-top: 5px">
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label><input type="checkbox" id="toggle_all_gambits" onchange="toggleAll('gambit')" checked> Toggle All Gambits</label>
                     <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
                         <label><input type="checkbox" id="use_gambit_Low" onchange="setCURRENTGAMBIT()" checked> Low</label>
                         <label><input type="checkbox" id="use_gambit_High" onchange="setCURRENTGAMBIT()" checked> High</label>
@@ -366,7 +154,7 @@
             </div>
 
             <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between;">
-                <label><input type="checkbox" id="use_custom_modifiers"> Custom Modifiers: </label>
+                <label>Custom Modifiers: </label>
                 <div class="stepper">
                     <button type="button" onclick="showELEMENT('mult_options', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
                 </div>
@@ -734,20 +522,17 @@
 
         <div id="actions_options" style="display: none; flex-direction: column;">
 
-            <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px;">
-                <label><input type="checkbox" id="toggle_all_actions" onchange="toggleAll('action')" checked> Toggle Actions:</label>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                    <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Blank</label>
-                    <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Skip</label>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                    <label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Sac. Life</label>
-                    <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Sac. Blank</label>
-                </div>
+            <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between">
+                <label><input type="checkbox" id="toggle_all_actions" onchange="toggleAll('action')" checked> Toggle All Actions</label>
+
+                    <div class="stepper">
+                        <button type="button" onclick="showELEMENT('custom_actions_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
+                    </div>
             </div>
 
+	    <div id="custom_actions_area" style="display: none; flex-direction: column; margin-top: 10px; border-top: 2px solid white; padding-top: 10px">
             <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px;">
-                <label>Blank Options:</label>
+                <label><input type="checkbox" id="use_action_Blank" onchange="toggleActionBtn('Blank')" checked> Toggle Blanks</label>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <label>Life Gain / Loss:</label>
@@ -779,10 +564,10 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px;">
-                <label>Sacrifice Options:</label>
+                <label>Sacrifice Toggle / Cost:</label>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <label>Streak Cost (Life):</label>
+                    <label><input type="checkbox" id="use_action_SacrificeLife" onchange="toggleActionBtn('SacrificeLife')" checked> Streak (Life):</label>
                     <div class="stepper">
                         <button onclick="addORremoveOPTIONS('sacrificelife', 1, '-', 0)"><span class="button_content2"> « </span></button>
                         <input type="text" id="sacrificelife" readonly>
@@ -790,7 +575,7 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <label>Streak Cost (Blanks):</label>
+                    <label><input type="checkbox" id="use_action_SacrificeBlank" onchange="toggleActionBtn('SacrificeBlank')" checked> Streak (Blanks):</label>
                     <div class="stepper">
                         <button onclick="addORremoveOPTIONS('sacrificeblanks', 1, '-', 0)"><span class="button_content2"> « </span></button>
                         <input type="text" id="sacrificeblanks" readonly>
@@ -800,7 +585,7 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label>Skip Options:</label>
+                <label><input type="checkbox" id="use_action_Skip" onchange="toggleActionBtn('Skip')" checked> Toggle Skip:</label>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <label>Life Gain / Loss:</label>
@@ -829,6 +614,7 @@
                         <button onclick="addORremoveOPTIONS('skipscoreamount', 1, '+', 20)"><span class="button_content2"> » </span></button>
                     </div>
                 </div>
+            </div>
             </div>
 
         </div>
