@@ -109,6 +109,103 @@ let mults = {
 	const GLOBAL_CAP = 20;
 	let scorechangeamount = '100';
 
+// --- NEW 54 CARD LOGIC DATA ---
+const suitsList = ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Jokers'];
+const standardCardRanks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const defaultCardPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
+
+let customDeckData = {};
+suitsList.forEach(suit => {
+    customDeckData[suit] = {};
+    if (suit === 'Jokers') {
+        customDeckData[suit]['J1'] = { qty: 1, pts: 20 };
+        customDeckData[suit]['J2'] = { qty: 1, pts: 20 };
+    } else {
+        standardCardRanks.forEach(rank => {
+            customDeckData[suit][rank] = { qty: 1, pts: defaultCardPoints[rank] };
+        });
+    }
+});
+
+let currentDeckSuitIndex = 0;
+
+function cycleDeckSuit(dir) {
+    currentDeckSuitIndex += dir;
+    if (currentDeckSuitIndex < 0) currentDeckSuitIndex = suitsList.length - 1;
+    if (currentDeckSuitIndex >= suitsList.length) currentDeckSuitIndex = 0;
+    renderDeckSuitMenu();
+}
+
+function renderDeckSuitMenu() {
+    const suit = suitsList[currentDeckSuitIndex];
+    const displayNames = {
+        'Hearts': 'Hearts (♥️)', 'Diamonds': 'Diamonds (♦️)', 
+        'Clubs': 'Clubs (♣️)', 'Spades': 'Spades (♠️)', 'Jokers': 'Jokers (🃏)'
+    };
+    document.getElementById('deck_suit_display').innerText = displayNames[suit];
+    
+    const container = document.getElementById('deck_cards_container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const cards = suit === 'Jokers' ? ['J1', 'J2'] : standardCardRanks;
+
+    cards.forEach(rank => {
+        const data = customDeckData[suit][rank];
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.alignItems = 'center';
+        
+        row.innerHTML = `
+            <label style="flex: 1; text-align: left">${rank}</label>
+            <div class="stepper" style="flex: 1; justify-content: center;">
+                <button type="button" onclick="changeCardData('${suit}', '${rank}', 'qty', -1)"> « </button>
+                <input type="text" value="${data.qty}" readonly style="width: 25px;">
+                <button type="button" onclick="changeCardData('${suit}', '${rank}', 'qty', 1)"> » </button>
+            </div>
+            <div class="stepper" style="flex: 1; justify-content: flex-end;">
+                <button type="button" onclick="changeCardData('${suit}', '${rank}', 'pts', -1)"> « </button>
+                <input type="text" value="${data.pts}" readonly style="width: 25px;">
+                <button type="button" onclick="changeCardData('${suit}', '${rank}', 'pts', 1)"> » </button>
+            </div>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function changeCardData(suit, rank, type, delta) {
+    let val = customDeckData[suit][rank][type];
+    val += delta;
+    if (type === 'qty') {
+        val = Math.max(0, Math.min(10, val));
+    } else {
+        val = Math.max(0, Math.min(20, val));
+    }
+    customDeckData[suit][rank][type] = val;
+    renderDeckSuitMenu();
+}
+
+function changeSuitAll(type, delta) {
+    const suit = suitsList[currentDeckSuitIndex];
+    const cards = suit === 'Jokers' ? ['J1', 'J2'] : standardCardRanks;
+
+    cards.forEach(rank => {
+        let val = customDeckData[suit][rank][type];
+        val += delta;
+        
+        if (type === 'qty') {
+            val = Math.max(0, Math.min(10, val));
+        } else {
+            val = Math.max(0, Math.min(20, val));
+        }
+        
+        customDeckData[suit][rank][type] = val;
+    });
+    
+    renderDeckSuitMenu();
+}
+
 const gambitNames = [
     'Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special',
     'Low_Red', 'High_Red', 'Low_Black', 'High_Black',
@@ -264,18 +361,36 @@ function applyPreset() {
 
     document.getElementById('preset-name').textContent = `${preset.name}`;
 
-    // Apply specific Stepper values for Decks/Cards
-const quantities = ["mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2", "mult-jokers"];
-    quantities.forEach(id => {
-        if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(0, cfg[id]) : 1;
-    });
 
-// Reset UI Toggles to Preset Configuration
-document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
-document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
-document.getElementById("use_custom_points").checked = cfg["use_custom_points"] || false;
-document.getElementById("use_custom_gambits").checked = cfg["use_custom_gambits"] || false;
-document.getElementById("use_custom_modifiers").checked = cfg["use_custom_modifiers"] || false;
+// (Inside applyPreset() where you used to apply Custom Ranks/Points UI changes)
+    
+    // Set Main Toggle
+    document.getElementById("use_custom_deck").checked = cfg["use_custom_ranks"] || cfg["use_custom_suits"] || cfg["use_custom_points"] || cfg["use_custom_deck"] || false;
+
+    // Build the precise 54-card configuration based on old configs or defaults
+    suitsList.forEach(suit => {
+        const cards = suit === 'Jokers' ? ['J1', 'J2'] : standardCardRanks;
+        cards.forEach(rank => {
+            const presetKeyQty = `deck-${suit}-${rank}-qty`;
+            const presetKeyPts = `deck-${suit}-${rank}-pts`;
+            
+            let fallbackQty = 1;
+            // Legacy conversion: Multiply the rank mult by the suit mult to mimic old behavior
+            if (cfg["use_custom_ranks"] !== undefined || cfg["use_custom_suits"] !== undefined) {
+                let rMult = rank.startsWith('J') ? cfg[`mult-rank-${rank}`] : cfg[`mult-rank-${rank}`];
+                let sMult = suit === 'Jokers' ? cfg['mult-jokers'] : cfg[`mult-${suit.toLowerCase()}`];
+                fallbackQty = (rMult !== undefined ? rMult : 1) * (sMult !== undefined ? sMult : 1);
+            }
+
+            let fallbackPts = cfg[`points-${rank}`] !== undefined ? cfg[`points-${rank}`] : defaultCardPoints[rank];
+
+            customDeckData[suit][rank].qty = cfg[presetKeyQty] !== undefined ? cfg[presetKeyQty] : fallbackQty;
+            customDeckData[suit][rank].pts = cfg[presetKeyPts] !== undefined ? cfg[presetKeyPts] : fallbackPts;
+        });
+    });
+    
+    // Refresh UI
+    renderDeckSuitMenu();
 
 const defaultMults = {
     // Gen toggles and modifiers
@@ -351,21 +466,6 @@ Object.keys(mults).forEach(key => {
                 inputEl.value = mults[key];
             }
         }
-    });
-
-// Populate Points
-    const defaultPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
-    const pointIds = ["points-A", "points-2", "points-3", "points-4", "points-5", "points-6", "points-7", "points-8", "points-9", "points-10", "points-J", "points-Q", "points-K", "points-J1", "points-J2"];
-    pointIds.forEach(id => {
-        let rank = id.split('-')[1];
-        
-        // Grab the value from the config, or fall back to the default
-        let rawValue = cfg[id] !== undefined ? cfg[id] : defaultPoints[rank];
-        
-        // Clamp the value between 0 and 20 before saving it
-        cardPoints[rank] = Math.min(20, Math.max(0, rawValue));
-        
-        if(document.getElementById(id)) document.getElementById(id).value = cardPoints[rank];
     });
 
     currentlifepoints = cfg["lifepoints"] !== undefined ? Math.max(1, cfg["lifepoints"]) : 3;
@@ -1110,14 +1210,6 @@ function changeMultiplier(type, delta) {
 	}
 }
 
-function changePoint(rank, delta) {
-    let current = cardPoints[rank] || 0;
-    // Math.max keeps it from going below 0, Math.min keeps it from going above 20
-    current = Math.min(20, Math.max(0, current + delta));
-    cardPoints[rank] = current;
-    document.getElementById("points-" + rank).value = current;
-}
-
 function changeAllPoints(delta) {
     const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "J1", "J2"];
     ranks.forEach(r => changePoint(r, delta));
@@ -1219,15 +1311,6 @@ function endlessMODE() {
 
 // Change Card Quantity
 
-function changeQty(id, delta, min = 0) {
-    let input = document.getElementById(id);
-    let val = parseInt(input.value) || 0;
-    val += delta;
-    if (val < min) val = min;
-    if (val > 10) val = 10; // Assuming 10 is your max based on earlier code
-    input.value = val;
-}
-
 function changeAllValueMult(delta) {
     const keys = [
         'value_low', 'value_high'
@@ -1279,36 +1362,6 @@ function changeAllValueSuitMult(delta) {
     });
 }
 
-function changeAllRanks(delta) {
-    // List all the IDs that should be affected by the "Main" stepper
-    const rankIds = [
-        'mult-rank-A', 'mult-rank-2', 'mult-rank-3', 
-        'mult-rank-4', 'mult-rank-5', 'mult-rank-6', 'mult-rank-7', 
-        'mult-rank-8', 'mult-rank-9', 'mult-rank-10', 'mult-rank-J', 
-        'mult-rank-Q', 'mult-rank-K', 'mult-rank-J1', 'mult-rank-J2'
-    ];
-
-    // Run the existing changeQty function for every ID in the list
-    rankIds.forEach(id => {
-        if (document.getElementById(id)) {
-            changeQty(id, delta);
-        }
-    });
-}
-
-function changeAllSuits(delta) {
-    // List all the IDs that should be affected by the "Main" stepper
-    const rankIds = [
-        'mult-hearts', 'mult-diamonds', 'mult-clubs', 'mult-spades', 'mult-jokers'
-    ];
-
-    // Run the existing changeQty function for every ID in the list
-    rankIds.forEach(id => {
-        if (document.getElementById(id)) {
-            changeQty(id, delta);
-        }
-    });
-}
 
 function toggleGainLossOp(type) {
     if (type === 'winlife') { winlifeop = winlifeop === '+' ? '-' : '+'; document.getElementById("winlifeop_btn").innerHTML = `<span class="button_content2">${winlifeop}</span>`; }
@@ -1377,62 +1430,48 @@ function toggleActionBtn(name) {
 // Generate Deck
 
 function generateCustomDeck() {
-    const useCustomSuits = document.getElementById('use_custom_suits').checked;
-    const useCustomRanks = document.getElementById('use_custom_ranks').checked;
-    const useCustomPoints = document.getElementById('use_custom_points').checked; // <--- Add this
-    
-    // Fallback constants if custom points are disabled
-    const defaultPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
-
-    // 1. Compile Suits
-
-    // 1. Compile Suits
-    const selectedSuits = [];
-    const suitIds = { "♥️": "hearts", "♦️": "diamonds", "♣️": "clubs", "♠️": "spades" };
-    standardSuits.forEach(s => {
-        const id = suitIds[s.suit];
-        const mult = useCustomSuits ? Math.min(Math.max(parseInt(document.getElementById(`mult-${id}`).value) || 0, 0), 10) : 1;
-        for (let i = 0; i < mult; i++) selectedSuits.push(s);
-    });
-
-    // 2. Compile Ranks
-    const selectedRanks = [];
-    standardRanks.forEach(r => {
-        const id = `mult-rank-${r.rank}`;
-        const mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById(id).value) || 0, 0), 10) : 1;
-        for (let i = 0; i < mult; i++) selectedRanks.push(r);
-    });
-
-// 3. Compile Base Deck Combinations
-    const baseCombinations = [];
-    selectedSuits.forEach(({ suit, color }) => {
-        selectedRanks.forEach(({ rank, value }) => {
-            // Update the line below:
-            baseCombinations.push({ rank, value, points: useCustomPoints ? cardPoints[rank] : defaultPoints[rank], suit, color });
-        });
-    });
-
-    // 4. Factor in Total Decks and Jokers
+    const useCustomDeck = document.getElementById('use_custom_deck').checked;
     const finalDeck = [];
 
-    finalDeck.push(...baseCombinations);
+    if (useCustomDeck) {
+        const suitMap = { 'Hearts': { s: '♥️', c: 'Red' }, 'Diamonds': { s: '♦️', c: 'Red' }, 'Clubs': { s: '♣️', c: 'Black' }, 'Spades': { s: '♠️', c: 'Black' } };
 
-    // Pull multipliers for the split jokers (default to 1 if custom ranks is unchecked)
-    const j1Mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById('mult-rank-J1').value) || 0, 0), 10) : 1;
-    const j2Mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById('mult-rank-J2').value) || 0, 0), 10) : 1;
+        suitsList.forEach(suitName => {
+            if (suitName === 'Jokers') {
+                ['J1', 'J2'].forEach(rank => {
+                    const data = customDeckData[suitName][rank];
+                    for(let i=0; i<data.qty; i++) {
+                        finalDeck.push({ rank: rank, value: 20, points: data.pts, suit: '🃏', color: 'Special' });
+                    }
+                });
+            } else {
+                const sInfo = suitMap[suitName];
+                standardCardRanks.forEach(rank => {
+                    const data = customDeckData[suitName][rank];
+                    let intrinsicValue = 0;
+                    if (rank === 'A') intrinsicValue = 20;
+                    else if (['J', 'Q', 'K'].includes(rank)) intrinsicValue = 10;
+                    else intrinsicValue = parseInt(rank);
 
-    // Pull multiplier for suit-level jokers (default to 1 if custom suits is unchecked)
-    const suitJokerMult = useCustomSuits ? Math.min(Math.max(parseInt(document.getElementById('mult-jokers').value) || 0, 0), 10) : 1;
-
-    // Push Joker 1 (Index 0 in standardExtras array)
-if (standardExtras.length > 0) {
-        for (let i = 0; i < (j1Mult * suitJokerMult); i++) finalDeck.push({...standardExtras[0], points: useCustomPoints ? cardPoints['J1'] : 20});
+                    for(let i=0; i<data.qty; i++) {
+                        finalDeck.push({ rank: rank, value: intrinsicValue, points: data.pts, suit: sInfo.s, color: sInfo.c });
+                    }
+                });
+            }
+        });
+    } else {
+        // Fallback to purely Standard Defaults
+        standardSuits.forEach(s => {
+            standardRanks.forEach(r => {
+                finalDeck.push({ rank: r.rank, value: r.value, points: defaultCardPoints[r.rank], suit: s.suit, color: s.color });
+            });
+        });
+        standardExtras.forEach(e => {
+            finalDeck.push({ rank: e.rank, value: e.value, points: defaultCardPoints[e.rank], suit: e.suit, color: e.color });
+        });
     }
-    if (standardExtras.length > 1) {
-        for (let i = 0; i < (j2Mult * suitJokerMult); i++) finalDeck.push({...standardExtras[1], points: useCustomPoints ? cardPoints['J2'] : 20});
-    }
 
-    // 5. Update the Global Card Counters via Direct Filtering (100% Accurate)
+    // Direct Filtering Global Card Counters (Untouched from your original logic - it still works perfectly!)
     heartscardscounter = finalDeck.filter(c => c.suit === '♥️').length;
     diamondscardscounter = finalDeck.filter(c => c.suit === '♦️').length;
     clubscardscounter = finalDeck.filter(c => c.suit === '♣️').length;
@@ -1460,7 +1499,6 @@ if (standardExtras.length > 0) {
     highclubscardscounter = finalDeck.filter(c => c.value >= 8 && c.value !== 20 && c.suit === '♣️').length;
     highspadescardscounter = finalDeck.filter(c => c.value >= 8 && c.value !== 20 && c.suit === '♠️').length;
 
-    // Update the UI
     document.getElementById("heartscards").innerHTML = heartscardscounter;
     document.getElementById("diamondscards").innerHTML = diamondscardscounter;
     document.getElementById("clubscards").innerHTML = clubscardscounter;
