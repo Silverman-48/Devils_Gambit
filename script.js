@@ -1405,6 +1405,8 @@ function toggleScoreAmount(amount, buttonid) {
     }
 }
 
+toggleScoreAmount(100, 'score_btn_3');
+
 function toggleSkipOp() {
     if (skipscoreop === "/") {
         skipscoreop = "*";
