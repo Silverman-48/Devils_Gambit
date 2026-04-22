@@ -137,6 +137,12 @@ const presets = [
             "mult-rank-8": 1, "mult-rank-9": 1, "mult-rank-10": 1, "mult-rank-J": 1, "mult-rank-Q": 1, "mult-rank-K": 1,
             "mult-hearts": 1, "mult-diamonds": 1, "mult-clubs": 1, "mult-spades": 1, "mult-rank-J1": 1, "mult-rank-J2": 1, "mult-jokers": 1,
 
+    "use_custom_points": false,
+    "points-A": 20, "points-2": 2, "points-3": 3, "points-4": 4, 
+    "points-5": 5, "points-6": 6, "points-7": 7, "points-8": 8, 
+    "points-9": 9, "points-10": 10, "points-J": 10, "points-Q": 10, 
+    "points-K": 10, "points-J1": 20, "points-J2": 20, 
+
     // Gen toggles and modifiers
     useSpec_value: false, gen_value: 1, gen_value_op: "*",
     useSpec_color: false, gen_color: 1, gen_color_op: "*",
@@ -171,12 +177,6 @@ const presets = [
     value_suit_high_spades: 6, value_suit_high_spades_op: "*",
     
     joker: 10, joker_op: "*",
-
-    // Points
-    "points-A": 20, "points-2": 2, "points-3": 3, "points-4": 4, 
-    "points-5": 5, "points-6": 6, "points-7": 7, "points-8": 8, 
-    "points-9": 9, "points-10": 10, "points-J": 10, "points-Q": 10, 
-    "points-K": 10, "points-J1": 20, "points-J2": 20, 
 
             "lifepoints": 3, "blanks": 1, "streak": 0, "lastchance": 1, "lastchancedice": 4,
 
@@ -478,11 +478,34 @@ Object.keys(mults).forEach(key => {
     setCURRENTGAMBIT();
 }
 
-function changePreset(delta) {
-    currentPresetIndex += delta;
-    if (currentPresetIndex < 0) currentPresetIndex = presets.length - 1;
-    if (currentPresetIndex >= presets.length) currentPresetIndex = 0;
-    applyPreset();
+// This function only handles DRAWING the info to the screen
+function updatePresetUI() {
+    const nameElement = document.getElementById('preset-name');
+    const counterElement = document.getElementById('preset-counter');
+
+    if (nameElement && presets[currentPresetIndex]) {
+        nameElement.innerText = presets[currentPresetIndex].name;
+    }
+
+    if (counterElement) {
+        // Human-friendly counting (1-based index)
+        counterElement.innerText = `${currentPresetIndex + 1} / ${presets.length}`;
+    }
+}
+
+// This function only handles CHANGING the data
+function changePreset(direction) {
+    currentPresetIndex += direction;
+
+    // Wrap-around logic
+    if (currentPresetIndex < 0) {
+        currentPresetIndex = presets.length - 1;
+    } else if (currentPresetIndex >= presets.length) {
+        currentPresetIndex = 0;
+    }
+
+    updatePresetUI();
+  applyPreset();
 }
 
 function toggleAll(type) {
@@ -1507,25 +1530,48 @@ function lastCHANCE(playerChoice) {
 		}
 	}
 
-function showELEMENTFLEX(elementId) {
-    // 1. List all your sections in one place
-    const sections = ['card_options', 'mult_options', 'gambit_options', 'stats_options', 'misc_options', 'win_loss_options', 'actions_options', 'points_options'];
-    
-    const target = document.getElementById(elementId);
-    if (!target) return; // Safety check
+// 1. List all sections and their corresponding display titles in order
+const menuSections = [
+    { id: 'stats_options', title: 'Score / Initial Stats' },
+    { id: 'card_options', title: 'Deck Structure' },
+    { id: 'points_options', title: 'Card Points' },
+    { id: 'gambit_options', title: 'Gambit Types' },
+    { id: 'mult_options', title: 'Gambit Modifiers' },
+    { id: 'actions_options', title: 'Actions' },
+    { id: 'win_loss_options', title: 'Win / Loss / Last Chance' },
+];
 
-    // 2. Check if the one we clicked is already open
-    const isAlreadyOpen = target.style.display === 'flex';
+// 2. Track the currently viewed section index (defaults to 0, which is 'Cards')
+let currentSectionIndex = 0;
 
-    // 3. Hide EVERY section in the list
-    sections.forEach(id => {
-        const el = document.getElementById(id);
+function cycleSection(direction) {
+    // Hide EVERY section in the list to reset the view
+    menuSections.forEach(section => {
+        const el = document.getElementById(section.id);
         if (el) el.style.display = 'none';
     });
 
-    // 4. If it wasn't open, open it now
-    if (!isAlreadyOpen) {
-        target.style.display = 'flex';
+    // Update the index based on the direction (-1 for left, 1 for right)
+    currentSectionIndex += direction;
+
+    // Loop around if we go past the start or end of the array
+    if (currentSectionIndex < 0) {
+        currentSectionIndex = menuSections.length - 1;
+    } else if (currentSectionIndex >= menuSections.length) {
+        currentSectionIndex = 0;
+    }
+
+    // Show the new target section
+    const targetSection = menuSections[currentSectionIndex];
+    const targetElement = document.getElementById(targetSection.id);
+    if (targetElement) {
+        targetElement.style.display = 'flex';
+    }
+
+    // Update the title div in the HTML
+    const titleElement = document.getElementById('section_title_display');
+    if (titleElement) {
+        titleElement.innerText = targetSection.title;
     }
 }
 
@@ -2322,4 +2368,5 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 
 
 	applyPreset();
+	updatePresetUI();
 	reset();
