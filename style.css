@@ -97,7 +97,8 @@
 
 	.special_button.highlight,
 	.special_button_1.highlight,
-	.special_button_2.highlight {
+	.special_button_2.highlight,
+	.score_btn.highlight {
 		color: white;
 		background-color: #A9A9A9;
 	}
