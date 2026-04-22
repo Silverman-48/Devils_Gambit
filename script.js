@@ -107,6 +107,7 @@ let mults = {
 	let savedblanks = 1;
 
 	const GLOBAL_CAP = 20;
+	let scorechangeamount = '100';
 
 const gambitNames = [
     'Low', 'High', 'Red', 'Black', 'Hearts', 'Diamonds', 'Clubs', 'Spades', 'Special',
@@ -130,7 +131,6 @@ const presets = [
             "finite_blanks": true,
             "currentscoretobeat": 100,
 
-            "mult-decks": 1,
             "use_custom_ranks": false,
             "use_custom_suits": false,
             "mult-rank-A": 1, "mult-rank-2": 1, "mult-rank-3": 1, "mult-rank-4": 1, "mult-rank-5": 1, "mult-rank-6": 1, "mult-rank-7": 1,
@@ -215,11 +215,11 @@ const presets = [
             "finite_blanks": true,
             "currentscoretobeat": 1000,
 
-            "mult-decks": 2,
             "use_custom_ranks": true,
+            "use_custom_suits": true,
             "mult-rank-A": 0, "mult-rank-2": 2, "mult-rank-3": 0, "mult-rank-4": 0, "mult-rank-5": 0, "mult-rank-6": 0, "mult-rank-7": 0,
             "mult-rank-8": 0, "mult-rank-9": 0, "mult-rank-10": 0, "mult-rank-J": 0, "mult-rank-Q": 0, "mult-rank-K": 0,
-            "mult-hearts": 0, "mult-diamonds": 0, "mult-clubs": 0, "mult-spades": 0, "mult-rank-J1": 10, "mult-rank-J2": 10, "mult-jokers": 1,
+            "mult-hearts": 2, "mult-diamonds": 2, "mult-clubs": 2, "mult-spades": 2, "mult-rank-J1": 10, "mult-rank-J2": 10, "mult-jokers": 2,
 
             "useSpec_value": false,    "gen_value": 0,
             "useSpec_color": false,    "gen_color": 0,
@@ -265,18 +265,17 @@ function applyPreset() {
     document.getElementById('preset-name').textContent = `${preset.name}`;
 
     // Apply specific Stepper values for Decks/Cards
-const quantities = ["mult-decks", "mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2", "mult-jokers"];
+const quantities = ["mult-rank-A", "mult-rank-2", "mult-rank-3", "mult-rank-4", "mult-rank-5", "mult-rank-6", "mult-rank-7", "mult-rank-8", "mult-rank-9", "mult-rank-10", "mult-rank-J", "mult-rank-Q", "mult-rank-K", "mult-hearts", "mult-diamonds", "mult-clubs", "mult-spades", "mult-rank-J1", "mult-rank-J2", "mult-jokers"];
     quantities.forEach(id => {
         if(document.getElementById(id)) document.getElementById(id).value = cfg[id] !== undefined ? Math.max(0, cfg[id]) : 1;
     });
 
 // Reset UI Toggles to Preset Configuration
-    document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
-    document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
-    document.getElementById("use_custom_points").checked = cfg["use_custom_points"] || false;
-    toggleSpecificCards('ranks');
-    toggleSpecificCards('suits');
-    toggleSpecificCards('points');
+document.getElementById("use_custom_ranks").checked = cfg["use_custom_ranks"] || false;
+document.getElementById("use_custom_suits").checked = cfg["use_custom_suits"] || false;
+document.getElementById("use_custom_points").checked = cfg["use_custom_points"] || false;
+document.getElementById("use_custom_gambits").checked = cfg["use_custom_gambits"] || false;
+document.getElementById("use_custom_modifiers").checked = cfg["use_custom_modifiers"] || false;
 
 const defaultMults = {
     // Gen toggles and modifiers
@@ -546,12 +545,6 @@ function enforceCaps() {
     if(document.getElementById('blanks')) document.getElementById('blanks').textContent = (blanks === Infinity) ? "∞" : blanks;
 }
 
-function toggleSpecificCards(type) {
-    const isChecked = document.getElementById(`use_custom_${type}`).checked;
-    const area = document.getElementById(`custom_${type}_area`);
-    if (area) area.style.display = isChecked ? "flex" : "none";
-}
-
 function toggleLIVES() {
     const checkbox = document.getElementById("toggle_lives");
     const lifeInput = document.getElementById("currentlifepoints");
@@ -804,6 +797,10 @@ if (key === "joker") {
         }
     }
 
+    let multipliersymbol = "x";
+
+    if (multiplierOp === "/") {multipliersymbol = "/"}
+
 	if (gambit1 === "" && gambit2 === "") {
 				valueswitch = -1;
 				variable = "None";
@@ -817,7 +814,7 @@ if (key === "joker") {
 				variable = gambit2;
 				element = "color";
 
-				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Value & Color Gambit (" + multipliersymbol + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -829,7 +826,7 @@ if (key === "joker") {
 				variable = gambit2;
 				element = "suit";
 
-				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Value & Suit Gambit (" + multipliersymbol + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -841,7 +838,7 @@ if (key === "joker") {
 				variable = "empty";
 				element = "empty";
 
-				document.getElementById("currentgambit").innerHTML = "Value Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Value Gambit (" + multipliersymbol + multiplier + ")";
 
 				if (gambit1 === "Low") {
 					valueswitch = 0;
@@ -857,7 +854,7 @@ if (key === "joker") {
 				variable = gambit2;
 				element = "color";
 
-				document.getElementById("currentgambit").innerHTML = "Color Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Color Gambit (" + multipliersymbol + multiplier + ")";
 
 		}
 
@@ -866,7 +863,7 @@ if (key === "joker") {
 				variable = gambit2;
 				element = "suit";
 
-				document.getElementById("currentgambit").innerHTML = "Suit Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Suit Gambit (" + multipliersymbol + multiplier + ")";
 
 		}
 
@@ -875,7 +872,7 @@ if (key === "joker") {
 				variable = gambit1;
 				element = "color";
 
-				document.getElementById("currentgambit").innerHTML = "Joker Gambit (x" + multiplier + ")";
+				document.getElementById("currentgambit").innerHTML = "Joker Gambit (" + multipliersymbol + multiplier + ")";
 		}
 
 // --- NEW VALIDATION LOGIC ---
@@ -983,6 +980,31 @@ function calculateCHANCE() {
 		}	
 		enforceCaps();
 	}
+
+function addORremoveSCORE(value, sign) {
+
+    const inputElement = document.getElementById('currentscoretobeat');
+    if (!inputElement) return;
+
+    let currentValue = parseInt(inputElement.value) || 0;
+    let newValue;
+
+    if (sign === "-") {
+        newValue = currentValue - value;
+        if (newValue < 1) {
+            newValue = 1;
+        }
+    } else if (sign === "+") {
+        newValue = currentValue + value;
+        if (newValue > 10000) {
+            newValue = 10000;
+        }
+    }
+
+    inputElement.value = newValue;
+
+    currentscoretobeat = newValue;
+}
 
 function addORremoveOPTIONS(variableId, value, sign, minmax) {
 
@@ -1109,7 +1131,8 @@ function endlessMODE() {
     
     // 1. Find all buttons inside the same div as the score input
     // This targets only the buttons in that specific 'stepper'
-    const stepperButtons = scoreInput.parentElement.querySelectorAll('button');
+    const stepperButtons = document.getElementById("scorebuttons").querySelectorAll('button');
+    const addremoveButtons = document.getElementById("addremovebuttons").querySelectorAll('button');
 
     if (checkbox.checked) {
         // FIX: Ensure we only save the score if it isn't already "∞"
@@ -1121,12 +1144,14 @@ function endlessMODE() {
 
         // 2. Disable all the buttons
         stepperButtons.forEach(btn => btn.disabled = true);
+        addremoveButtons.forEach(btn => btn.disabled = true);
     } else {
         scoreInput.value = savedscore;
         currentscoretobeat = parseInt(savedscore);
 
         // 3. Re-enable the buttons
         stepperButtons.forEach(btn => btn.disabled = false);
+        addremoveButtons.forEach(btn => btn.disabled = false);
     }
 }
 
@@ -1309,6 +1334,24 @@ function toggleBlankOp() {
     if (btn) btn.innerHTML = `<span class="button_content2">${blankscoreop}</span>`;
 }
 
+function toggleScoreAmount(amount, buttonid) {
+    scorechangeamount = amount;
+
+    const scoreContainer = document.getElementById("scorebuttons");
+    if (!scoreContainer) return; 
+
+    const scoreButtons = scoreContainer.querySelectorAll('button');
+
+    scoreButtons.forEach(button => {
+        button.classList.remove('highlight');
+    });
+
+    const targetButton = document.getElementById(buttonid);
+    if (targetButton) {
+        targetButton.classList.add('highlight');
+    }
+}
+
 function toggleSkipOp() {
     if (skipscoreop === "/") {
         skipscoreop = "*";
@@ -1334,7 +1377,6 @@ function toggleActionBtn(name) {
 // Generate Deck
 
 function generateCustomDeck() {
-    const decks = parseInt(document.getElementById('mult-decks').value) || 1;
     const useCustomSuits = document.getElementById('use_custom_suits').checked;
     const useCustomRanks = document.getElementById('use_custom_ranks').checked;
     const useCustomPoints = document.getElementById('use_custom_points').checked; // <--- Add this
@@ -1372,9 +1414,8 @@ function generateCustomDeck() {
 
     // 4. Factor in Total Decks and Jokers
     const finalDeck = [];
-    for (let i = 0; i < decks; i++) {
-        finalDeck.push(...baseCombinations); 
-    }
+
+    finalDeck.push(...baseCombinations);
 
     // Pull multipliers for the split jokers (default to 1 if custom ranks is unchecked)
     const j1Mult = useCustomRanks ? Math.min(Math.max(parseInt(document.getElementById('mult-rank-J1').value) || 0, 0), 10) : 1;
@@ -1385,10 +1426,10 @@ function generateCustomDeck() {
 
     // Push Joker 1 (Index 0 in standardExtras array)
 if (standardExtras.length > 0) {
-        for (let i = 0; i < (j1Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[0], points: useCustomPoints ? cardPoints['J1'] : 20});
+        for (let i = 0; i < (j1Mult * suitJokerMult); i++) finalDeck.push({...standardExtras[0], points: useCustomPoints ? cardPoints['J1'] : 20});
     }
     if (standardExtras.length > 1) {
-        for (let i = 0; i < (j2Mult * suitJokerMult) * decks; i++) finalDeck.push({...standardExtras[1], points: useCustomPoints ? cardPoints['J2'] : 20});
+        for (let i = 0; i < (j2Mult * suitJokerMult); i++) finalDeck.push({...standardExtras[1], points: useCustomPoints ? cardPoints['J2'] : 20});
     }
 
     // 5. Update the Global Card Counters via Direct Filtering (100% Accurate)
@@ -1520,13 +1561,13 @@ function lastCHANCE(playerChoice) {
 
 // Show / Hide Elements
 
-	function showELEMENT(element) {
+	function showELEMENT(element, displaytype) {
 		var x = document.getElementById(element);
 
-		if (x.style.display == "block") {
+		if (x.style.display == displaytype) {
 			x.style.display = "none";
 		} else {
-			x.style.display = "block";
+			x.style.display = displaytype;
 		}
 	}
 
@@ -1534,9 +1575,7 @@ function lastCHANCE(playerChoice) {
 const menuSections = [
     { id: 'stats_options', title: 'Score / Initial Stats' },
     { id: 'card_options', title: 'Deck Structure' },
-    { id: 'points_options', title: 'Card Points' },
-    { id: 'gambit_options', title: 'Gambit Types' },
-    { id: 'mult_options', title: 'Gambit Modifiers' },
+    { id: 'gambit_mult_options', title: 'Gambits' },
     { id: 'actions_options', title: 'Actions' },
     { id: 'win_loss_options', title: 'Win / Loss / Last Chance' },
 ];
