@@ -1782,6 +1782,10 @@ function updateDISPLAYS() {
 			document.getElementById("table_suit_2").innerHTML = "";
 			document.getElementById("table_card").style.borderStyle = "dotted";
 			document.getElementById("table_card").style.background = "none";
+
+			document.getElementById("table_card").classList.remove('card-disappear');
+			document.getElementById("hand_card").classList.remove('card-disappear');
+
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
 			return;
@@ -1800,6 +1804,9 @@ function updateDISPLAYS() {
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
+
+			document.getElementById("table_card").classList.remove('card-disappear');
+			document.getElementById("hand_card").classList.remove('card-disappear');
             
 			// Display appropriate dice buttons
 			for (let i = 1; i <= 10; i++) {
@@ -1828,13 +1835,20 @@ function updateDISPLAYS() {
 			document.getElementById("hand_card").style.borderStyle = "dotted";
 			document.getElementById("hand_card").style.background = "none";
 
+			document.getElementById("table_card").classList.remove('card-disappear');
+			document.getElementById("hand_card").classList.remove('card-disappear');
+
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
 			return;
-		} else if (lifepoints > 0) pickTABLECARD(); return;
+		} else if (lifepoints > 0) {
+			document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+			pickTABLECARD();
+			return;
+		}
 	}
 
 // Triggers the Game Reset
@@ -1925,6 +1939,9 @@ function updateDISPLAYS() {
 		document.getElementById("set_button").disabled = true;
 
 		pickTABLECARD();
+
+		document.getElementById("hand_card").classList.remove('card-disappear');
+
 		updateTESTVALUES();
 	}
 
@@ -2025,16 +2042,16 @@ function sacrificeSTREAK(type) {
 
 	function useBLANK() {
 		if (playerwin === true) return;
-		if (blanks === 0) {
-			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
-			document.getElementById("percentage").innerHTML = "";
-			return;
-		};
 		if (lifepoints === 0) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
+		if (blanks === 0) {
+			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
+			document.getElementById("percentage").innerHTML = "";
+			return;
+		};
 
 		valueswitch = -1;
 		variable = "Blank";
@@ -2084,9 +2101,9 @@ function sacrificeSTREAK(type) {
 		document.getElementById("hand_card").style.background = "white";
 
 		const index = Math.floor(Math.random() * cards.length);
-card = cards.splice(index, 1)[0];
+		card = cards.splice(index, 1)[0];
 		value = card.value;
-        currentPoints = card.points;
+        	currentPoints = card.points;
 		rank = card.rank;
 		suit = card.suit;
 		color = card.color;
@@ -2153,6 +2170,8 @@ card = cards.splice(index, 1)[0];
 		document.getElementById("hand_suit_1").innerHTML = suit;
 		document.getElementById("hand_number").innerHTML = rank;
 		document.getElementById("hand_suit_2").innerHTML = suit;
+
+		triggerAnimation('hand_card', 'card-appear');
 	}
 
 // Picks the Next Table Card
@@ -2165,9 +2184,9 @@ card = cards.splice(index, 1)[0];
 		}
 
 		const index = Math.floor(Math.random() * cards.length);
-const card = cards.splice(index, 1)[0];
+		const card = cards.splice(index, 1)[0];
 		const value = card.value;
-        const points = card.points;
+        	const points = card.points;
 		const rank = card.rank;
 		const suit = card.suit;
 		const color = card.color;
@@ -2236,6 +2255,8 @@ const card = cards.splice(index, 1)[0];
 		document.getElementById("table_suit_1").innerHTML = suit;
 		document.getElementById("table_number").innerHTML = rank;
 		document.getElementById("table_suit_2").innerHTML = suit;
+
+		triggerAnimation('table_card', 'card-appear');
 	}
 
 // Checks If Gambit is Regular or Value, and Runs It
@@ -2432,18 +2453,38 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 			}
 		});
 
-		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
-		document.getElementById("set_button").disabled = true;
+			document.getElementById("set_button").disabled = true;
 
-		document.getElementById("hand_card").style.borderStyle = "dotted";
-		document.getElementById("hand_card").style.background = "none";
+		// 1. Trigger the disappear animations
+		triggerAnimation('table_card', 'card-disappear');
+		triggerAnimation('hand_card', 'card-disappear');
 
-		document.getElementById("hand_suit_1").innerHTML = "";
-		document.getElementById("hand_number").innerHTML = "";
-		document.getElementById("hand_suit_2").innerHTML = "";
+		// 2. Wait 300ms for the animation to finish before clearing the HTML
+		setTimeout(() => {
+			document.getElementById("hand_card").style.borderStyle = "dotted";
+			document.getElementById("hand_card").style.background = "none";
 
-		updateDISPLAYS();
+			document.getElementById("hand_suit_1").innerHTML = "";
+			document.getElementById("hand_number").innerHTML = "";
+			document.getElementById("hand_suit_2").innerHTML = "";
+
+			// Clean up the disappear classes so the opacity is reset for the next round
+			document.getElementById("table_card").classList.remove('card-disappear');
+			document.getElementById("hand_card").classList.remove('card-disappear');
+
+			updateDISPLAYS();
+		}, 300); // 300ms matches your CSS 0.3s duration
 	}
+
+function triggerAnimation(elementId, animationClass) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    
+    // Reset classes to allow re-triggering the same animation
+    el.classList.remove('card-appear', 'card-disappear');
+    void el.offsetWidth; // Force a reflow to restart the animation
+    el.classList.add(animationClass);
+}
 
 
 	applyPreset();
