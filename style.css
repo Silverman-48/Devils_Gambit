@@ -176,6 +176,7 @@
 .stepper button:hover {
 		color: white;
 		background-color: #A9A9A9;
+		cursor: pointer;
 }
 
 .stepper input {
