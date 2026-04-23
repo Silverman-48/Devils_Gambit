@@ -906,7 +906,7 @@ if (key === "joker") {
 				variable = "None";
 				element = "None";
 
-				document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+				document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 		}
 
 		if (valuearray.includes(gambit1)) {
@@ -1589,7 +1589,7 @@ function generateCustomDeck() {
 		} else {
 
 			if (lastchance >= 1) {
-				document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
+				document.getElementById("currentgambit").innerHTML = "Last Chance Available (" + lastchance + ")";
 				return;
 			} else {
 
@@ -1598,7 +1598,7 @@ function generateCustomDeck() {
 				});
 
 				document.getElementById("clear_button").disabled = true;
-				document.getElementById("currentgambit").innerHTML = "Game Over";
+				document.getElementById("currentgambit").innerHTML = "You Lost";
 			}
 
 		}
@@ -1694,7 +1694,11 @@ function cycleSection(direction) {
 // Triggers the “Empty Deck” Message
 
 	function emptyDECK() {
-		document.getElementById("currentgambit").textContent = "No more cards left!";
+		if (cards.length === 1) {
+			document.getElementById("currentgambit").textContent = "Not Enough Cards Left";
+		} else {
+			document.getElementById("currentgambit").textContent = "No More Cards Left";
+		}
 		document.getElementById("gambit_left").textContent = "";
 		document.getElementById("gambit_right").textContent = "";
 		document.getElementById("empty_gambit").textContent = "...";
@@ -1705,6 +1709,12 @@ function cycleSection(direction) {
 
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
+
+			gameplaybtn.forEach(btn => {
+				btn.disabled = true;
+			});
+
+			document.getElementById("clear_button").disabled = true;
 	}
 
 // Update the Score, Card History and Score Displays
@@ -1800,8 +1810,12 @@ function updateDISPLAYS() {
 		}
 
 		if (lifepoints === 0 && lastchance > 0) {
+			if (cards.length <= 1) {
+				emptyDECK();
+				return;
+			}
 			document.getElementById("lifepoints").textContent = "0";
-			document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
+			document.getElementById("currentgambit").innerHTML = "Last Chance Available (" + lastchance + ")";
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
@@ -1828,7 +1842,7 @@ function updateDISPLAYS() {
 			return;
 		} else if (lifepoints === 0) {
 			document.getElementById("lifepoints").textContent = "0";
-			document.getElementById("currentgambit").innerHTML = "Game Over";
+			document.getElementById("currentgambit").innerHTML = "You Lost";
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
@@ -1857,7 +1871,7 @@ function updateDISPLAYS() {
 			clearGAMBIT2();
 			return;
 		} else if (lifepoints > 0) {
-			document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+			document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 			pickTABLECARD();
 			return;
 		}
@@ -1933,7 +1947,7 @@ function updateDISPLAYS() {
 		document.getElementById("gambit_left").innerHTML = "";
 		document.getElementById("gambit_right").innerHTML = "";
 
-		document.getElementById("currentgambit").innerHTML = "Select Your Gambit:";
+		document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -2190,7 +2204,7 @@ function sacrificeSTREAK(type) {
 
 	function pickTABLECARD() {
 		if (playerwin === true) return;
-		if (cards.length === 0) {
+		if (cards.length <= 1) {
 			emptyDECK();
 			return;
 		}
@@ -2440,14 +2454,14 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Success";
 			winloss = "Success"
-			setTimeout(resumeGAME, 1300);
+			setTimeout(resumeGAME, 1200);
 		} else {
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Fail";
 			winloss = "Fail"
-			setTimeout(resumeGAME, 1300);
+			setTimeout(resumeGAME, 1200);
 		}
 	}
 
