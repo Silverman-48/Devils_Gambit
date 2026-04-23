@@ -1574,9 +1574,6 @@ function lastCHANCE(playerChoice) {
 
 		if (randomNumber === diceroll) {
 
-			document.getElementById("table_card").style.borderStyle = "solid";
-			document.getElementById("table_card").style.background = "white";
-
 			pickTABLECARD();
 			
 			addORremove('lifepoints', 1, '+');
@@ -1780,11 +1777,8 @@ function updateDISPLAYS() {
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
-			document.getElementById("table_card").style.borderStyle = "dotted";
-			document.getElementById("table_card").style.background = "none";
-
-			document.getElementById("table_card").classList.remove('card-disappear');
-			document.getElementById("hand_card").classList.remove('card-disappear');
+document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
@@ -1797,16 +1791,14 @@ function updateDISPLAYS() {
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
-			document.getElementById("table_card").style.borderStyle = "dotted";
-			document.getElementById("table_card").style.background = "none";
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
 
-			document.getElementById("table_card").classList.remove('card-disappear');
-			document.getElementById("hand_card").classList.remove('card-disappear');
+document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
             
 			// Display appropriate dice buttons
 			for (let i = 1; i <= 10; i++) {
@@ -1826,17 +1818,13 @@ function updateDISPLAYS() {
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
-			document.getElementById("table_card").style.borderStyle = "dotted";
-			document.getElementById("table_card").style.background = "none";
 
 			document.getElementById("hand_suit_1").innerHTML = "";
 			document.getElementById("hand_number").innerHTML = "";
 			document.getElementById("hand_suit_2").innerHTML = "";
-			document.getElementById("hand_card").style.borderStyle = "dotted";
-			document.getElementById("hand_card").style.background = "none";
 
-			document.getElementById("table_card").classList.remove('card-disappear');
-			document.getElementById("hand_card").classList.remove('card-disappear');
+document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1862,12 +1850,6 @@ function updateDISPLAYS() {
 		if (numberscore > numberhighscore) {
 			document.getElementById("highscore").innerHTML = score;
 		}
-
-		document.getElementById("hand_card").style.borderStyle = "dotted";
-		document.getElementById("hand_card").style.background = "none";
-
-		document.getElementById("table_card").style.borderStyle = "solid";
-		document.getElementById("table_card").style.background = "white";
 
 		document.getElementById("gameplay_buttons").style.display = "block";
 		document.getElementById("last_chance").style.display = "none";
@@ -1904,7 +1886,6 @@ function updateDISPLAYS() {
 		document.getElementById("streak").innerHTML = streak;
 		document.getElementById("output").innerHTML = "0";
 
-		document.getElementById("tablecard").textContent = "None";
 		document.getElementById("remaining").innerHTML = cards.length;
 
 		document.getElementById("redcards").innerHTML = redcardscounter;
@@ -1938,9 +1919,10 @@ function updateDISPLAYS() {
 
 		document.getElementById("set_button").disabled = true;
 
-		pickTABLECARD();
+document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
-		document.getElementById("hand_card").classList.remove('card-disappear');
+		pickTABLECARD();
 
 		updateTESTVALUES();
 	}
@@ -2097,9 +2079,6 @@ function sacrificeSTREAK(type) {
 			return;
 		}
 
-		document.getElementById("hand_card").style.borderStyle = "solid";
-		document.getElementById("hand_card").style.background = "white";
-
 		const index = Math.floor(Math.random() * cards.length);
 		card = cards.splice(index, 1)[0];
 		value = card.value;
@@ -2192,7 +2171,6 @@ function sacrificeSTREAK(type) {
 		const color = card.color;
 		result2 = rank.concat(" ", suit);
 
-		document.getElementById("tablecard").textContent = result2;
 		document.getElementById("remaining").textContent = cards.length;
 		acevalue = points;
 
@@ -2457,23 +2435,19 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 
 		// 1. Trigger the disappear animations
 		triggerAnimation('table_card', 'card-disappear');
-		triggerAnimation('hand_card', 'card-disappear');
+		setTimeout(() => {triggerAnimation('hand_card', 'card-disappear');}, 150);
 
 		// 2. Wait 300ms for the animation to finish before clearing the HTML
 		setTimeout(() => {
-			document.getElementById("hand_card").style.borderStyle = "dotted";
-			document.getElementById("hand_card").style.background = "none";
-
 			document.getElementById("hand_suit_1").innerHTML = "";
 			document.getElementById("hand_number").innerHTML = "";
 			document.getElementById("hand_suit_2").innerHTML = "";
 
 			// Clean up the disappear classes so the opacity is reset for the next round
-			document.getElementById("table_card").classList.remove('card-disappear');
-			document.getElementById("hand_card").classList.remove('card-disappear');
-
+document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 			updateDISPLAYS();
-		}, 300); // 300ms matches your CSS 0.3s duration
+		}, 450); // 300ms matches your CSS 0.3s duration
 	}
 
 function triggerAnimation(elementId, animationClass) {
