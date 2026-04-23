@@ -63,6 +63,11 @@
 		background-color: #191919;
 	}
 
+	.cheats_button:disabled {
+   	 opacity: 1;
+   	 pointer-events: none;
+	}
+
 
 
 	button {
