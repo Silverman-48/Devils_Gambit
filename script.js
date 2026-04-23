@@ -109,9 +109,6 @@ let mults = {
 	const GLOBAL_CAP = 20;
 	let scorechangeamount = '100';
 
-	let gameplaybtn = document.getElementById("gameplay_buttons").querySelectorAll('button');
-	let lastchancebtn = document.getElementById("last_chance").querySelectorAll('button');
-
 // --- NEW 54 CARD LOGIC DATA ---
 const suitsList = ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Jokers'];
 const standardCardRanks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -1592,12 +1589,6 @@ function generateCustomDeck() {
 				document.getElementById("currentgambit").innerHTML = "Last Chance Available (" + lastchance + ")";
 				return;
 			} else {
-
-				lastchancebtn.forEach(btn => {
-					btn.disabled = true;
-				});
-
-				document.getElementById("clear_button").disabled = true;
 				document.getElementById("currentgambit").innerHTML = "You Lost";
 			}
 
@@ -1709,12 +1700,6 @@ function cycleSection(direction) {
 
 		const buttons_2 = document.querySelectorAll('.special_button_2');
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
-
-			gameplaybtn.forEach(btn => {
-				btn.disabled = true;
-			});
-
-			document.getElementById("clear_button").disabled = true;
 	}
 
 // Update the Score, Card History and Score Displays
@@ -1798,12 +1783,6 @@ function updateDISPLAYS() {
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
-			gameplaybtn.forEach(btn => {
-				btn.disabled = true;
-			});
-
-			document.getElementById("clear_button").disabled = true;
-
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
 			return;
@@ -1853,16 +1832,6 @@ function updateDISPLAYS() {
 
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
-
-			gameplaybtn.forEach(btn => {
-				btn.disabled = true;
-			});
-
-			lastchancebtn.forEach(btn => {
-				btn.disabled = true;
-			});
-
-			document.getElementById("clear_button").disabled = true;
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1956,15 +1925,6 @@ function updateDISPLAYS() {
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
 		document.getElementById("set_button").disabled = true;
-		document.getElementById("clear_button").disabled = false;
-
-		gameplaybtn.forEach(btn => {
-			btn.disabled = false;
-		});
-
-		lastchancebtn.forEach(btn => {
-			btn.disabled = false;
-		});
 
 		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 		document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
