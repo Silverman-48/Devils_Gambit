@@ -186,3 +186,17 @@
     font-weight: bold;
     font-size: 16px;
 }
+
+
+
+.card-appear { animation: drop-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+.card-disappear { animation: lift-out 0.3s ease-in forwards; }
+
+@keyframes drop-in {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes lift-out {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-30px); }
+}
