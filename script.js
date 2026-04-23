@@ -2440,14 +2440,14 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Success";
 			winloss = "Success"
-			setTimeout(resumeGAME, 1500);
+			setTimeout(resumeGAME, 1300);
 		} else {
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
 			document.getElementById("currentgambit").innerHTML = "Fail";
 			winloss = "Fail"
-			setTimeout(resumeGAME, 1500);
+			setTimeout(resumeGAME, 1300);
 		}
 	}
 
