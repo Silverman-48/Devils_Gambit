@@ -643,7 +643,7 @@
             </div>
 
             <div class="score">
-                Score: <span id="score">0</span> / <span id="scoretobeat"></span>
+                Score: <span id="score">0</span> / <span id="scoretobeat">∞</span>
             </div>
 
             <div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content; margin-top: 10px; margin-bottom: 10px;">
@@ -680,7 +680,7 @@
             </div>
 
             <div class="button_divisions" style="max-width: 300px; display: flex; gap: 5px; margin: auto; flex-direction: row; align-items: center;">
-                <button id="set_button" style="width: stretch; flex: 1; height: 35px; display: block;" onclick="runGAMBIT();"><span class="button_content">Set</span></button>
+                <button id="set_button" style="width: stretch; flex: 1; height: 35px; display: block;" onclick="runGAMBIT();" disabled><span class="button_content">Set</span></button>
                 <button id="clear_button" style="width: stretch; flex: 1; height: 35px; display: block;" onclick="clearGAMBIT();"><span class="button_content">Clear</span></button>
                 <button id="reset_button" style="width: stretch; flex: 1; height: 35px" onclick="reset();"><span class="button_content">Reset</span></button>
             </div>
