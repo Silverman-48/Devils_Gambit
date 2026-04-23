@@ -2430,45 +2430,135 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 		triggerAnimation('table_card', 'card-disappear');
 		setTimeout(() => {triggerAnimation('hand_card', 'card-disappear');}, 150);
 
-		// 2. Wait 300ms for the animation to finish before clearing the HTML
 		setTimeout(() => {
-			const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
-			gameButtons.forEach(btn => {
-				btn.disabled = false;
-            
-				// Actions still use normal toggling
-				if (btn.id && btn.id.startsWith('btn_action_')) {
-					let name = btn.id.replace('btn_action_', '');
-					let cb = document.getElementById(`use_action_${name}`);
-					if (cb) btn.disabled = !cb.checked;
-				}
-			});
-
-			document.getElementById("set_button").disabled = true;
-
-			document.getElementById("hand_suit_1").innerHTML = "";
-			document.getElementById("hand_number").innerHTML = "";
-			document.getElementById("hand_suit_2").innerHTML = "";
-
 			// Clean up the disappear classes so the opacity is reset for the next round
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
-			updateDISPLAYS();
+			setTimeout(() => {
+				const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
+				gameButtons.forEach(btn => {
+					btn.disabled = false;
+            
+					// Actions still use normal toggling
+					if (btn.id && btn.id.startsWith('btn_action_')) {
+						let name = btn.id.replace('btn_action_', '');
+						let cb = document.getElementById(`use_action_${name}`);
+						if (cb) btn.disabled = !cb.checked;
+					}
+				});
+
+				document.getElementById("set_button").disabled = true;
+
+				document.getElementById("hand_suit_1").innerHTML = "";
+				document.getElementById("hand_number").innerHTML = "";
+				document.getElementById("hand_suit_2").innerHTML = "";
+
+				updateDISPLAYS();
+			}, 50);
 		}, 450); // 300ms matches your CSS 0.3s duration
 	}
+
+// --- AUDIO CONFIGURATION ---
+let bgMusic = new Audio('Sound/theme.mp3'); 
+bgMusic.loop = true;
+
+// 1. RANDOMIZER: Create an array of different appear sounds
+const appearSounds = [
+    new Audio('Sound/appear_1.mp3'),
+    new Audio('Sound/appear_2.mp3'),
+];
+
+let disappearSound = new Audio('Sound/disappear.mp3');
+
+let isMusicPlaying = false;
+let globalVolume = 0.5;
+
+// 2. FIX FOR INITIAL LOAD: "Unlock" audio on first user interaction
+// This listens for the first click anywhere on the page to enable audio
+document.addEventListener('click', () => {
+    // We "prime" the sounds by playing and immediately pausing them
+    // This tells the browser the user has consented to audio
+    disappearSound.play().then(() => disappearSound.pause()).catch(() => {});
+    appearSounds.forEach(s => {
+        s.play().then(() => s.pause()).catch(() => {});
+    });
+}, { once: true }); // { once: true } makes this run only one time
+
+
+function toggleMusic() {
+    const musicBtn = document.getElementById('music_toggle');
+    if (isMusicPlaying) {
+        bgMusic.pause();
+        isMusicPlaying = false;
+        musicBtn.innerText = "Play Music 🎵";
+        musicBtn.classList.remove('highlight');
+    } else {
+        bgMusic.volume = globalVolume;
+        bgMusic.play();
+        isMusicPlaying = true;
+        musicBtn.innerText = "Pause Music ⏸️";
+        musicBtn.classList.add('highlight');
+    }
+}
+
+function updateVolume() {
+    globalVolume = document.getElementById('volume_slider').value;
+    bgMusic.volume = globalVolume;
+    disappearSound.volume = globalVolume;
+    
+    // Update volume for all random sound objects
+    appearSounds.forEach(sound => {
+        sound.volume = globalVolume;
+    });
+}
 
 function triggerAnimation(elementId, animationClass) {
     const el = document.getElementById(elementId);
     if (!el) return;
     
-    // Reset classes to allow re-triggering the same animation
+    if (animationClass === 'card-appear') {
+        // 3. RANDOMIZER LOGIC: Pick a random sound from the array
+        let randomIndex = Math.floor(Math.random() * appearSounds.length);
+        let selectedSound = appearSounds[randomIndex];
+        
+        selectedSound.currentTime = 0; 
+        selectedSound.volume = globalVolume; // Ensure volume is current
+        selectedSound.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+        
+    } else if (animationClass === 'card-disappear') {
+        // disappearSound.currentTime = 0;
+        disappearSound.volume = globalVolume;
+        disappearSound.play().catch(e => console.log("Sound blocked"));
+    }
+
     el.classList.remove('card-appear', 'card-disappear');
-    void el.offsetWidth; // Force a reflow to restart the animation
+    void el.offsetWidth; 
     el.classList.add(animationClass);
 }
 
+let allbuttons = document.querySelectorAll('button');
 
-	applyPreset();
-	updatePresetUI();
-	reset();
+allbuttons.forEach(btn => btn.disabled = true);
+
+// The function you want to run
+function myInitialFunction() {
+  allbuttons.forEach(btn => btn.disabled = false);
+    applyPreset();
+    updatePresetUI();
+    reset();
+}
+
+// List of interaction events to watch for
+const firstInteractions = ['click'];
+
+// Add the listener to the window
+firstInteractions.forEach(eventType => {
+    window.addEventListener(eventType, () => {
+    setTimeout(() => {
+           myInitialFunction();
+         }, 10);
+    }, { once: true }); 
+    // ^ This { once: true } is the magic—it removes the listener 
+    // for ALL events in the list as soon as one of them fires.
+});
