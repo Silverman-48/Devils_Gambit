@@ -109,6 +109,9 @@ let mults = {
 	const GLOBAL_CAP = 20;
 	let scorechangeamount = '100';
 
+	let gameplaybtn = document.getElementById("gameplay_buttons").querySelectorAll('button');
+	let lastchancebtn = document.getElementById("last_chance").querySelectorAll('button');
+
 // --- NEW 54 CARD LOGIC DATA ---
 const suitsList = ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Jokers'];
 const standardCardRanks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -474,9 +477,6 @@ Object.keys(mults).forEach(key => {
 
     currentlastchance = cfg["lastchance"] !== undefined ? Math.max(0, cfg["lastchance"]) : 1;
     lastchancedice = cfg["lastchancedice"] !== undefined ? Math.max(2, cfg["lastchancedice"]) : 4;
-    if(document.getElementById('last_chance_label')) {
-        document.getElementById('last_chance_label').textContent = 'Last Chance D' + lastchancedice + ':';
-    }
 
     sacrificelife = cfg["sacrificelife"] !== undefined ? Math.max(0, cfg["sacrificelife"]) : 3;
     sacrificeblanks = cfg["sacrificeblanks"] !== undefined ? Math.max(0, cfg["sacrificeblanks"]) : 6;
@@ -1170,7 +1170,6 @@ function setMULTDISPLAYS() {
 	document.getElementById("currentstreak").value = currentstreak;
 	document.getElementById("currentlastchance").value = currentlastchance;
 	if(document.getElementById("lastchancedice")) document.getElementById("lastchancedice").value = lastchancedice;
-        if(document.getElementById('last_chance_label')) document.getElementById('last_chance_label').textContent = 'Last Chance D' + lastchancedice + ':';
 	document.getElementById("sacrificelife").value = sacrificelife;
 	document.getElementById("sacrificeblanks").value = sacrificeblanks;
 	document.getElementById("currentscoretobeat").value = savedscore;
@@ -1563,7 +1562,7 @@ function generateCustomDeck() {
 
 // Last Chance Setup
 
-function lastCHANCE(playerChoice) {
+	function lastCHANCE(playerChoice) {
 		if (lastchance === 0) return;
 
 		lastchance = lastchance - 1;
@@ -1581,6 +1580,9 @@ function lastCHANCE(playerChoice) {
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
+
+			document.getElementById("clear_button").disabled = false;
+
 			document.getElementById("last_chance").style.display = "none";
 			document.getElementById("gameplay_buttons").style.display = "block";
 
@@ -1590,6 +1592,12 @@ function lastCHANCE(playerChoice) {
 				document.getElementById("currentgambit").innerHTML = "Last Chance Available! (" + lastchance + ")";
 				return;
 			} else {
+
+				lastchancebtn.forEach(btn => {
+					btn.disabled = true;
+				});
+
+				document.getElementById("clear_button").disabled = true;
 				document.getElementById("currentgambit").innerHTML = "Game Over";
 			}
 
@@ -1777,8 +1785,14 @@ function updateDISPLAYS() {
 			document.getElementById("table_suit_1").innerHTML = "";
 			document.getElementById("table_number").innerHTML = "";
 			document.getElementById("table_suit_2").innerHTML = "";
-document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+
+			gameplaybtn.forEach(btn => {
+				btn.disabled = true;
+			});
+
+			document.getElementById("clear_button").disabled = true;
 
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
@@ -1797,8 +1811,8 @@ document.getElementById("hand_card").classList.remove('card-appear', 'card-disap
 			document.getElementById("gameplay_buttons").style.display = "none";
 			document.getElementById("last_chance").style.display = "block";
 
-document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
             
 			// Display appropriate dice buttons
 			for (let i = 1; i <= 10; i++) {
@@ -1808,7 +1822,7 @@ document.getElementById("hand_card").classList.remove('card-appear', 'card-disap
 				}
 			}
 
-			document.getElementById("continue_button").disabled = true;
+			document.getElementById("clear_button").disabled = true;
 			document.getElementById("percentage").innerHTML = "";
 			clearGAMBIT2();
 			return;
@@ -1823,8 +1837,18 @@ document.getElementById("hand_card").classList.remove('card-appear', 'card-disap
 			document.getElementById("hand_number").innerHTML = "";
 			document.getElementById("hand_suit_2").innerHTML = "";
 
-document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+
+			gameplaybtn.forEach(btn => {
+				btn.disabled = true;
+			});
+
+			lastchancebtn.forEach(btn => {
+				btn.disabled = true;
+			});
+
+			document.getElementById("clear_button").disabled = true;
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1918,9 +1942,18 @@ document.getElementById("hand_card").classList.remove('card-appear', 'card-disap
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
 		document.getElementById("set_button").disabled = true;
+		document.getElementById("clear_button").disabled = false;
 
-document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+		gameplaybtn.forEach(btn => {
+			btn.disabled = false;
+		});
+
+		lastchancebtn.forEach(btn => {
+			btn.disabled = false;
+		});
+
+		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+		document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
 		pickTABLECARD();
 
