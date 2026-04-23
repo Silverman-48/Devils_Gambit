@@ -646,24 +646,34 @@
                 Score: <span id="score">0</span> / <span id="scoretobeat">∞</span>
             </div>
 
-            <div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content; margin-top: 10px; margin-bottom: 10px;">
+          <div style="display: flex; flex-direction: row; gap: 10px; margin: auto; width: fit-content; margin-top: 10px; margin-bottom: 10px;">
 
-                <div id="table_card" style="margin: auto; background: white; border: 4px solid #EE4B2B; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 10px; height: 125px;">
-                    <span id="table_suit_1" style="text-align: left; font-size: 25px;"></span>
-                    <span id="table_number" style="font-size: 30px; color: black;"></span>
-                    <span id="table_suit_2" style="text-align: right; font-size: 25px;"></span>
+                <!-- Table Card Container -->
+                <div style="display: grid; place-items: center;">
+                    <!-- Dotted Placeholder Slot -->
+                    <div style="grid-area: 1 / 1; width: 90px; height: 125px; padding: 5px; border: 4px dotted #EE4B2B; border-radius: 10px; opacity: 0.8"></div>
+                    
+                    <!-- Your Existing Table Card -->
+<div id="table_card" style="grid-area: 1 / 1; margin: auto; background: white; border: 4px solid #EE4B2B; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 10px; height: 125px; opacity: 0;">
+    <span id="table_suit_1" style="text-align: left; font-size: 25px;"></span>
+    <span id="table_number" style="font-size: 30px; color: black;"></span>
+    <span id="table_suit_2" style="text-align: right; font-size: 25px;"></span>
+</div>
                 </div>
 
-                <div id="hand_card" style="margin: auto; background: none; border: 4px dotted #800080; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 10px; height: 125px;">
-                    <span id="hand_suit_1" style="text-align: left; font-size: 25px;"></span>
-                    <span id="hand_number" style="font-size: 30px; color: black;"></span>
-                    <span id="hand_suit_2" style="text-align: right; font-size: 25px;"></span>
+                <!-- Hand Card Container -->
+                <div style="display: grid; place-items: center;">
+                    <!-- Dotted Placeholder Slot -->
+                    <div style="grid-area: 1 / 1; width: 90px; height: 125px; padding: 5px; border: 4px dotted #800080; border-radius: 10px; opacity: 0.8;"></div>
+                    
+                    <!-- Your Existing Hand Card -->
+<div id="hand_card" style="grid-area: 1 / 1; margin: auto; background: white; border: 4px solid #800080; width: 90px; padding: 5px; gap: 10px; display: flex; flex-direction: column; border-radius: 10px; height: 125px; opacity: 0;">
+    <span id="hand_suit_1" style="text-align: left; font-size: 25px;"></span>
+    <span id="hand_number" style="font-size: 30px; color: black;"></span>
+    <span id="hand_suit_2" style="text-align: right; font-size: 25px;"></span>
+</div>
                 </div>
 
-            </div>
-
-            <div style="display: none" class="current_cards">
-                Table Card: <span id="tablecard">None</span>
             </div>
 
             <div class="current_gambit">
