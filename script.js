@@ -2603,45 +2603,65 @@ function updateVolume(id, element) {
     }
 }
 
-// NEW: Generalized Sound Function
 function playSound(type) {
     let soundClone;
 
-	if (soundClone) {
     switch (type) {
         case 'appear':
             soundClone = appearSound.cloneNode();
-			soundClone.volume = volumeSettings['card'];
-        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'disappear':
             soundClone = disappearSound.cloneNode();
-        	soundClone.volume = volumeSettings['card'];
-        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'death':
             soundClone = deathSound.cloneNode();
-        	soundClone.volume = volumeSettings['winloss'];
-        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'win':
             soundClone = winSound.cloneNode();
-      	  	soundClone.volume = volumeSettings['winloss'];
-      	  	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'empty':
             soundClone = emptySound.cloneNode();
-        	soundClone.volume = volumeSettings['winloss'];
-        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         default:
             console.log(`Unknown sound type: ${type}`);
             return; // Exit if the type doesn't exist
+    }
+
+    // Set volume and play (shared logic for all cases)
+    if (soundClone) {
+    switch (type) {
+        case 'appear':
+        soundClone.volume = volumeSettings['card'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'disappear':
+        soundClone.volume = volumeSettings['card'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'death':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'win':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'empty':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        default:
+            return;
     }
     }
 }
