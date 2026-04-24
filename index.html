@@ -419,12 +419,12 @@
 
                 <div class="stepper" style="flex-direction: column">
 
-                    <div class="stepper" style="flex-direction: column; gap: 0px; width: stretch">
-                    <div id="scorebuttons" style="display: flex; flex-direction: row; width: stretch">
-                        <button id="score_btn_1" class="score_btn" type="button" style="width: stretch" onclick="toggleScoreAmount(1, 'score_btn_1')">1</button>
-                        <button id="score_btn_2" class="score_btn" type="button" style="width: stretch" onclick="toggleScoreAmount(10, 'score_btn_2')">10</button>
-                        <button id="score_btn_3" class="score_btn highlight" type="button" style="width: stretch" onclick="toggleScoreAmount(100, 'score_btn_3')">100</button>
-                        <button id="score_btn_4" class="score_btn" type="button" style="width: stretch" onclick="toggleScoreAmount(1000, 'score_btn_4')">1000</button>
+                    <div class="stepper" style="flex-direction: column; gap: 0px">
+                    <div id="scorebuttons" style="display: flex; flex-direction: row; width: 320px;">
+                        <button id="score_btn_1" class="score_btn" type="button" style="flex: 1" onclick="toggleScoreAmount(1, 'score_btn_1')">1</button>
+                        <button id="score_btn_2" class="score_btn" type="button" style="flex: 1" onclick="toggleScoreAmount(10, 'score_btn_2')">10</button>
+                        <button id="score_btn_3" class="score_btn highlight" type="button" style="flex: 1" onclick="toggleScoreAmount(100, 'score_btn_3')">100</button>
+                        <button id="score_btn_4" class="score_btn" type="button" style="flex: 1" onclick="toggleScoreAmount(1000, 'score_btn_4')">1000</button>
                     </div>
                     </div>
 
@@ -646,7 +646,7 @@
 
             <div id="cheats" class="cheats">
 <div style="margin-bottom: 5px; margin-top: 5px;">
-    <button id="music_toggle" class="special_button" onclick="toggleMusic()">
+    <button id="music_toggle" class="special_button" style="width: 150px" onclick="toggleMusic()">
         Play Music 🎵
     </button>
     
@@ -734,14 +734,14 @@
 
                     <div style="display: flex; gap: 5px; width: 300px; margin-top: 5px">
 
-                        <button id="btn_action_Blank" class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="useBLANK()"><span class="button_content">Blank</span></button>
+                        <button id="btn_action_Blank" class="special_button" style="flex: 1; height: 60px" onclick="useBLANK()"><span class="button_content">Blank</span></button>
 
                         <div style="display: flex; flex-direction: column;">
-                            <button id="btn_action_SacrificeLife" class="special_button" style="width: stretch; flex: 1; height: 20px; border-bottom: 1.5px solid #b5b5b5; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Sacrifice (Life)</span></button>
-                            <button id="btn_action_SacrificeBlank" class="special_button" style="width: stretch; flex: 1; height: 20px; border-top: 1.5px solid #b5b5b5; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Sacrifice (Blank)</span></button>
+                            <button id="btn_action_SacrificeLife" class="special_button" style="flex: 1; border-bottom: 1.5px solid #b5b5b5; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Sacrifice (Life)</span></button>
+                            <button id="btn_action_SacrificeBlank" class="special_button" style="flex: 1; border-top: 1.5px solid #b5b5b5; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Sacrifice (Blank)</span></button>
                         </div>
 
-                        <button id="btn_action_Skip" class="special_button" style="width: stretch; flex: 1; height: stretch" onclick="skipROUND()"><span class="button_content">Skip</span></button>
+                        <button id="btn_action_Skip" class="special_button" style="flex: 1; height: 60px" onclick="skipROUND()"><span class="button_content">Skip</span></button>
 
                     </div>
 
@@ -772,7 +772,7 @@
 
         </div>
 
-        <div id="flex_element_2" class="flex_element_2" style="display: none; width: 300px; background: #191919; border: 5px solid white; border-radius: 10px; padding: 10px;">
+        <div id="flex_element_2" class="flex_element_2" style="display: none; width: 320px; background: #191919; border: 5px solid white; border-radius: 10px; padding: 10px;">
 
             <button style="width: stretch;" onclick="toggleELEMENTS();"><span id="togglebutton" class="button_content">Resume Game</span></button>
 
@@ -789,7 +789,7 @@
 
                 <div>Game History:</div>
 
-                <div id="card_history" class="card_history" style="width: stretch"></div>
+                <div id="card_history" class="card_history" style="width: 320px"></div>
 
             </div>
 
