@@ -22,14 +22,14 @@
 	let colorarray = ['Red', 'Black', 'Special'];
 	let valuearray = ['Low', 'High'];
 
-let variable = "None";
+	let variable = "None";
 	let element = "None";
 	let multiplier = 1;
-    let multiplierOp = "*";
+	let multiplierOp = "*";
 	let valueswitch = -1;
 
 	let value = "";
-    let currentPoints = 0;
+	let currentPoints = 0;
 	let rank = "";
 	let suit = "";
 	let color = "";
@@ -39,7 +39,7 @@ let variable = "None";
 	let valuemodifierhand = 0;
 	let usedstreak = 0;
 
-    let cardPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
+	let cardPoints = { "A": 20, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10, "J1": 20, "J2": 20 };
 	let winloss = "";
 
 let mults = {
@@ -109,6 +109,8 @@ let mults = {
 	const GLOBAL_CAP = 20;
 	let scorechangeamount = '100';
 	let globalTableIndex = -1;
+
+	let isdeckempty = false;
 
 	const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -692,7 +694,7 @@ function toggleBLANKS() {
 	function clearGAMBIT() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -734,7 +736,7 @@ function toggleBLANKS() {
 	function setgambitLEFT(buttonelement) {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		const buttons = document.querySelectorAll('.special_button_1');
 		const buttons_2 = document.querySelectorAll('.special_button_2');
@@ -788,7 +790,7 @@ function toggleBLANKS() {
 	function setgambitRIGHT(buttonelement) {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		const buttons = document.querySelectorAll('.special_button_2');
 
@@ -1514,7 +1516,7 @@ function generateCustomDeck() {
 	function skipROUND() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		// Calculate Life Cost
 		if (lifepoints !== Infinity) {
@@ -1728,6 +1730,9 @@ function toggleELEMENTS() {
 		} else {
 			document.getElementById("currentgambit").textContent = "No More Cards Left";
 		}
+
+		isdeckempty = true;
+
 		document.getElementById("gambit_left").textContent = "";
 		document.getElementById("gambit_right").textContent = "";
 		document.getElementById("empty_gambit").textContent = "...";
@@ -1917,6 +1922,8 @@ function updateDISPLAYS() {
 
 		cards = generateCustomDeck();
 
+		isdeckempty = false;
+
 		document.getElementById("table_suit_1").innerHTML = "";
 		document.getElementById("table_number").innerHTML = "";
 		document.getElementById("table_suit_2").innerHTML = "";
@@ -1996,7 +2003,7 @@ function updateDISPLAYS() {
 function sacrificeSTREAK(type) {
 	if (playerwin === true) return;
 	if (lifepoints === 0) return;
-	if (cards.length === 0) return;
+	if (isdeckempty === true) return;
 
 	const buttons_1 = document.querySelectorAll('.special_button_1');
 	buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -2100,7 +2107,7 @@ function sacrificeSTREAK(type) {
 	function useBLANK() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		if (blanks === 0) {
 			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
@@ -2147,7 +2154,7 @@ function sacrificeSTREAK(type) {
 
 function selectCARD() {
 		if (playerwin === true) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		// INFINITE DECK LOGIC
 		const isInfiniteDeck = document.getElementById('infinite_deck').checked;
@@ -2281,7 +2288,7 @@ function pickTABLECARD() {
 // Checks If Gambit is Regular or Value, and Runs It
 
 	function runGAMBIT() {
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 		if (variable === "Special") {
 			jokerGAMBIT();
 			return;
@@ -2299,7 +2306,7 @@ function pickTABLECARD() {
 	function jokerGAMBIT() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
 
@@ -2340,7 +2347,7 @@ if (color === 'Special') {
 		if (playerwin === true) return;
 		if (document.getElementById("gambit_left").innerHTML === "" && document.getElementById("gambit_right").innerHTML === "") return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		selectCARD();
 
@@ -2367,7 +2374,7 @@ if (variable === check || color === 'Special') {
 	function gambitVALUE() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) return;
+		if (isdeckempty === true) return;
 
 		selectCARD();
 
