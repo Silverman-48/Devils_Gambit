@@ -110,6 +110,8 @@ let mults = {
 	let scorechangeamount = '100';
 	let globalTableIndex = -1;
 
+	const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // --- NEW 54 CARD LOGIC DATA ---
 const suitsList = ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Jokers'];
 const standardCardRanks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -690,10 +692,7 @@ function toggleBLANKS() {
 	function clearGAMBIT() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -735,10 +734,7 @@ function toggleBLANKS() {
 	function setgambitLEFT(buttonelement) {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		const buttons = document.querySelectorAll('.special_button_1');
 		const buttons_2 = document.querySelectorAll('.special_button_2');
@@ -792,10 +788,7 @@ function toggleBLANKS() {
 	function setgambitRIGHT(buttonelement) {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		const buttons = document.querySelectorAll('.special_button_2');
 
@@ -1521,10 +1514,7 @@ function generateCustomDeck() {
 	function skipROUND() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		// Calculate Life Cost
 		if (lifepoints !== Infinity) {
@@ -1564,41 +1554,80 @@ function generateCustomDeck() {
 
 // Last Chance Setup
 
-	function lastCHANCE(playerChoice) {
-		if (lastchance === 0) return;
+async function lastCHANCE(playerChoice) {
+    if (lastchance === 0) return;
 
-		lastchance = lastchance - 1;
+    lastchance--;
 
-		const randomNumber = Math.floor(Math.random() * lastchancedice) + 1;
-		document.getElementById("output").textContent = randomNumber;
-		const diceroll = Number(playerChoice);
+    const randomNumber = Math.floor(Math.random() * lastchancedice) + 1;
+    document.getElementById("output").textContent = randomNumber;
+    const diceroll = Number(playerChoice);
 
-		if (randomNumber === diceroll) {
+    if (randomNumber === diceroll) {
+        // --- 1. SUCCESS STATE ---
+        document.getElementById("hand_suit_1").innerHTML = "💗";
+        document.getElementById("hand_number").innerHTML = "Life";
+        document.getElementById("hand_suit_2").innerHTML = "💗";
 
-			pickTABLECARD();
-			
-			addORremove('lifepoints', 1, '+');
-			document.getElementById("currentgambit").innerHTML = "One More Chance!";
-			document.getElementById("empty_gambit").innerHTML = "...";
-			document.getElementById("gambit_left").innerHTML = "";
-			document.getElementById("gambit_right").innerHTML = "";
+        playSound('appear');
+        triggerAnimation('hand_card', 'card-appear');
 
-			document.getElementById("clear_button").disabled = false;
+        addORremove('lifepoints', 1, '+');
+        document.getElementById("currentgambit").innerHTML = "One More Chance!";
 
-			document.getElementById("last_chance").style.display = "none";
-			document.getElementById("gameplay_buttons").style.display = "block";
+        // Wait for the player to enjoy their victory (1.2 seconds)
+        await wait(1200);
 
-		} else {
+        // --- 2. START EXIT ANIMATIONS ---
+        playSound('disappear');
+        triggerAnimation('table_card', 'card-disappear');
 
-			if (lastchance >= 1) {
-				document.getElementById("currentgambit").innerHTML = "Last Chance Available (" + lastchance + ")";
-				return;
-			} else {
-				document.getElementById("currentgambit").innerHTML = "You Lost";
-			}
+        // Short stagger before the hand card disappears (0.15 seconds)
+        await wait(150);
+        playSound('disappear');
+        triggerAnimation('hand_card', 'card-disappear');
 
-		}
-	}
+        // Wait for animations to finish (0.45 seconds)
+        await wait(400);
+
+        // --- 3. CLEANUP & RESET ---
+        // Strip classes and ensure they are invisible for the next round
+        const table = document.getElementById("table_card");
+        const hand = document.getElementById("hand_card");
+        
+        table.classList.remove('card-appear', 'card-disappear');
+        hand.classList.remove('card-appear', 'card-disappear');
+        table.style.opacity = "0";
+        hand.style.opacity = "0";
+
+        await wait(100);
+
+        document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
+        pickTABLECARD();
+
+        document.getElementById("empty_gambit").innerHTML = "...";
+        document.getElementById("gambit_left").innerHTML = "";
+        document.getElementById("gambit_right").innerHTML = "";
+
+        document.getElementById("clear_button").disabled = false;
+        document.getElementById("last_chance").style.display = "none";
+        document.getElementById("gameplay_buttons").style.display = "block";
+
+    } else {
+        // --- 4. FAILURE STATE ---
+        if (lastchance >= 1) {
+            document.getElementById("currentgambit").innerHTML = `Last Chance Available (${lastchance})`;
+        } else {
+            document.getElementById("hand_suit_1").innerHTML = "💀";
+            document.getElementById("hand_number").innerHTML = "Death";
+            document.getElementById("hand_suit_2").innerHTML = "💀";
+
+            playSound('appear');
+            triggerAnimation('hand_card', 'card-appear');
+            document.getElementById("currentgambit").innerHTML = "You Lost";
+        }
+    }
+}
 
 // Show / Hide Elements
 
@@ -1674,18 +1703,22 @@ function cycleSection(direction) {
 
 // Show / Hide Main Interface and Card History
 
-	function toggleELEMENTS() {
-		var x = document.getElementById('flex_element_1');
-		var y = document.getElementById('flex_element_2');
+function toggleELEMENTS() {
+    var x = document.getElementById('flex_element_1');
+    var y = document.getElementById('flex_element_2');
 
-		if (x.style.display == "block") {
-			x.style.display = "none";
-			y.style.display = "block";
-		} else {
-			x.style.display = "block";
-			y.style.display = "none";
-		}
-	}
+    if (x.style.display == "block") {
+        // Strip the lingering animation classes BEFORE hiding the game screen
+        document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+        document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+
+        x.style.display = "none";
+        y.style.display = "block";
+    } else {
+        x.style.display = "block";
+        y.style.display = "none";
+    }
+}
 
 // Triggers the “Empty Deck” Message
 
@@ -1699,6 +1732,15 @@ function cycleSection(direction) {
 		document.getElementById("gambit_right").textContent = "";
 		document.getElementById("empty_gambit").textContent = "...";
 		document.getElementById("percentage").innerHTML = "";
+
+		document.getElementById("table_suit_1").innerHTML = "󠀠";
+		document.getElementById("table_number").innerHTML = "Empty";
+		document.getElementById("table_suit_2").innerHTML = "󠀠";
+
+		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
+
+		playSound('appear');
+		triggerAnimation('table_card', 'card-appear');
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -1782,11 +1824,12 @@ function updateDISPLAYS() {
 			clearGAMBIT();
 			currentscore = currentscoretobeat;
 			document.getElementById("score").innerHTML = currentscore;
-			document.getElementById("table_suit_1").innerHTML = "";
-			document.getElementById("table_number").innerHTML = "";
-			document.getElementById("table_suit_2").innerHTML = "";
-			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+			document.getElementById("table_suit_1").innerHTML = "✨️";
+			document.getElementById("table_number").innerHTML = "Win";
+			document.getElementById("table_suit_2").innerHTML = "✨️";
+
+			playSound('appear');
+			triggerAnimation('table_card', 'card-appear');
 
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
@@ -1800,9 +1843,9 @@ function updateDISPLAYS() {
 			}
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "Last Chance Available (" + lastchance + ")";
-			document.getElementById("table_suit_1").innerHTML = "";
-			document.getElementById("table_number").innerHTML = "";
-			document.getElementById("table_suit_2").innerHTML = "";
+			document.getElementById("table_suit_1").innerHTML = "🎲";
+			document.getElementById("table_number").innerHTML = "Dice";
+			document.getElementById("table_suit_2").innerHTML = "🎲";
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
 			document.getElementById("gambit_right").innerHTML = "";
@@ -1811,6 +1854,9 @@ function updateDISPLAYS() {
 
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+
+			playSound('appear');
+			triggerAnimation('table_card', 'card-appear');
             
 			// Display appropriate dice buttons
 			for (let i = 1; i <= 10; i++) {
@@ -1827,9 +1873,9 @@ function updateDISPLAYS() {
 		} else if (lifepoints === 0) {
 			document.getElementById("lifepoints").textContent = "0";
 			document.getElementById("currentgambit").innerHTML = "You Lost";
-			document.getElementById("table_suit_1").innerHTML = "";
-			document.getElementById("table_number").innerHTML = "";
-			document.getElementById("table_suit_2").innerHTML = "";
+			document.getElementById("table_suit_1").innerHTML = "💀";
+			document.getElementById("table_number").innerHTML = "Death";
+			document.getElementById("table_suit_2").innerHTML = "💀";
 
 			document.getElementById("hand_suit_1").innerHTML = "";
 			document.getElementById("hand_number").innerHTML = "";
@@ -1837,6 +1883,9 @@ function updateDISPLAYS() {
 
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+
+			playSound('appear');
+			triggerAnimation('table_card', 'card-appear');
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1934,6 +1983,9 @@ function updateDISPLAYS() {
 		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 		document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
+		document.getElementById("table_card").style.opacity = "0";
+		document.getElementById("hand_card").style.opacity = "0";
+
 		pickTABLECARD();
 
 		updateTESTVALUES();
@@ -1944,10 +1996,7 @@ function updateDISPLAYS() {
 function sacrificeSTREAK(type) {
 	if (playerwin === true) return;
 	if (lifepoints === 0) return;
-	if (cards.length === 0) {
-		emptyDECK();
-		return;
-	}
+	if (cards.length === 0) return;
 
 	const buttons_1 = document.querySelectorAll('.special_button_1');
 	buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -2051,10 +2100,8 @@ function sacrificeSTREAK(type) {
 	function useBLANK() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
+
 		if (blanks === 0) {
 			document.getElementById("currentgambit").innerHTML = "No Blanks Available";
 			document.getElementById("percentage").innerHTML = "";
@@ -2100,10 +2147,7 @@ function sacrificeSTREAK(type) {
 
 function selectCARD() {
 		if (playerwin === true) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		// INFINITE DECK LOGIC
 		const isInfiniteDeck = document.getElementById('infinite_deck').checked;
@@ -2237,10 +2281,7 @@ function pickTABLECARD() {
 // Checks If Gambit is Regular or Value, and Runs It
 
 	function runGAMBIT() {
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 		if (variable === "Special") {
 			jokerGAMBIT();
 			return;
@@ -2258,10 +2299,7 @@ function pickTABLECARD() {
 	function jokerGAMBIT() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		document.getElementById("currentgambit").innerHTML = "Joker Gambit";
 
@@ -2302,10 +2340,7 @@ if (color === 'Special') {
 		if (playerwin === true) return;
 		if (document.getElementById("gambit_left").innerHTML === "" && document.getElementById("gambit_right").innerHTML === "") return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		selectCARD();
 
@@ -2332,10 +2367,7 @@ if (variable === check || color === 'Special') {
 	function gambitVALUE() {
 		if (playerwin === true) return;
 		if (lifepoints === 0) return;
-		if (cards.length === 0) {
-			emptyDECK();
-			return;
-		}
+		if (cards.length === 0) return;
 
 		selectCARD();
 
@@ -2415,43 +2447,57 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 		}
 	}
 
-	function resumeGAME() {
-		// 1. Trigger the disappear animations
-		playSound('disappear');
-		triggerAnimation('table_card', 'card-disappear');
-		setTimeout(() => {
-			// playSound('disappear');
-			triggerAnimation('hand_card', 'card-disappear');
-		}, 75);
+async function resumeGAME() {
+    // 1. START ANIMATIONS
+    // Table card starts disappearing immediately
+    playSound('disappear');
+    triggerAnimation('table_card', 'card-disappear');
 
-		setTimeout(() => {
-			// Clean up the disappear classes so the opacity is reset for the next round
-			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
-			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
+    // Wait 150ms before starting the hand card animation (The stagger effect)
+    await wait(150);
+    playSound('disappear');
+    triggerAnimation('hand_card', 'card-disappear');
 
-			setTimeout(() => {
-				const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
-				gameButtons.forEach(btn => {
-					btn.disabled = false;
-            
-					// Actions still use normal toggling
-					if (btn.id && btn.id.startsWith('btn_action_')) {
-						let name = btn.id.replace('btn_action_', '');
-						let cb = document.getElementById(`use_action_${name}`);
-						if (cb) btn.disabled = !cb.checked;
-					}
-				});
+    // 2. WAIT FOR ANIMATIONS TO FINISH
+    // We wait 400ms more (Total 550ms from start) to let the CSS finish
+    await wait(400);
 
-				document.getElementById("set_button").disabled = true;
+    // 3. CLEANUP & STATE LOCKING
+    const table = document.getElementById("table_card");
+    const hand = document.getElementById("hand_card");
 
-				document.getElementById("hand_suit_1").innerHTML = "";
-				document.getElementById("hand_number").innerHTML = "";
-				document.getElementById("hand_suit_2").innerHTML = "";
+    // Remove classes but lock opacity at 0 so they don't pop back in
+    table.classList.remove('card-appear', 'card-disappear');
+    hand.classList.remove('card-appear', 'card-disappear');
+    table.style.opacity = "0";
+    hand.style.opacity = "0";
 
-				updateDISPLAYS();
-			}, 100);
-		}, 350); // 300ms matches your CSS 0.3s duration
-	}
+    // 4. FINAL UI UPDATES
+    // Wait the final 100ms for the "Reset" feel
+    await wait(100);
+
+    const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
+    
+    gameButtons.forEach(btn => {
+        btn.disabled = false;
+        
+        // Handle Action Button Toggling
+        if (btn.id && btn.id.startsWith('btn_action_')) {
+            let name = btn.id.replace('btn_action_', '');
+            let cb = document.getElementById(`use_action_${name}`);
+            if (cb) btn.disabled = !cb.checked;
+        }
+    });
+
+    document.getElementById("set_button").disabled = true;
+
+    // Clear the Hand Card text
+    document.getElementById("hand_suit_1").innerHTML = "";
+    document.getElementById("hand_number").innerHTML = "";
+    document.getElementById("hand_suit_2").innerHTML = "";
+
+    updateDISPLAYS();
+}
 
 // --- AUDIO CONFIGURATION ---
 let bgMusic = new Audio('Sound/theme.mp3'); 
@@ -2459,8 +2505,7 @@ bgMusic.loop = true;
 
 // 1. RANDOMIZER: Create an array of different appear sounds
 const appearSounds = [
-    new Audio('Sound/appear_1.mp3'),
-    new Audio('Sound/appear_2.mp3'),
+    new Audio('Sound/appear.mp3'),
 ];
 
 let disappearSound = new Audio('Sound/disappear.mp3');
@@ -2511,36 +2556,61 @@ function updateVolume() {
 function playSound(type) {
     if (type === 'appear') {
         let randomIndex = Math.floor(Math.random() * appearSounds.length);
-        let selectedSound = appearSounds[randomIndex];
-        selectedSound.currentTime = 0; 
-        selectedSound.volume = globalVolume;
-        selectedSound.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+        // Clone the node so multiple cards appearing don't cut each other's audio off
+        let soundClone = appearSounds[randomIndex].cloneNode(); 
+        soundClone.volume = globalVolume;
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
     } else if (type === 'disappear') {
-        disappearSound.currentTime = 0;
-        disappearSound.volume = globalVolume;
-        disappearSound.play().catch(e => console.log("Sound blocked"));
+        // Clone the disappear sound too
+        let soundClone = disappearSound.cloneNode();
+        soundClone.volume = globalVolume;
+        soundClone.play().catch(e => console.log("Sound blocked"));
     }
 }
 
-// UPDATED: Animation function stripped of sound logic
+// UPDATED: Animation function with visual state locking
 function triggerAnimation(elementId, animationClass) {
     const el = document.getElementById(elementId);
     if (!el) return;
     
     el.classList.remove('card-appear', 'card-disappear');
-    void el.offsetWidth; 
+    void el.offsetWidth; // Trigger CSS reflow
     el.classList.add(animationClass);
+
+    // Lock in the inline style to match the END state of the animation.
+    // This keeps the cards visible when we remove the classes in the menu toggle.
+    if (animationClass === 'card-appear') {
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0)";
+    } else if (animationClass === 'card-disappear') {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(-30px)"; // Matches your 100% keyframe
+    }
 }
 
 const btnClickSound = new Audio('Sound/click.mp3'); // Change to your actual file path
 
 // 2. Find all buttons and add the sound event
-document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', () => {
-        btnClickSound.currentTime = 0; // Resets the sound so it can be spammed rapidly
-        btnClickSound.volume = globalVolume; // Respects your game's volume setting
-        btnClickSound.play().catch(e => console.log("Click sound blocked"));
-    });
+document.addEventListener('click', (event) => {
+    // Check if the clicked element is a button
+    // .closest('button') ensures it works even if they click an icon inside the button
+    const btn = event.target.closest('button');
+
+    if (btn) {
+        btnClickSound.currentTime = 0;
+        btnClickSound.volume = globalVolume;
+        btnClickSound.play().catch(e => console.log("Sound blocked"));
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const isButton = event.target.closest('button');
+    const isCheckbox = event.target.type === 'checkbox';
+
+    if (isButton || isCheckbox) {
+        btnClickSound.currentTime = 0;
+        btnClickSound.play().catch(() => {});
+    }
 });
 
 let allbuttons = document.querySelectorAll('button');
@@ -2561,9 +2631,7 @@ const firstInteractions = ['click'];
 // Add the listener to the window
 firstInteractions.forEach(eventType => {
     window.addEventListener(eventType, () => {
-    setTimeout(() => {
            myInitialFunction();
-         }, 10);
     }, { once: true }); 
     // ^ This { once: true } is the magic—it removes the listener 
     // for ALL events in the list as soon as one of them fires.
