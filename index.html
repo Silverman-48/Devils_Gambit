@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +44,10 @@
         <div id="card_options" style="display: none; flex-direction: column;">
             <div style="display: flex; flex-direction: column; gap: 5px; justify-content: space-between;">
                 <div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
+                <div style="display: flex; flex-direction: column">
                     <label><input type="checkbox" id="use_custom_deck" unchecked> Toggle Custom Deck</label>
+			<label><input type="checkbox" id="infinite_deck" unchecked> Infinite Deck</label>
+			</div>
                     <div class="stepper">
                         <button type="button" onclick="showELEMENT('custom_deck_area', 'flex')" style="width: fit-content"><span class="button_content2">Show / Hide</span></button>
                     </div>
@@ -404,7 +408,10 @@
         <div id="stats_options" style="display: flex; flex-direction: column;">
             <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; border-bottom: 2px solid white; padding-bottom: 10px; justify-content: space-between">
                 <div style="display: flex; flex-direction: row; justify-content: space-between">
-                    <label><input style="flex: 1" type="checkbox" onchange="endlessMODE();" id="endless_mode" unchecked> Score To Beat:</label>
+                    <div style="display: flex; flex-direction: column">
+                    <label>Score To Beat:</label>
+                    <label><input style="flex: 1" type="checkbox" onchange="endlessMODE();" id="endless_mode" unchecked> Endless Mode</label>
+                    </div>
                     <div id="addremovebuttons" class="stepper">
                         <button type="button" onclick="addORremoveSCORE(scorechangeamount, '-')">-</button>
                         <input type="text" style="width: 50px" id="currentscoretobeat" value="1" readonly>
