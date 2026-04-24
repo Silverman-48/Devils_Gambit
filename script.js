@@ -1627,7 +1627,7 @@ async function lastCHANCE(playerChoice) {
             playSound('appear');
             triggerAnimation('hand_card', 'card-appear');
 
-            playSound('death');
+            // playSound('death');
 
 		document.getElementById('hand_card').style.filter = 'invert(100%)';
 
@@ -1755,7 +1755,7 @@ function toggleELEMENTS() {
 		playSound('appear');
 		triggerAnimation('table_card', 'card-appear');
 
-		playSound('empty');
+		// playSound('empty');
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -1846,7 +1846,7 @@ function updateDISPLAYS() {
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
 
-			playSound('win');
+			// playSound('win');
 
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
@@ -1906,7 +1906,7 @@ function updateDISPLAYS() {
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
 
-			playSound('death');
+			// playSound('death');
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -2532,9 +2532,9 @@ bgMusic.loop = true;
 
 let appearSound = new Audio('Sound/appear.mp3');
 let disappearSound = new Audio('Sound/disappear.mp3');
-let deathSound = new Audio('Sound/death.mp3');
-let winSound = new Audio('Sound/win.mp3');
-let emptySound = new Audio('Sound/empty.mp3');
+// let deathSound = new Audio('Sound/death.mp3');
+// let winSound = new Audio('Sound/win.mp3');
+// let emptySound = new Audio('Sound/empty.mp3');
 let btnClickSound = new Audio('Sound/click.mp3');
 
 let isMusicPlaying = false;
@@ -2607,62 +2607,41 @@ function updateVolume(id, element) {
 function playSound(type) {
     let soundClone;
 
+	if (soundClone) {
     switch (type) {
         case 'appear':
             soundClone = appearSound.cloneNode();
+			soundClone.volume = volumeSettings['card'];
+        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'disappear':
             soundClone = disappearSound.cloneNode();
+        	soundClone.volume = volumeSettings['card'];
+        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'death':
             soundClone = deathSound.cloneNode();
+        	soundClone.volume = volumeSettings['winloss'];
+        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'win':
             soundClone = winSound.cloneNode();
+      	  	soundClone.volume = volumeSettings['winloss'];
+      	  	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         case 'empty':
             soundClone = emptySound.cloneNode();
+        	soundClone.volume = volumeSettings['winloss'];
+        	soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
             break;
 
         default:
             console.log(`Unknown sound type: ${type}`);
             return; // Exit if the type doesn't exist
-    }
-
-    // Set volume and play (shared logic for all cases)
-    if (soundClone) {
-    switch (type) {
-        case 'appear':
-        soundClone.volume = volumeSettings['card'];
-        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-            break;
-
-        case 'disappear':
-        soundClone.volume = volumeSettings['card'];
-        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-            break;
-
-        case 'death':
-        soundClone.volume = volumeSettings['winloss'];
-        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-            break;
-
-        case 'win':
-        soundClone.volume = volumeSettings['winloss'];
-        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-            break;
-
-        case 'empty':
-        soundClone.volume = volumeSettings['winloss'];
-        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-            break;
-
-        default:
-            return;
     }
     }
 }
