@@ -625,6 +625,28 @@
 
         </div>
 
+<div id="audio_options" style="margin-bottom: 5px; margin-top: 5px; display: none; flex-direction: column; justify-content: space-between">
+
+    <div style="margin-top: 10px; display: flex; align-items: left;">
+        <strong>Volume:</strong>
+    </div>
+
+    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <span>Cards:</span>
+        <input type="range" id="volume_slider_card" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume('volume_slider_card', 'card')">
+    </div>
+
+    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <span>Button Click:</span>
+        <input type="range" id="volume_slider_button" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume('volume_slider_button', 'button')">
+    </div>
+
+    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <span>Win / Loss:</span>
+        <input type="range" id="volume_slider_winloss" min="0" max="1" step="0.1" value="0" oninput="updateVolume('volume_slider_winloss', 'winloss')">
+    </div>
+</div>
+
     </div>
 
     <div id="game_screen" style="display: block;">
@@ -645,14 +667,12 @@
             </div>
 
             <div id="cheats" class="cheats">
-<div style="margin-bottom: 5px; margin-top: 5px;">
-    <button id="music_toggle" class="special_button" style="width: 150px" onclick="toggleMusic()">
+<div style="margin-bottom: 5px; margin-top: 5px">
+    <button id="music_toggle" style="width: 150px" onclick="toggleMusic()">
         Play Music 🎵
     </button>
-    
-    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <span>Volume:</span>
-        <input type="range" id="volume_slider" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume()">
+    <div style="margin-top: 10px;">
+        <input type="range" id="volume_slider_music" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume('volume_slider_music', 'music')">
     </div>
 </div>
                 Gambit Chance: <span id="percentage"></span>
