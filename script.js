@@ -1626,6 +1626,11 @@ async function lastCHANCE(playerChoice) {
 
             playSound('appear');
             triggerAnimation('hand_card', 'card-appear');
+
+            playSound('death');
+
+		document.getElementById('hand_card').style.filter = 'invert(100%)';
+
             document.getElementById("currentgambit").innerHTML = "You Lost";
         }
     }
@@ -1650,6 +1655,7 @@ const menuSections = [
     { id: 'gambit_mult_options', title: 'Gambits' },
     { id: 'actions_options', title: 'Actions' },
     { id: 'win_loss_options', title: 'Win / Loss / Last Chance' },
+    { id: 'audio_options', title: 'Audio Settings' },
 ];
 
 // 2. Track the currently viewed section index (defaults to 0, which is 'Cards')
@@ -1739,13 +1745,17 @@ function toggleELEMENTS() {
 		document.getElementById("percentage").innerHTML = "";
 
 		document.getElementById("table_suit_1").innerHTML = "󠀠";
-		document.getElementById("table_number").innerHTML = "Empty";
+		document.getElementById("table_number").innerHTML = "Void";
 		document.getElementById("table_suit_2").innerHTML = "󠀠";
+
+		document.getElementById('table_card').style.filter = 'invert(100%)';
 
 		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 
 		playSound('appear');
 		triggerAnimation('table_card', 'card-appear');
+
+		playSound('empty');
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -1836,6 +1846,8 @@ function updateDISPLAYS() {
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
 
+			playSound('win');
+
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
 			return;
@@ -1889,8 +1901,12 @@ function updateDISPLAYS() {
 			document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 			document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
+			document.getElementById('table_card').style.filter = 'invert(100%)';
+
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
+
+			playSound('death');
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1991,7 +2007,10 @@ function updateDISPLAYS() {
 		document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
 
 		document.getElementById("table_card").style.opacity = "0";
+		document.getElementById('table_card').style.filter = 'invert(0%)';
+
 		document.getElementById("hand_card").style.opacity = "0";
+		document.getElementById('hand_card').style.filter = 'invert(0%)';
 
 		pickTABLECARD();
 
@@ -2289,6 +2308,7 @@ function pickTABLECARD() {
 
 	function runGAMBIT() {
 		if (isdeckempty === true) return;
+
 		if (variable === "Special") {
 			jokerGAMBIT();
 			return;
@@ -2510,15 +2530,20 @@ async function resumeGAME() {
 let bgMusic = new Audio('Sound/theme.mp3'); 
 bgMusic.loop = true;
 
-// 1. RANDOMIZER: Create an array of different appear sounds
-const appearSounds = [
-    new Audio('Sound/appear.mp3'),
-];
-
+let appearSound = new Audio('Sound/appear.mp3');
 let disappearSound = new Audio('Sound/disappear.mp3');
+let deathSound = new Audio('Sound/death.mp3');
+let winSound = new Audio('Sound/win.mp3');
+let emptySound = new Audio('Sound/empty.mp3');
+let btnClickSound = new Audio('Sound/click.mp3');
 
 let isMusicPlaying = false;
-let globalVolume = 0.5;
+const volumeSettings = {
+    music: 0.5,
+    card: 0.5,
+    button: 0.5,
+    winloss: 0
+};
 
 // 2. FIX FOR INITIAL LOAD: "Unlock" audio on first user interaction
 // This listens for the first click anywhere on the page to enable audio
@@ -2526,9 +2551,7 @@ document.addEventListener('click', () => {
     // We "prime" the sounds by playing and immediately pausing them
     // This tells the browser the user has consented to audio
     disappearSound.play().then(() => disappearSound.pause()).catch(() => {});
-    appearSounds.forEach(s => {
-        s.play().then(() => s.pause()).catch(() => {});
-    });
+    appearSound.play().then(() => appearSound.pause()).catch(() => {});
 }, { once: true }); // { once: true } makes this run only one time
 
 
@@ -2540,7 +2563,7 @@ function toggleMusic() {
         musicBtn.innerText = "Play Music 🎵";
         musicBtn.classList.remove('highlight');
     } else {
-        bgMusic.volume = globalVolume;
+        bgMusic.volume = volumeSettings['music'];
         bgMusic.play();
         isMusicPlaying = true;
         musicBtn.innerText = "Pause Music ⏸️";
@@ -2548,30 +2571,99 @@ function toggleMusic() {
     }
 }
 
-function updateVolume() {
-    globalVolume = document.getElementById('volume_slider').value;
-    bgMusic.volume = globalVolume;
-    disappearSound.volume = globalVolume;
+function updateVolume(id, element) {
+    // Convert string value to a float (0.0 to 1.0)
+    const newVolume = parseFloat(document.getElementById(id).value);
     
-    // Update volume for all random sound objects
-    appearSounds.forEach(sound => {
-        sound.volume = globalVolume;
-    });
+    // Also update your global variable so future sounds use this volume
+    volumeSettings[element] = newVolume;
+
+    switch (element) {
+        case 'music':
+            bgMusic.volume = newVolume;
+            break; // Stop here!
+
+        case 'card':
+            disappearSound.volume = newVolume;
+            appearSound.volume = newVolume;
+            break;
+
+        case 'button':
+            btnClickSound.volume = newVolume;
+            break;
+
+        case 'winloss':
+            death.volume = newVolume;
+            win.volume = newVolume;
+            empty.volume = newVolume;
+            break;
+
+        default: 
+            break;
+    }
 }
 
 // NEW: Generalized Sound Function
 function playSound(type) {
-    if (type === 'appear') {
-        let randomIndex = Math.floor(Math.random() * appearSounds.length);
-        // Clone the node so multiple cards appearing don't cut each other's audio off
-        let soundClone = appearSounds[randomIndex].cloneNode(); 
-        soundClone.volume = globalVolume;
+    let soundClone;
+
+    switch (type) {
+        case 'appear':
+            soundClone = appearSound.cloneNode();
+            break;
+
+        case 'disappear':
+            soundClone = disappearSound.cloneNode();
+            break;
+
+        case 'death':
+            soundClone = deathSound.cloneNode();
+            break;
+
+        case 'win':
+            soundClone = winSound.cloneNode();
+            break;
+
+        case 'empty':
+            soundClone = emptySound.cloneNode();
+            break;
+
+        default:
+            console.log(`Unknown sound type: ${type}`);
+            return; // Exit if the type doesn't exist
+    }
+
+    // Set volume and play (shared logic for all cases)
+    if (soundClone) {
+    switch (type) {
+        case 'appear':
+        soundClone.volume = volumeSettings['card'];
         soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-    } else if (type === 'disappear') {
-        // Clone the disappear sound too
-        let soundClone = disappearSound.cloneNode();
-        soundClone.volume = globalVolume;
-        soundClone.play().catch(e => console.log("Sound blocked"));
+            break;
+
+        case 'disappear':
+        soundClone.volume = volumeSettings['card'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'death':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'win':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        case 'empty':
+        soundClone.volume = volumeSettings['winloss'];
+        soundClone.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+            break;
+
+        default:
+            return;
+    }
     }
 }
 
@@ -2595,8 +2687,6 @@ function triggerAnimation(elementId, animationClass) {
     }
 }
 
-const btnClickSound = new Audio('Sound/click.mp3'); // Change to your actual file path
-
 // 2. Find all buttons and add the sound event
 document.addEventListener('click', (event) => {
     // Check if the clicked element is a button
@@ -2605,7 +2695,7 @@ document.addEventListener('click', (event) => {
 
     if (btn) {
         btnClickSound.currentTime = 0;
-        btnClickSound.volume = globalVolume;
+        btnClickSound.volume = volumeSettings['button'];
         btnClickSound.play().catch(e => console.log("Sound blocked"));
     }
 });
