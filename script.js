@@ -108,6 +108,7 @@ let mults = {
 
 	const GLOBAL_CAP = 20;
 	let scorechangeamount = '100';
+	let globalTableIndex = -1;
 
 // --- NEW 54 CARD LOGIC DATA ---
 const suitsList = ['Hearts', 'Diamonds', 'Clubs', 'Spades', 'Jokers'];
@@ -224,6 +225,7 @@ const presets = [
         name: "Default",
         config: {
             "endless": true,
+            "infinite_deck": false,
             "finite_lives": true,
             "finite_blanks": true,
             "currentscoretobeat": 100,
@@ -308,6 +310,7 @@ const presets = [
         name: "Russian Roulette",
         config: {
             "endless": false,
+            "infinite_deck": false,
             "finite_lives": true,
             "finite_blanks": true,
             "currentscoretobeat": 1000,
@@ -543,6 +546,8 @@ Object.keys(mults).forEach(key => {
 
     savedblanks = currentblanks; 
     document.getElementById("currentblanks").value = savedblanks;
+
+    document.getElementById("infinite_deck").checked = cfg["infinite_deck"] || false;
 
     // Process Checkboxes for Infinity Logic
     document.getElementById("endless_mode").checked = cfg["endless"] || false;
@@ -1960,6 +1965,22 @@ function sacrificeSTREAK(type) {
 
 	updateTESTVALUES();
 
+	// Check if trying to buy life while having infinite life
+	if (type === 'lifepoints' && lifepoints === Infinity) {
+		document.getElementById("currentgambit").textContent = "Infinite HP Active";
+		document.getElementById("empty_gambit").textContent = "...";
+		document.getElementById("percentage").innerHTML = "";
+		return;
+	} 
+	
+	// Check if trying to buy blanks while having infinite blanks
+	if (type === 'blanks' && blanks === Infinity) {
+		document.getElementById("currentgambit").textContent = "Infinite Blanks Active";
+		document.getElementById("empty_gambit").textContent = "...";
+		document.getElementById("percentage").innerHTML = "";
+		return;
+	}
+
 	var streaknumber = (type === "lifepoints") ? sacrificelife : sacrificeblanks;
 
 	// 1. Check if user has enough streak first
@@ -1968,23 +1989,22 @@ function sacrificeSTREAK(type) {
 		document.getElementById("empty_gambit").textContent = "(" + streak + "/" + streaknumber + ")";
 		document.getElementById("percentage").innerHTML = "";
 		return;
+	} else {
+		streak -= streaknumber;
+		document.getElementById("streak").textContent = streak;
 	}
 
-	streak -= streaknumber;
-	document.getElementById("streak").textContent = streak;
-
 	if (type === 'lifepoints') {
-		if (lifepoints !== Infinity) {
-			if (lifepoints >= GLOBAL_CAP) {
-				enforceCaps();
-				document.getElementById("currentgambit").textContent = "Max HP Reached";
-				document.getElementById("empty_gambit").textContent = "...";
-				document.getElementById("percentage").innerHTML = "";
-				return;
-			}
-			lifepoints++; 
-			document.getElementById("lifepoints").textContent = lifepoints;
+		if (lifepoints >= GLOBAL_CAP) {
+			enforceCaps();
+			document.getElementById("currentgambit").textContent = "Max HP Reached";
+			document.getElementById("empty_gambit").textContent = "...";
+			document.getElementById("percentage").innerHTML = "";
+			return;
 		}
+		lifepoints++; 
+		document.getElementById("lifepoints").textContent = lifepoints;
+		
 		document.getElementById("currentgambit").textContent = "Streak Sacrificed";
 		document.getElementById("empty_gambit").textContent = "(+1 Life)";
 		document.getElementById("percentage").innerHTML = "";
@@ -1999,17 +2019,16 @@ function sacrificeSTREAK(type) {
 		document.getElementById("card_history").innerHTML = historyEntry + document.getElementById("card_history").innerHTML;
 
 	} else if (type === 'blanks') {
-		if (blanks !== Infinity) {
-			if (blanks >= GLOBAL_CAP) {
-				enforceCaps();
-				document.getElementById("currentgambit").textContent = "Max Blanks Reached";
-				document.getElementById("empty_gambit").textContent = "...";
-				document.getElementById("percentage").innerHTML = "";
-				return;
-			}
-			blanks++; 
-			document.getElementById("blanks").textContent = blanks;
+		if (blanks >= GLOBAL_CAP) {
+			enforceCaps();
+			document.getElementById("currentgambit").textContent = "Max Blanks Reached";
+			document.getElementById("empty_gambit").textContent = "...";
+			document.getElementById("percentage").innerHTML = "";
+			return;
 		}
+		blanks++; 
+		document.getElementById("blanks").textContent = blanks;
+
 		document.getElementById("currentgambit").textContent = "Streak Sacrificed";
 		document.getElementById("empty_gambit").textContent = "(+1 Blank)";
 		document.getElementById("percentage").innerHTML = "";
@@ -2079,17 +2098,31 @@ function sacrificeSTREAK(type) {
 
 // Selects the Player's Card
 
-	function selectCARD() {
+function selectCARD() {
 		if (playerwin === true) return;
 		if (cards.length === 0) {
 			emptyDECK();
 			return;
 		}
 
-		const index = Math.floor(Math.random() * cards.length);
-		card = cards.splice(index, 1)[0];
+		// INFINITE DECK LOGIC
+		const isInfiniteDeck = document.getElementById('infinite_deck').checked;
+		let index;
+		if (isInfiniteDeck) {
+			index = Math.floor(Math.random() * cards.length);
+			// Prevent drawing the exact card currently on the table
+			while (index === globalTableIndex && cards.length > 1) {
+				index = Math.floor(Math.random() * cards.length);
+			}
+		} else {
+			index = Math.floor(Math.random() * cards.length);
+		}
+
+		// Don't splice if Infinite Deck is active
+		card = isInfiniteDeck ? cards[index] : cards.splice(index, 1)[0];
+		
 		value = card.value;
-        	currentPoints = card.points;
+		currentPoints = card.points;
 		rank = card.rank;
 		suit = card.suit;
 		color = card.color;
@@ -2098,81 +2131,65 @@ function sacrificeSTREAK(type) {
 		document.getElementById("remaining").textContent = cards.length;
 
 		if (value <= 7) {
-		
 			valuemodifierhand = 0;
-			lowcardscounter = lowcardscounter - 1;
-			document.getElementById("lowcards").innerHTML = lowcardscounter;
-		
+			if (!isInfiniteDeck) {
+				lowcardscounter = lowcardscounter - 1;
+				document.getElementById("lowcards").innerHTML = lowcardscounter;
+			}
 		}
 
 		if (value >= 8 && value !== 20) {
-		
 			valuemodifierhand = 1;
-			highcardscounter = highcardscounter - 1;
-			document.getElementById("highcards").innerHTML = highcardscounter;
-		
+			if (!isInfiniteDeck) {
+				highcardscounter = highcardscounter - 1;
+				document.getElementById("highcards").innerHTML = highcardscounter;
+			}
 		}
 
-		if (rank === "A") {
-			acecardscounter = acecardscounter - 1;
-			document.getElementById("acecards").innerHTML = acecardscounter;
-		}
-
-		if (color === "Red") {
-			redcardscounter = redcardscounter - 1;
-			document.getElementById("redcards").innerHTML = redcardscounter;
-		}
-
-		if (color === "Black") {
-			blackcardscounter = blackcardscounter - 1;
-			document.getElementById("blackcards").innerHTML = blackcardscounter;
-		}
-
-		if (color === "Special") {
-			jokercardscounter = jokercardscounter - 1;
-			document.getElementById("jokercards").innerHTML = jokercardscounter;
-		}
-
-		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter - 1;
-			document.getElementById("clubscards").innerHTML = clubscardscounter;
-		}
-
-		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter - 1;
-			document.getElementById("spadescards").innerHTML = spadescardscounter;
-		}
-
-		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter - 1;
-			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-		}
-
-		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter - 1;
-			document.getElementById("heartscards").innerHTML = heartscardscounter;
+		// Only decrement specific counters if not infinite
+		if (!isInfiniteDeck) {
+			if (rank === "A") { acecardscounter = acecardscounter - 1; document.getElementById("acecards").innerHTML = acecardscounter; }
+			if (color === "Red") { redcardscounter = redcardscounter - 1; document.getElementById("redcards").innerHTML = redcardscounter; }
+			if (color === "Black") { blackcardscounter = blackcardscounter - 1; document.getElementById("blackcards").innerHTML = blackcardscounter; }
+			if (color === "Special") { jokercardscounter = jokercardscounter - 1; document.getElementById("jokercards").innerHTML = jokercardscounter; }
+			if (suit === "♣️") { clubscardscounter = clubscardscounter - 1; document.getElementById("clubscards").innerHTML = clubscardscounter; }
+			if (suit === "♠️") { spadescardscounter = spadescardscounter - 1; document.getElementById("spadescards").innerHTML = spadescardscounter; }
+			if (suit === "♦️") { diamondscardscounter = diamondscardscounter - 1; document.getElementById("diamondscards").innerHTML = diamondscardscounter; }
+			if (suit === "♥️") { heartscardscounter = heartscardscounter - 1; document.getElementById("heartscards").innerHTML = heartscardscounter; }
 		}
 
 		document.getElementById("hand_suit_1").innerHTML = suit;
 		document.getElementById("hand_number").innerHTML = rank;
 		document.getElementById("hand_suit_2").innerHTML = suit;
 
+		playSound('appear');
 		triggerAnimation('hand_card', 'card-appear');
 	}
 
 // Picks the Next Table Card
 
-	function pickTABLECARD() {
+function pickTABLECARD() {
 		if (playerwin === true) return;
 		if (cards.length <= 1) {
 			emptyDECK();
 			return;
 		}
 
-		const index = Math.floor(Math.random() * cards.length);
-		const card = cards.splice(index, 1)[0];
+		// INFINITE DECK LOGIC
+		const isInfiniteDeck = document.getElementById('infinite_deck').checked;
+		let index;
+		if (isInfiniteDeck) {
+			index = Math.floor(Math.random() * cards.length);
+			globalTableIndex = index; // Store it so the Hand knows what to avoid
+		} else {
+			index = Math.floor(Math.random() * cards.length);
+		}
+
+		// Don't splice if Infinite Deck is active
+		const card = isInfiniteDeck ? cards[index] : cards.splice(index, 1)[0];
+		
 		const value = card.value;
-        	const points = card.points;
+		const points = card.points;
 		const rank = card.rank;
 		const suit = card.suit;
 		const color = card.color;
@@ -2182,65 +2199,38 @@ function sacrificeSTREAK(type) {
 		acevalue = points;
 
 		if (value <= 7) {
-		
 			valuemodifiertable = 0;
-			lowcardscounter = lowcardscounter - 1;
-			document.getElementById("lowcards").innerHTML = lowcardscounter;
-		
+			if (!isInfiniteDeck) {
+				lowcardscounter = lowcardscounter - 1;
+				document.getElementById("lowcards").innerHTML = lowcardscounter;
+			}
 		}
 
 		if (value >= 8 && value !== 20) {
-		
 			valuemodifiertable = 1;
-			highcardscounter = highcardscounter - 1;
-			document.getElementById("highcards").innerHTML = highcardscounter;
-		
+			if (!isInfiniteDeck) {
+				highcardscounter = highcardscounter - 1;
+				document.getElementById("highcards").innerHTML = highcardscounter;
+			}
 		}
 
-		if (rank === "A") {
-			acecardscounter = acecardscounter - 1;
-			document.getElementById("acecards").innerHTML = acecardscounter;
-		}
-
-		if (color === "Red") {
-			redcardscounter = redcardscounter - 1;
-			document.getElementById("redcards").innerHTML = redcardscounter;
-		}
-
-		if (color === "Black") {
-			blackcardscounter = blackcardscounter - 1;
-			document.getElementById("blackcards").innerHTML = blackcardscounter;
-		}
-
-		if (color === "Special") {
-			jokercardscounter = jokercardscounter - 1;
-			document.getElementById("jokercards").innerHTML = jokercardscounter;
-		}
-
-		if (suit === "♣️") {
-			clubscardscounter = clubscardscounter - 1;
-			document.getElementById("clubscards").innerHTML = clubscardscounter;
-		}
-
-		if (suit === "♠️") {
-			spadescardscounter = spadescardscounter - 1;
-			document.getElementById("spadescards").innerHTML = spadescardscounter;
-		}
-
-		if (suit === "♦️") {
-			diamondscardscounter = diamondscardscounter - 1;
-			document.getElementById("diamondscards").innerHTML = diamondscardscounter;
-		}
-
-		if (suit === "♥️") {
-			heartscardscounter = heartscardscounter - 1;
-			document.getElementById("heartscards").innerHTML = heartscardscounter;
+		// Only decrement specific counters if not infinite
+		if (!isInfiniteDeck) {
+			if (rank === "A") { acecardscounter = acecardscounter - 1; document.getElementById("acecards").innerHTML = acecardscounter; }
+			if (color === "Red") { redcardscounter = redcardscounter - 1; document.getElementById("redcards").innerHTML = redcardscounter; }
+			if (color === "Black") { blackcardscounter = blackcardscounter - 1; document.getElementById("blackcards").innerHTML = blackcardscounter; }
+			if (color === "Special") { jokercardscounter = jokercardscounter - 1; document.getElementById("jokercards").innerHTML = jokercardscounter; }
+			if (suit === "♣️") { clubscardscounter = clubscardscounter - 1; document.getElementById("clubscards").innerHTML = clubscardscounter; }
+			if (suit === "♠️") { spadescardscounter = spadescardscounter - 1; document.getElementById("spadescards").innerHTML = spadescardscounter; }
+			if (suit === "♦️") { diamondscardscounter = diamondscardscounter - 1; document.getElementById("diamondscards").innerHTML = diamondscardscounter; }
+			if (suit === "♥️") { heartscardscounter = heartscardscounter - 1; document.getElementById("heartscards").innerHTML = heartscardscounter; }
 		}
 
 		document.getElementById("table_suit_1").innerHTML = suit;
 		document.getElementById("table_number").innerHTML = rank;
 		document.getElementById("table_suit_2").innerHTML = suit;
 
+		playSound('appear');
 		triggerAnimation('table_card', 'card-appear');
 	}
 
@@ -2427,8 +2417,12 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 
 	function resumeGAME() {
 		// 1. Trigger the disappear animations
+		playSound('disappear');
 		triggerAnimation('table_card', 'card-disappear');
-		setTimeout(() => {triggerAnimation('hand_card', 'card-disappear');}, 150);
+		setTimeout(() => {
+			// playSound('disappear');
+			triggerAnimation('hand_card', 'card-disappear');
+		}, 75);
 
 		setTimeout(() => {
 			// Clean up the disappear classes so the opacity is reset for the next round
@@ -2455,8 +2449,8 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 				document.getElementById("hand_suit_2").innerHTML = "";
 
 				updateDISPLAYS();
-			}, 50);
-		}, 450); // 300ms matches your CSS 0.3s duration
+			}, 100);
+		}, 350); // 300ms matches your CSS 0.3s duration
 	}
 
 // --- AUDIO CONFIGURATION ---
@@ -2513,29 +2507,41 @@ function updateVolume() {
     });
 }
 
+// NEW: Generalized Sound Function
+function playSound(type) {
+    if (type === 'appear') {
+        let randomIndex = Math.floor(Math.random() * appearSounds.length);
+        let selectedSound = appearSounds[randomIndex];
+        selectedSound.currentTime = 0; 
+        selectedSound.volume = globalVolume;
+        selectedSound.play().catch(e => console.log("Sound blocked by browser until first interaction."));
+    } else if (type === 'disappear') {
+        disappearSound.currentTime = 0;
+        disappearSound.volume = globalVolume;
+        disappearSound.play().catch(e => console.log("Sound blocked"));
+    }
+}
+
+// UPDATED: Animation function stripped of sound logic
 function triggerAnimation(elementId, animationClass) {
     const el = document.getElementById(elementId);
     if (!el) return;
     
-    if (animationClass === 'card-appear') {
-        // 3. RANDOMIZER LOGIC: Pick a random sound from the array
-        let randomIndex = Math.floor(Math.random() * appearSounds.length);
-        let selectedSound = appearSounds[randomIndex];
-        
-        selectedSound.currentTime = 0; 
-        selectedSound.volume = globalVolume; // Ensure volume is current
-        selectedSound.play().catch(e => console.log("Sound blocked by browser until first interaction."));
-        
-    } else if (animationClass === 'card-disappear') {
-        // disappearSound.currentTime = 0;
-        disappearSound.volume = globalVolume;
-        disappearSound.play().catch(e => console.log("Sound blocked"));
-    }
-
     el.classList.remove('card-appear', 'card-disappear');
     void el.offsetWidth; 
     el.classList.add(animationClass);
 }
+
+const btnClickSound = new Audio('Sound/click.mp3'); // Change to your actual file path
+
+// 2. Find all buttons and add the sound event
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => {
+        btnClickSound.currentTime = 0; // Resets the sound so it can be spammed rapidly
+        btnClickSound.volume = globalVolume; // Respects your game's volume setting
+        btnClickSound.play().catch(e => console.log("Click sound blocked"));
+    });
+});
 
 let allbuttons = document.querySelectorAll('button');
 
