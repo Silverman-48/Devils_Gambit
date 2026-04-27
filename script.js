@@ -2086,6 +2086,7 @@ function updateDISPLAYS() {
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
 		document.getElementById("set_button").disabled = true;
+		document.getElementById("clear_button").disabled = false;
 
 		document.getElementById("table_card").classList.remove('card-appear', 'card-disappear');
 		document.getElementById("hand_card").classList.remove('card-appear', 'card-disappear');
