@@ -1,5 +1,7 @@
 	// Variables Used
 
+	import { presets } from './presets.js';
+
 	let playerwin = false;
 
 	let currentlifepoints = 3;
@@ -223,8 +225,6 @@ const actionNames = ['Blank', 'Skip', 'SacrificeLife', 'SacrificeBlank'];
 // Handle Deck Presets
 
 let currentPresetIndex = 0;
-
-import { presets } from 'presets.js';
 
 function applyPreset() {
     const preset = presets[currentPresetIndex];
