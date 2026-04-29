@@ -1,4 +1,4 @@
-export const presets = [
+const presets = [
 	{
 	name: "Default",
 	config: {
@@ -226,3 +226,5 @@ export const presets = [
 	}
     }
 ];
+
+export { presets };
