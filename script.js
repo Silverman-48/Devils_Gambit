@@ -1,7 +1,5 @@
 	// Variables Used
 
-	// import { presets } from './presets.js';
-
 	let playerwin = false;
 
 	let currentlifepoints = 3;
@@ -363,7 +361,7 @@ Object.keys(mults).forEach(key => {
     skipscoreamount = cfg["skipscoreamount"] !== undefined ? Math.max(0, cfg["skipscoreamount"]) : 0;
     skipscoreop = cfg["skipscoreop"] !== undefined ? cfg["skipscoreop"] : "/";
 
-    if (skipscoreop === '/' && skipscoreamount <= "1") {
+    if (skipscoreop === '/' && skipscoreamount <= 1) {
         skipscoreamount = 1;
     }
 
@@ -398,12 +396,12 @@ Object.keys(mults).forEach(key => {
     });
 
     currentscoretobeat = cfg["currentscoretobeat"] !== undefined ? Math.max(1, cfg["currentscoretobeat"]) : 100;
-        savedscore = currentscoretobeat;
-          document.getElementById("currentscoretobeat").value = currentscoretobeat;
+    savedscore = currentscoretobeat;
+    document.getElementById('currentscoretobeat').value = currentscoretobeat;
 
     // Seed the UI first so the toggle functions don't read stale data from the previous preset
     savedlifepoints = currentlifepoints; 
-    document.getElementById("currentlifepoints").value = savedlifepoints;
+    document.getElementById('currentlifepoints').value = savedlifepoints;
 
     savedblanks = currentblanks; 
     document.getElementById("currentblanks").value = savedblanks;
@@ -426,14 +424,16 @@ Object.keys(mults).forEach(key => {
     
     // Change the currentblanks line to this:
     document.getElementById('currentblanks').value = currentblanks === Infinity ? "∞" : currentblanks;
+
+    document.getElementById('currentscoretobeat').value = currentscoretobeat === Infinity ? "∞" : currentscoretobeat;
+
+    document.getElementById('scoretobeat').innerHTML = currentscoretobeat === Infinity ? "∞" : currentscoretobeat;
     
     document.getElementById('currentstreak').value = currentstreak;
     document.getElementById('currentlastchance').value = currentlastchance;
     document.getElementById('sacrificelife').value = sacrificelife;
     document.getElementById('sacrificeblanks').value = sacrificeblanks;
     
-    document.getElementById('currentscoretobeat').value = currentscoretobeat;
-    document.getElementById('scoretobeat').innerHTML = currentscoretobeat;
     checkMainToggle('gambit');
     checkMainToggle('action');
     
@@ -923,15 +923,17 @@ function calculateCHANCE() {
 // New Add / Remove Function
 
      function addORremove(variable, value, sign) {
-		eval('var check = ' + variable);
-		
-                                      if (check === Infinity) return; 
+		const stateMap = { lifepoints, streak, blanks };
+		const check = stateMap[variable];
 
-		if (check === 0 && sign === "-") {
-			return;
-		} else {
-			eval(variable + ' = ' + variable + sign + value);
-		}	
+		if (check === undefined) return;
+		if (check === Infinity) return;
+		if (check === 0 && sign === "-") return;
+
+		if (variable === 'lifepoints') lifepoints = lifepoints + (sign === '-' ? -value : +value);
+		else if (variable === 'streak') streak = streak + (sign === '-' ? -value : +value);
+		else if (variable === 'blanks') blanks = blanks + (sign === '-' ? -value : +value);
+
 		enforceCaps();
 	}
 
@@ -965,10 +967,10 @@ function addORremoveOPTIONS(variableId, value, sign, minmax) {
     const inputElement = document.getElementById(variableId);
     if (!inputElement) return;
 
-    if (variableId === 'blankscoreamount' && blankscoreop === '/' && inputElement.value <= "1") {
+    if (variableId === 'blankscoreamount' && blankscoreop === '/' && parseInt(inputElement.value) <= 1) {
         inputElement.value = 1;
         return;
-    } else if (variableId === 'skipscoreamount' && skipscoreop === '/' && inputElement.value <= "1") {
+    } else if (variableId === 'skipscoreamount' && skipscoreop === '/' && parseInt(inputElement.value) <= 1) {
         inputElement.value = 1;
         return;
     }
@@ -1080,21 +1082,18 @@ function endlessMODE() {
     const addremoveButtons = document.getElementById("addremovebuttons").querySelectorAll('button');
 
     if (checkbox.checked) {
-        // FIX: Ensure we only save the score if it isn't already "∞"
         if (scoreInput.value !== "∞") {
-            savedscore = scoreInput.value; 
+            savedscore = parseInt(scoreInput.value) || 100;
         }
         scoreInput.value = "∞";
-        currentscoretobeat = "∞";
+        currentscoretobeat = Infinity;
 
-        // 2. Disable all the buttons
         stepperButtons.forEach(btn => btn.disabled = true);
         addremoveButtons.forEach(btn => btn.disabled = true);
     } else {
         scoreInput.value = savedscore;
-        currentscoretobeat = parseInt(savedscore);
+        currentscoretobeat = savedscore;
 
-        // 3. Re-enable the buttons
         stepperButtons.forEach(btn => btn.disabled = false);
         addremoveButtons.forEach(btn => btn.disabled = false);
     }
@@ -1424,6 +1423,10 @@ async function lastCHANCE(playerChoice) {
 
     if (randomNumber === diceroll) {
         // --- 1. SUCCESS STATE ---
+
+	const gameButtons = document.querySelectorAll('#last_chance button, #clear_button, #reset_button, #card_history_button, #settings_button');
+	gameButtons.forEach(btn => btn.disabled = true);
+
         document.getElementById("hand_suit_1").innerHTML = "💗";
         document.getElementById("hand_number").innerHTML = "Life";
         document.getElementById("hand_suit_2").innerHTML = "💗";
@@ -1461,6 +1464,8 @@ async function lastCHANCE(playerChoice) {
 
         await wait(100);
 
+	gameButtons.forEach(btn => btn.disabled = false);
+
         document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
         pickTABLECARD();
 
@@ -1484,9 +1489,9 @@ async function lastCHANCE(playerChoice) {
             playSound('appear');
             triggerAnimation('hand_card', 'card-appear');
 
-            // playSound('death');
+            playSound('death');
 
-		document.getElementById('hand_card').style.filter = 'invert(100%)';
+            document.getElementById('hand_card').style.filter = 'invert(100%)';
 
             document.getElementById("currentgambit").innerHTML = "You Lost";
         }
@@ -1612,7 +1617,7 @@ function toggleELEMENTS() {
 		playSound('appear');
 		triggerAnimation('table_card', 'card-appear');
 
-		// playSound('empty');
+		playSound('empty');
 
 		const buttons_1 = document.querySelectorAll('.special_button_1');
 		buttons_1.forEach(btn => btn.classList.remove('highlight'));
@@ -1703,7 +1708,7 @@ function updateDISPLAYS() {
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
 
-			// playSound('win');
+			playSound('win');
 
 			document.getElementById("currentgambit").innerHTML = "You Won!";
 			playerwin = true;
@@ -1763,7 +1768,7 @@ function updateDISPLAYS() {
 			playSound('appear');
 			triggerAnimation('table_card', 'card-appear');
 
-			// playSound('death');
+			playSound('death');
 
 			document.getElementById("empty_gambit").innerHTML = "...";
 			document.getElementById("gambit_left").innerHTML = "";
@@ -1820,7 +1825,7 @@ function updateDISPLAYS() {
 
 		document.getElementById("card_history").innerHTML = historyEntry;
 
-		document.getElementById("scoretobeat").innerHTML = currentscoretobeat;
+		document.getElementById("scoretobeat").innerHTML = (currentscoretobeat === Infinity) ? "∞" : currentscoretobeat;
 		document.getElementById("score").innerHTML = currentscore;
 		document.getElementById("lifepoints").textContent = lifepoints === Infinity ? "∞" : lifepoints;
 		document.getElementById("blanks").textContent = blanks === Infinity ? "∞" : blanks;
@@ -2229,7 +2234,8 @@ if (color === 'Special') {
 
 		selectCARD();
 
-		eval('var check = ' + element);
+		const cardProps = { color, suit, empty };
+		const check = cardProps[element];
 
 if (variable === check || color === 'Special') {
             usedstreak = streak;
@@ -2256,12 +2262,13 @@ if (variable === check || color === 'Special') {
 
 		selectCARD();
 
-		eval('var check = ' + element);
+		const cardPropsV = { color, suit, empty };
+		const check = cardPropsV[element];
 
 		if (rank === 'A') {
 			let SPEvalue = acevalue;
 
-if (valuemodifiertable === valueswitch && variable === check || color === 'Special' || SPEvalue === 20 && variable === check) {
+if ((valuemodifiertable === valueswitch && variable === check) || color === 'Special' || (SPEvalue === 20 && variable === check)) {
                 usedstreak = streak;
                 let pts = (streak + acevalue);
                 if (multiplierOp === "/") {
@@ -2276,7 +2283,7 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 				lostGAMBIT();
 			}
 		} else {
-			if (valuemodifierhand === valueswitch && variable === check || color === 'Special') {
+			if ((valuemodifierhand === valueswitch && variable === check) || color === 'Special') {
        usedstreak = streak;
                 let pts = (streak + acevalue);
                 if (multiplierOp === "/") {
@@ -2312,7 +2319,7 @@ if (valuemodifiertable === valueswitch && variable === check || color === 'Speci
 		buttons_2.forEach(btn => btn.classList.remove('highlight'));
 
 		// CHANGE: Target only specific game buttons to avoid disabling menu steppers
-		const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
+		const gameButtons = document.querySelectorAll('#gameplay_buttons button, #last_chance button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
 		gameButtons.forEach(btn => btn.disabled = true);
 
 		if (wonGambit) {
@@ -2361,7 +2368,7 @@ async function resumeGAME() {
     // Wait the final 100ms for the "Reset" feel
     await wait(100);
 
-    const gameButtons = document.querySelectorAll('#gameplay_buttons button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
+    const gameButtons = document.querySelectorAll('#gameplay_buttons button, #last_chance button, #set_button, #clear_button, #reset_button, #card_history_button, #settings_button');
     
     gameButtons.forEach(btn => {
         btn.disabled = false;
@@ -2390,9 +2397,9 @@ bgMusic.loop = true;
 
 let appearSound = new Audio('Sound/appear.mp3');
 let disappearSound = new Audio('Sound/disappear.mp3');
-// let deathSound = new Audio('Sound/death.mp3');
-// let winSound = new Audio('Sound/win.mp3');
-// let emptySound = new Audio('Sound/empty.mp3');
+let deathSound = new Audio('Sound/death.mp3');
+let winSound = new Audio('Sound/win.mp3');
+let emptySound = new Audio('Sound/empty.mp3');
 let btnClickSound = new Audio('Sound/click.mp3');
 
 let isMusicPlaying = false;
@@ -2451,9 +2458,9 @@ function updateVolume(id, element) {
             break;
 
         case 'winloss':
-            death.volume = newVolume;
-            win.volume = newVolume;
-            empty.volume = newVolume;
+            deathSound.volume = newVolume;
+            winSound.volume = newVolume;
+            emptySound.volume = newVolume;
             break;
 
         default: 
@@ -2544,25 +2551,14 @@ function triggerAnimation(elementId, animationClass) {
     }
 }
 
-// 2. Find all buttons and add the sound event
-document.addEventListener('click', (event) => {
-    // Check if the clicked element is a button
-    // .closest('button') ensures it works even if they click an icon inside the button
-    const btn = event.target.closest('button');
-
-    if (btn) {
-        btnClickSound.currentTime = 0;
-        btnClickSound.volume = volumeSettings['button'];
-        btnClickSound.play().catch(e => console.log("Sound blocked"));
-    }
-});
-
+// Play click sound for buttons and checkboxes
 document.addEventListener('click', (event) => {
     const isButton = event.target.closest('button');
     const isCheckbox = event.target.type === 'checkbox';
 
     if (isButton || isCheckbox) {
         btnClickSound.currentTime = 0;
+        btnClickSound.volume = volumeSettings['button'];
         btnClickSound.play().catch(() => {});
     }
 });
