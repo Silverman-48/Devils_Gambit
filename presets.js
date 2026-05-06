@@ -101,7 +101,7 @@ const presets = [
 		// Item Toggles and Modifiers
 		"active_Blank": true, "active_Skip": true, "active_SacrificeLife": true, "active_SacrificeBlank": true,
 
-		"sacrificelife": 3, "sacrificeblanks": 6,
+		"sacrificelife": 2, "sacrificeblanks": 4,
 
 		"skiplifeamount": 1, "skiplifeop": "-",
 		"skipstreakamount": 1, "skipstreakop": "+", 
@@ -109,7 +109,7 @@ const presets = [
 
 		"blanklifeamount": 0, "blanklifeop": "+",
 		"blankstreakamount": 0, "blankstreakop": "+",
-		"blankscoreamount": 2, "blankscoreop": "/"
+		"blankscoreamount": 1, "blankscoreop": "*"
 	}
     },
     {
