@@ -632,12 +632,15 @@ function toggleBLANKS() {
 		}
 
 		if (buttonelement === "Blank" || buttonelement === "Skip") {
-			textgambit_left.innerHTML = "";
+			document.getElementById("empty_gambit").innerHTML = "...";
+			document.getElementById("gambit_left").innerHTML = buttonelement;
+			setCURRENTGAMBIT();
+			document.getElementById("gambit_left").innerHTML = "";
 		} else {
-			textgambit_left.innerHTML = buttonelement;
+			document.getElementById("gambit_left").innerHTML = buttonelement;
+			setCURRENTGAMBIT();
 		}
 		
-		setCURRENTGAMBIT();
 		updateTESTVALUES();
 
 		buttons.forEach(btn => {
