@@ -631,7 +631,11 @@ function toggleBLANKS() {
 			return;
 		}
 
-		textgambit_left.innerHTML = buttonelement;
+		if (buttonelement === "Blank" || buttonelement === "Skip") {
+			textgambit_left.innerHTML = "";
+		} else {
+			textgambit_left.innerHTML = buttonelement;
+		}
 		
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
