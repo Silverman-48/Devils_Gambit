@@ -745,21 +745,15 @@
                         <button style="flex: 1; height: 35px" class="special_button_2" id="btn_gambit_Spades" onclick="setgambitRIGHT('♠️');"><span class="button_content">♠️</span></button>
                     </div>
 
-                    <button id="btn_gambit_Special" style="flex: 1; height: 35px; display: flex; align-items: center; justify-content: center; width: 100%" class="special_button_1" onclick="setgambitLEFT('Special')">
-                        <span class="button_content">I'm Feeling Lucky</span>
-                    </button>
+					<div style="display: flex; gap: 5px; width: 300px;">
+						<button id="btn_action_Blank" class="special_button" style="flex: 1; height: 35px" onclick="useBLANK()"><span class="button_content">Blank</span></button>
+						<button id="btn_gambit_Special" class="special_button_1" style="flex: 1; height: 35px" onclick="setgambitLEFT('Special')"><span class="button_content">🃏</span></button>
+						<button id="btn_action_Skip" class="special_button" style="flex: 1; height: 35px" onclick="skipROUND()"><span class="button_content">Skip</span></button>
+					</div>
 
-                    <div style="display: flex; gap: 5px; width: 300px; margin-top: 5px">
-
-                        <button id="btn_action_Blank" class="special_button" style="flex: 1; height: 60px" onclick="useBLANK()"><span class="button_content">Blank</span></button>
-
-                        <div style="display: flex; flex-direction: column;">
-                            <button id="btn_action_SacrificeLife" class="special_button" style="flex: 1; border-bottom: 1.5px solid #b5b5b5; border-radius: 5px 5px 0px 0px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Sacrifice (Life)</span></button>
-                            <button id="btn_action_SacrificeBlank" class="special_button" style="flex: 1; border-top: 1.5px solid #b5b5b5; border-radius: 0px 0px 5px 5px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Sacrifice (Blank)</span></button>
-                        </div>
-
-                        <button id="btn_action_Skip" class="special_button" style="flex: 1; height: 60px" onclick="skipROUND()"><span class="button_content">Skip</span></button>
-
+                    <div style="display: flex; gap: 5px; width: 300px;">
+                        <button id="btn_action_SacrificeLife" class="special_button" style="flex: 1; height: 35px" onclick="sacrificeSTREAK('lifepoints');"><span class="button_content">Life +</span></button>
+                        <button id="btn_action_SacrificeBlank" class="special_button" style="flex: 1; height: 35px" onclick="sacrificeSTREAK('blanks');"><span class="button_content">Blank +</span></button>
                     </div>
 
                 </div>
