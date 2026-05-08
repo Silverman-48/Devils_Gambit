@@ -631,22 +631,14 @@ function toggleBLANKS() {
 			return;
 		}
 
-		if (buttonelement === "Blank" || buttonelement === "Skip") {
-			document.getElementById("empty_gambit").innerHTML = "...";
-			document.getElementById("gambit_left").innerHTML = buttonelement;
-			setCURRENTGAMBIT();
-			document.getElementById("gambit_left").innerHTML = "";
-		} else {
-			document.getElementById("gambit_left").innerHTML = buttonelement;
-			setCURRENTGAMBIT();
-		}
-		
+		textgambit_left.innerHTML = buttonelement;
+
+		setCURRENTGAMBIT();
 		updateTESTVALUES();
 
 		buttons.forEach(btn => {
 			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "🃏" && buttonelement === "Special") {
 				btn.classList.add('highlight');
-
 			}
 		});
 	}
@@ -841,6 +833,7 @@ if (key === "joker") {
 		if (gambit1 === "Skip") {
 				valueswitch = -1;
 				variable = "Skip";
+				gambit1 = "";
 				element = "color";
 
 				document.getElementById("currentgambit").innerHTML = "Round Skip (" + multipliersymbol + skipscoreamount + ")";
@@ -849,6 +842,7 @@ if (key === "joker") {
 		if (gambit1 === "Blank") {
 				valueswitch = -1;
 				variable = "Blank";
+				gambit1 = "";
 				element = "none";
 
 				document.getElementById("currentgambit").innerHTML = "Use Blank (" + multipliersymbol + blankscoreamount + ")";
