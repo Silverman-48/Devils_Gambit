@@ -608,7 +608,9 @@ function toggleBLANKS() {
 		let mod1 = textgambit_left.innerHTML;
 		let mod2 = textgambit_right.innerHTML;
 
-		if (buttonelement === "Special") {
+		let specialbuttonelements = ['Special', 'Blank', 'Skip'];
+
+		if (specialbuttonelements.includes(buttonelement)) {
 			textgambit_right.innerHTML = "";
 			buttons.forEach(btn => {
 				btn.classList.remove('highlight');
@@ -635,7 +637,7 @@ function toggleBLANKS() {
 		updateTESTVALUES();
 
 		buttons.forEach(btn => {
-			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "I'm Feeling Lucky" && buttonelement === "Special") {
+			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "🃏" && buttonelement === "Special") {
 				btn.classList.add('highlight');
 
 			}
@@ -753,7 +755,7 @@ if (key === "joker") {
 
     let multipliersymbol = "x";
 
-    if (multiplierOp === "/") {multipliersymbol = "/"}
+    if (multiplierOp === "/" || blankscoreop === "/" || skipscoreop === "/") {multipliersymbol = "/"}
 
 	if (gambit1 === "" && gambit2 === "") {
 				valueswitch = -1;
@@ -827,6 +829,22 @@ if (key === "joker") {
 				element = "color";
 
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (" + multipliersymbol + multiplier + ")";
+		}
+
+		if (gambit1 === "Skip") {
+				valueswitch = -1;
+				variable = "Skip";
+				element = "color";
+
+				document.getElementById("currentgambit").innerHTML = "Round Skip (" + multipliersymbol + skipscoreamount + ")";
+		}
+
+		if (gambit1 === "Blank") {
+				valueswitch = -1;
+				variable = "Blank";
+				element = "none";
+
+				document.getElementById("currentgambit").innerHTML = "Use Blank (" + multipliersymbol + blankscoreamount + ")";
 		}
 
 // --- NEW VALIDATION LOGIC ---
@@ -2171,6 +2189,16 @@ function pickTABLECARD() {
 
 	function runGAMBIT() {
 		if (isdeckempty === true) return;
+
+		if (variable === "Skip") {
+			skipROUND();
+			return;
+		}
+
+		if (variable === "Blank") {
+			useBLANK();
+			return;
+		}
 
 		if (variable === "Special") {
 			jokerGAMBIT();
