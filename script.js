@@ -565,6 +565,11 @@ function toggleBLANKS() {
 
 		document.getElementById("set_button").disabled = true;
 
+		variable = "None";
+		element = "None";
+		valueswitch = -1;
+		multiplier = 1;
+
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
 	}
@@ -590,105 +595,128 @@ function toggleBLANKS() {
 
 // Changes the Text for Left-Side Gambits
 	
-	function setgambitLEFT(buttonelement) {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (isdeckempty === true) return;
+function setgambitLEFT(buttonelement) {
+    if (playerwin === true) return;
+    if (lifepoints === 0) return;
+    if (isdeckempty === true) return;
 
-		const buttons = document.querySelectorAll('.special_button_1');
-		const buttons_2 = document.querySelectorAll('.special_button_2');
+    const buttons = document.querySelectorAll('.special_button_1');
+    const buttons_2 = document.querySelectorAll('.special_button_2');
 
-		buttons.forEach(btn => btn.classList.remove('highlight'));
+    // 1. Check if clicking the SAME special button to toggle it off
+    if ((variable === "Skip" && buttonelement === "Skip") || 
+        (variable === "Blank" && buttonelement === "Blank")) {
+        document.getElementById("empty_gambit").innerHTML = "...";
+        buttons.forEach(btn => btn.classList.remove('highlight'));
+        buttons_2.forEach(btn => btn.classList.remove('highlight'));
+        variable = "None"; // Clear state entirely
+        setCURRENTGAMBIT();
+        updateTESTVALUES();
+        return;
+    }
 
-		document.getElementById("empty_gambit").innerHTML = "";
+    // 2. Clear old highlights from left
+    buttons.forEach(btn => btn.classList.remove('highlight'));
+    document.getElementById("empty_gambit").innerHTML = "";
 
-		let textgambit_left = document.getElementById("gambit_left");
-		let textgambit_right = document.getElementById("gambit_right");
+    let textgambit_left = document.getElementById("gambit_left");
+    let textgambit_right = document.getElementById("gambit_right");
 
-		let mod1 = textgambit_left.innerHTML;
-		let mod2 = textgambit_right.innerHTML;
+    let mod1 = textgambit_left.innerHTML;
+    let mod2 = textgambit_right.innerHTML;
 
-		let specialbuttonelements = ['Special', 'Blank', 'Skip'];
+    // 3. If selecting or coming from Special/Blank/Skip, clear the right side
+    let specialbuttonelements = ['Special', 'Blank', 'Skip'];
+    if (specialbuttonelements.includes(buttonelement)) {
+        textgambit_right.innerHTML = "";
+        buttons_2.forEach(btn => btn.classList.remove('highlight'));
+    } else if (variable === "Skip" || variable === "Blank") {
+        buttons_2.forEach(btn => btn.classList.remove('highlight'));
+    }
 
-		if (specialbuttonelements.includes(buttonelement)) {
-			textgambit_right.innerHTML = "";
-			buttons.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-			buttons_2.forEach(btn => {
-				btn.classList.remove('highlight');
-			});
-		}
+    // 4. Toggle off normal left gambit
+    if (buttonelement === mod1 && !specialbuttonelements.includes(buttonelement)) {
+        if (mod2 === "") {
+            document.getElementById("empty_gambit").innerHTML = "...";
+            document.getElementById("percentage").innerHTML = "";
+        }
+        textgambit_left.innerHTML = "";
+        setCURRENTGAMBIT();
+        updateTESTVALUES();
+        return;
+    }
+    
+    // 5. Apply the new selection
+    if (buttonelement === "Blank" || buttonelement === "Skip") {
+        textgambit_left.innerHTML = "";
+        textgambit_right.innerHTML = "";
+        setCURRENTACTION(buttonelement);
+        document.getElementById("empty_gambit").innerHTML = "...";
+    } else {
+        textgambit_left.innerHTML = buttonelement;
+        setCURRENTGAMBIT();
+    }
 
-		if (buttonelement === mod1) {
-			if (mod2 === "") {
-				document.getElementById("empty_gambit").innerHTML = "...";
-				document.getElementById("percentage").innerHTML = "";
-			}
-			textgambit_left.innerHTML = "";
-			setCURRENTGAMBIT();
-			updateTESTVALUES();
-			return;
-		}
-		
-		textgambit_left.innerHTML = buttonelement;
+    updateTESTVALUES();
 
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
-
-		buttons.forEach(btn => {
-			if (btn.textContent.trim() === buttonelement || btn.textContent.trim() === "🃏" && buttonelement === "Special") {
-				btn.classList.add('highlight');
-			}
-		});
-	}
+    // 6. Highlight the new selection
+    buttons.forEach(btn => {
+        if (btn.textContent.trim() === buttonelement || (btn.textContent.trim() === "🃏" && buttonelement === "Special")) {
+            btn.classList.add('highlight');
+        }
+    });
+}
 
 // Changes the Text for Right-Side Gambits
 
-	function setgambitRIGHT(buttonelement) {
-		if (playerwin === true) return;
-		if (lifepoints === 0) return;
-		if (isdeckempty === true) return;
+function setgambitRIGHT(buttonelement) {
+    if (playerwin === true) return;
+    if (lifepoints === 0) return;
+    if (isdeckempty === true) return;
 
-		const buttons = document.querySelectorAll('.special_button_2');
+    const buttons = document.querySelectorAll('.special_button_2');
+    buttons.forEach(btn => btn.classList.remove('highlight'));
 
-		buttons.forEach(btn => btn.classList.remove('highlight'));
+    let textgambit_left = document.getElementById("gambit_left");
+    let textgambit_right = document.getElementById("gambit_right");
 
-		let textgambit_left = document.getElementById("gambit_left");
-		let textgambit_right = document.getElementById("gambit_right");
+    // Clear any active special state since we clicked a right modifier
+    if (variable === "Special" || variable === "Skip" || variable === "Blank") {
+        textgambit_left.innerHTML = "";
+        const buttons_1 = document.querySelectorAll('.special_button_1');
+        buttons_1.forEach(btn => btn.classList.remove('highlight'));
+        if (variable === "Skip" || variable === "Blank") {
+            variable = "None"; // Destroy the special state
+        }
+    }
 
-		if (variable === "Special") {
-			textgambit_left.innerHTML = "";
-			document.getElementById("btn_gambit_Special").classList.remove('highlight'); // Changed from joker_button
-		}
+    document.getElementById("empty_gambit").innerHTML = "";
 
-		document.getElementById("empty_gambit").innerHTML = "";
+    let mod1 = textgambit_left.innerHTML;
+    let mod2 = textgambit_right.innerHTML;
 
-		let mod1 = textgambit_left.innerHTML;
-		let mod2 = textgambit_right.innerHTML;
+    if (buttonelement === mod2) {
+        if (mod1 === "") {
+            document.getElementById("empty_gambit").innerHTML = "...";
+            document.getElementById("percentage").innerHTML = "";
+        }
+        textgambit_right.innerHTML = "";
+        setCURRENTGAMBIT();
+        updateTESTVALUES();
+        return;
+    }
 
-		if (buttonelement === mod2) {
-			if (mod1 === "") {
-				document.getElementById("empty_gambit").innerHTML = "...";
-				document.getElementById("percentage").innerHTML = "";
-			}
-			textgambit_right.innerHTML = "";
-			setCURRENTGAMBIT();
-			updateTESTVALUES();
-			return;
-		}
+    textgambit_right.innerHTML = buttonelement;
 
-		textgambit_right.innerHTML = buttonelement;
+    setCURRENTGAMBIT();
+    updateTESTVALUES();
 
-		setCURRENTGAMBIT();
-		updateTESTVALUES();
-
-		buttons.forEach(btn => {
-			if (btn.textContent.trim() === buttonelement) {
-				btn.classList.add('highlight');
-			}
-		});
-	}
+    buttons.forEach(btn => {
+        if (btn.textContent.trim() === buttonelement) {
+            btn.classList.add('highlight');
+        }
+    });
+}
 
 function toggleSpecifics(cat) {
     const isChecked = document.getElementById(`use_spec_${cat}`).checked;
@@ -699,6 +727,28 @@ function toggleSpecifics(cat) {
     if (area) area.style.display = isChecked ? "flex" : "none";
     
     updateTESTVALUES();
+}
+
+function setCURRENTACTION(actionname) {
+    const setButton = document.getElementById("set_button");
+    setButton.disabled = false;
+    let actionmultipliersymbol = "x";
+
+    if (actionname === "Skip") {
+        if (skipscoreop === "/") { actionmultipliersymbol = "/"; }
+        valueswitch = -1;
+        variable = "Skip";
+        element = "none";
+        document.getElementById("currentgambit").innerHTML = "Round Skip (" + actionmultipliersymbol + skipscoreamount + ")";
+    }
+
+    if (actionname === "Blank") {
+        if (blankscoreop === "/") { actionmultipliersymbol = "/"; }
+        valueswitch = -1;
+        variable = "Blank";
+        element = "none";
+        document.getElementById("currentgambit").innerHTML = "Use Blank (" + actionmultipliersymbol + blankscoreamount + ")";
+    }
 }
 
 // Sets the Current Gambit Values
@@ -754,15 +804,20 @@ if (key === "joker") {
 
     let multipliersymbol = "x";
 
-    if (multiplierOp === "/" || blankscoreop === "/" || skipscoreop === "/") {multipliersymbol = "/"}
+    if (multiplierOp === "/") {multipliersymbol = "/"}
 
-	if (gambit1 === "" && gambit2 === "") {
-				valueswitch = -1;
-				variable = "None";
-				element = "None";
-
-				document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
-		}
+if (gambit1 === "" && gambit2 === "") {
+        // ONLY reset to None if we aren't using a Blank or Skip!
+        if (variable !== "Blank" && variable !== "Skip") {
+            valueswitch = -1;
+            variable = "None";
+            element = "None";
+            document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
+        } else {
+            // Re-assert the action text just in case
+            setCURRENTACTION(variable); 
+        }
+    }
 
 		if (valuearray.includes(gambit1)) {
 			if (colorarray.includes(gambit2)) {
@@ -855,32 +910,18 @@ if (key === "joker") {
             }
         }
 
-        // Apply UI lockouts
+// Apply UI lockouts
         if (!isGambitAllowed && (gambit1 || gambit2)) {
             document.getElementById("empty_gambit").innerHTML += " <span style='color:#FF6666;'>(Disabled)</span>";
             setButton.disabled = true;
-		} else {
-            // Keep the "Set" button disabled if nothing is selected at all
-            setButton.disabled = (gambit1 === "" && gambit2 === "");
+        } else {
+            // Exempt Blank and Skip from being disabled by empty text fields
+            if (variable === "Blank" || variable === "Skip") {
+                setButton.disabled = false;
+            } else {
+                setButton.disabled = (gambit1 === "" && gambit2 === "");
+            }
         }
-
-		if (gambit1 === "Skip") {
-				valueswitch = -1;
-				variable = "Skip";
-				gambit1 = "";
-				element = "color";
-
-				document.getElementById("currentgambit").innerHTML = "Round Skip (" + multipliersymbol + skipscoreamount + ")";
-		}
-
-		if (gambit1 === "Blank") {
-				valueswitch = -1;
-				variable = "Blank";
-				gambit1 = "";
-				element = "none";
-
-				document.getElementById("currentgambit").innerHTML = "Use Blank (" + multipliersymbol + blankscoreamount + ")";
-		}
 
     checkMainToggle('gambit'); // <-- Add this line
 }
@@ -986,14 +1027,6 @@ function addORremoveOPTIONS(variableId, value, sign, minmax) {
     const inputElement = document.getElementById(variableId);
     if (!inputElement) return;
 
-    if (variableId === 'blankscoreamount' && blankscoreop === '/' && parseInt(inputElement.value) <= 1) {
-        inputElement.value = 1;
-        return;
-    } else if (variableId === 'skipscoreamount' && skipscoreop === '/' && parseInt(inputElement.value) <= 1) {
-        inputElement.value = 1;
-        return;
-    }
-
     let currentValue = parseInt(inputElement.value) || 0;
     let newValue;
 
@@ -1011,6 +1044,14 @@ function addORremoveOPTIONS(variableId, value, sign, minmax) {
 
     inputElement.value = newValue;
 
+    if (variableId === 'blankscoreamount' && blankscoreop === '/' && newValue < 1) {
+        inputElement.value = 1;
+        return;
+    } else if (variableId === 'skipscoreamount' && skipscoreop === '/' && newValue < 1) {
+        inputElement.value = 1;
+        return;
+    }
+
     switch (variableId) {
         case 'currentscoretobeat': currentscoretobeat = newValue; break;
         case 'currentlifepoints': currentlifepoints = newValue; break;
@@ -1022,6 +1063,7 @@ function addORremoveOPTIONS(variableId, value, sign, minmax) {
         case 'sacrificeblanks': sacrificeblanks = newValue; break;
         case 'skiplifeamount': skiplifeamount = newValue; break;
         case 'skipstreakamount': skipstreakamount = newValue; break;
+        case 'skipscoreamount': skipscoreamount = newValue; break;
         case 'blanklifeamount': blanklifeamount = newValue; break;
         case 'blankstreakamount': blankstreakamount = newValue; break;
         case 'blankscoreamount': blankscoreamount = newValue; break;
@@ -1797,6 +1839,11 @@ function updateDISPLAYS() {
 			return;
 		} else if (lifepoints > 0) {
 			document.getElementById("currentgambit").innerHTML = "Select Your Gambit";
+			variable = "None";
+			element = "None";
+			valueswitch = -1;
+			multiplier = 1;
+			updateTESTVALUES();
 			pickTABLECARD();
 			return;
 		}
