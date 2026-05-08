@@ -630,12 +630,8 @@ function toggleBLANKS() {
 			updateTESTVALUES();
 			return;
 		}
-
-		if (buttonelement === "Blank" || buttonelement === "Skip") {
-			document.getElementById("empty_gambit").innerHTML = "...";
-		} else {
-			textgambit_left.innerHTML = buttonelement;
-		}
+		
+		textgambit_left.innerHTML = buttonelement;
 
 		setCURRENTGAMBIT();
 		updateTESTVALUES();
@@ -834,23 +830,7 @@ if (key === "joker") {
 				document.getElementById("currentgambit").innerHTML = "Joker Gambit (" + multipliersymbol + multiplier + ")";
 		}
 
-		if (gambit1 === "Skip") {
-				valueswitch = -1;
-				variable = "Skip";
-				element = "color";
-
-				document.getElementById("currentgambit").innerHTML = "Round Skip (" + multipliersymbol + skipscoreamount + ")";
-		}
-
-		if (gambit1 === "Blank") {
-				valueswitch = -1;
-				variable = "Blank";
-				element = "none";
-
-				document.getElementById("currentgambit").innerHTML = "Use Blank (" + multipliersymbol + blankscoreamount + ")";
-		}
-
-// --- NEW VALIDATION LOGIC ---
+		// --- NEW VALIDATION LOGIC ---
         let isGambitAllowed = true;
         let gambitNameForCheck = "";
 
@@ -879,10 +859,28 @@ if (key === "joker") {
         if (!isGambitAllowed && (gambit1 || gambit2)) {
             document.getElementById("empty_gambit").innerHTML += " <span style='color:#FF6666;'>(Disabled)</span>";
             setButton.disabled = true;
-} else {
+		} else {
             // Keep the "Set" button disabled if nothing is selected at all
             setButton.disabled = (gambit1 === "" && gambit2 === "");
         }
+
+		if (gambit1 === "Skip") {
+				valueswitch = -1;
+				variable = "Skip";
+				gambit1 = "";
+				element = "color";
+
+				document.getElementById("currentgambit").innerHTML = "Round Skip (" + multipliersymbol + skipscoreamount + ")";
+		}
+
+		if (gambit1 === "Blank") {
+				valueswitch = -1;
+				variable = "Blank";
+				gambit1 = "";
+				element = "none";
+
+				document.getElementById("currentgambit").innerHTML = "Use Blank (" + multipliersymbol + blankscoreamount + ")";
+		}
 
     checkMainToggle('gambit'); // <-- Add this line
 }
